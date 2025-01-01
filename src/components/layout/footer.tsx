@@ -11,7 +11,7 @@ export function Footer() {
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-12">
           {/* Brand and Description */}
-          <div className="sm:col-span-2 md:col-span-2 lg:col-span-4">
+          <div className="sm:col-span-2 md:col-span-2 lg:col-span-3">
             <Link href="/" className="text-lg font-semibold">
               {appConfig.projectName}
             </Link>
@@ -137,8 +137,47 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Social Links */}
+          {/* Legal Links */}
           <div className="sm:col-span-1 md:col-span-1 lg:col-span-2">
+            <h3 className="text-sm font-semibold">Legal</h3>
+            <ul className="mt-2 space-y-2 text-sm">
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/cookie"
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Cookie Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/refund"
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  Refund Policy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Social Links */}
+          <div className="sm:col-span-1 md:col-span-1 lg:col-span-1">
             <h3 className="text-sm font-semibold">Social</h3>
             <ul className="mt-2 space-y-2 text-sm">
               {appConfig.social.twitter && (
@@ -190,14 +229,6 @@ export function Footer() {
             Copyright © {new Date().getFullYear()} {appConfig.projectName}
           </p>
           <div className="flex items-center gap-4">
-            <div className="flex gap-4 text-sm text-muted-foreground">
-              <Link href="/privacy" className="hover:text-primary">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="hover:text-primary">
-                Terms of Service
-              </Link>
-            </div>
             <ThemeSwitcher />
           </div>
         </div>

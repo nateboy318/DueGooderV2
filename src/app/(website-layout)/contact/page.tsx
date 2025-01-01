@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -35,7 +35,7 @@ const formSchema = z.object({
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -60,7 +60,7 @@ export default function ContactPage() {
         throw new Error("Failed to submit form");
       }
 
-      toast.success("Thank you for your message! We&apos;ll get back to you soon.");
+      toast.success("Thank you for your message! We'll get back to you soon.");
       form.reset();
     } catch {
       toast.error("Something went wrong. Please try again later.");
@@ -81,7 +81,8 @@ export default function ContactPage() {
           <div className="mx-auto max-w-2xl space-y-4 text-center">
             <h1 className="text-3xl font-bold md:text-5xl">Get in Touch</h1>
             <p className="text-xl text-primary-foreground/90">
-              Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
+              Have questions? We&apos;d love to hear from you. Send us a message
+              and we&apos;ll respond as soon as possible.
             </p>
           </div>
         </div>
@@ -96,7 +97,8 @@ export default function ContactPage() {
               <div>
                 <h2 className="mb-6 text-2xl font-bold">Contact Information</h2>
                 <p className="mb-8 text-muted-foreground">
-                  Fill up the form and our Team will get back to you within 24 hours.
+                  Fill up the form and our Team will get back to you within 24
+                  hours.
                 </p>
               </div>
 
@@ -130,9 +132,13 @@ export default function ContactPage() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="mb-1 text-lg font-semibold">{item.title}</h3>
+                      <h3 className="mb-1 text-lg font-semibold">
+                        {item.title}
+                      </h3>
                       {item.details.map((detail, j) => (
-                        <p key={j} className="text-muted-foreground">{detail}</p>
+                        <p key={j} className="text-muted-foreground">
+                          {detail}
+                        </p>
                       ))}
                     </div>
                   </div>
@@ -144,7 +150,10 @@ export default function ContactPage() {
             <div className="rounded-2xl border bg-card p-8 shadow-lg">
               <h2 className="mb-6 text-2xl font-bold">Send us a Message</h2>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-6"
+                >
                   <FormField
                     control={form.control}
                     name="name"
@@ -225,4 +234,4 @@ export default function ContactPage() {
       </section>
     </div>
   );
-} 
+}

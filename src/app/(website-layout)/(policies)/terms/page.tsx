@@ -1,7 +1,7 @@
 export default function TermsPage() {
   return (
     <article
-      className="prose lg:prose-xl max-w-6xl mx-auto"
+      className="max-w-6xl mx-auto"
       dangerouslySetInnerHTML={{
         __html: `
       <p><strong>TERMS AND CONDITIONS</strong></p>

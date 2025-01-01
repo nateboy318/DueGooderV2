@@ -2,7 +2,7 @@ export default function CookiePolicyPage() {
   return (
     <>
       <article
-        className="prose lg:prose-xl max-w-6xl mx-auto"
+        className="max-w-6xl mx-auto"
         dangerouslySetInnerHTML={{
           __html: `
               <h1>Cookie Policy for Gloow</h1>
