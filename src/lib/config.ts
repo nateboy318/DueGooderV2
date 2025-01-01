@@ -26,7 +26,11 @@ export const appConfig: AppConfigPublic = {
     phone: "+91 9876543210",
   },
   social: {
-    // TODO: Add social links
+    twitter: "https://twitter.com/cjsingg",
+    instagram: "https://instagram.com/-",
+    linkedin: "https://linkedin.com/-",
+    facebook: "https://facebook.com/-",
+    youtube: "https://youtube.com/-",
   },
   email: {
     senderName: "Indie Kit",

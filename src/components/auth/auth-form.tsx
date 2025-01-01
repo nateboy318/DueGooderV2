@@ -28,7 +28,7 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
       });
     } catch (error) {
       console.error("Authentication error:", error);
-      toast.error("Failed to sign in with Google");
+      toast.error("Failed to continue with Google");
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +83,7 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
           </div>
           <Button disabled={isLoading}>
             {isLoading && <FaSpinner className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In with Email
+            Continue with Email
           </Button>
         </div>
       </form>

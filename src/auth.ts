@@ -18,6 +18,7 @@ const emailProvider: EmailConfig = {
     if (process.env.NODE_ENV === "development") {
       console.log("Sending email: ", JSON.stringify(params, null, 2));
     }
+    // TODO: Implement email provider
   },
 };
 

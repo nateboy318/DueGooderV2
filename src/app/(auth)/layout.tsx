@@ -1,10 +1,36 @@
 import { appConfig } from "@/lib/config";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { FaTwitter, FaInstagram, FaLinkedin, FaFacebook, FaYoutube } from "react-icons/fa";
 
 interface AuthLayoutProps {
   children: ReactNode;
 }
+
+const SocialIcon = ({ type }: { type: keyof typeof appConfig.social }) => {
+  const icons = {
+    twitter: FaTwitter,
+    instagram: FaInstagram,
+    linkedin: FaLinkedin,
+    facebook: FaFacebook,
+    youtube: FaYoutube,
+  };
+  const Icon = icons[type];
+  const link = appConfig.social[type];
+  
+  if (!link) return null;
+  
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-muted-foreground hover:text-white transition-colors"
+    >
+      <Icon className="h-5 w-5" />
+    </a>
+  );
+};
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
@@ -18,8 +44,17 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
               <p className="text-lg">&ldquo;{appConfig.description}&rdquo;</p>
-              <footer className="text-sm text-muted-foreground">
-                Built with ❤️ by {appConfig.projectName} Team
+              <footer className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Built with ❤️ by {appConfig.projectName} Team
+                </p>
+                <div className="flex items-center space-x-4">
+                  <SocialIcon type="twitter" />
+                  <SocialIcon type="instagram" />
+                  <SocialIcon type="linkedin" />
+                  <SocialIcon type="facebook" />
+                  <SocialIcon type="youtube" />
+                </div>
               </footer>
             </blockquote>
           </div>

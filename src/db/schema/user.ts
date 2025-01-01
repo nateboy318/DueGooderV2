@@ -17,7 +17,6 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-  isSuperAdmin: boolean("isSuperAdmin").default(false),
 });
 
 export const accounts = pgTable(
