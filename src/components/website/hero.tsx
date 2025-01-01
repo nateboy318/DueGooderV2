@@ -56,7 +56,12 @@ export function WebsiteHero() {
           <div className="inline-flex items-center rounded-lg bg-background/60 px-3 py-1 text-sm backdrop-blur">
             <span className="mr-2 font-semibold text-primary">📣 New</span>
             <span>Introducing our new AI-powered features</span>
-            <Button variant="link" size="sm" className="ml-2 h-auto p-0" asChild>
+            <Button
+              variant="link"
+              size="sm"
+              className="ml-2 h-auto p-0"
+              asChild
+            >
               <Link href="/features">Learn more →</Link>
             </Button>
           </div>
@@ -101,7 +106,9 @@ export function WebsiteHero() {
                         key={i}
                         className={cn(
                           "h-5 w-5",
-                          i < 4 ? "fill-primary text-primary" : "fill-muted text-muted"
+                          i < 4
+                            ? "fill-primary text-primary"
+                            : "fill-muted text-muted"
                         )}
                       />
                     ))}
@@ -116,29 +123,8 @@ export function WebsiteHero() {
               <HeroVideoDialogDemo />
             </div>
           </div>
-
-          {/* Trusted By Section */}
-          <div className="mt-16 sm:mt-24">
-            <p className="text-center text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Trusted by leading teams
-            </p>
-            <div className="mt-6 grid grid-cols-2 gap-8 sm:grid-cols-4 md:grid-cols-8">
-              {[...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-center grayscale transition hover:grayscale-0"
-                >
-                  <img
-                    src={`https://startup-template-sage.vercel.app/company-${i + 1}.svg`}
-                    alt={`Company ${i + 1}`}
-                    className="h-8 object-contain"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
     </>
   );
-} 
+}

@@ -8,11 +8,13 @@ import { WebsitePricing } from "@/components/website/pricing";
 import { WebsiteFAQs } from "@/components/website/faqs";
 import { CTA2 } from "@/components/website/cta-2";
 import { CTA4 } from "@/components/website/cta-4";
+import { CompanyLogos } from "@/components/website/company-logos";
 
 export default function WebsiteHomepage() {
   return (
     <main>
       <WebsiteHero />
+      <CompanyLogos />
       <WebsiteFeatures />
       <HowItWorks />
       <WebsiteTestimonials />

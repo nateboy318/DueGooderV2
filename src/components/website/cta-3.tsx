@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 export function CTA3() {
   const { theme } = useTheme();
@@ -74,15 +75,19 @@ export function CTA3() {
           <div className="relative">
             <div className="aspect-square overflow-hidden rounded-[2rem] bg-primary-foreground/10">
               {theme === 'dark' ? (
-                <img
-                  src="https://startup-template-sage.vercel.app/dashboard-dark.png"
-                  alt="Dashboard Preview"
+                <Image
+                  src="https://picsum.photos/800/800?random=1"
+                  alt="Dashboard Preview (Dark)"
+                  width={800}
+                  height={800}
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <img
-                  src="https://startup-template-sage.vercel.app/dashboard-light.png"
-                  alt="Dashboard Preview"
+                <Image
+                  src="https://picsum.photos/800/800?random=2"
+                  alt="Dashboard Preview (Light)"
+                  width={800}
+                  height={800}
                   className="h-full w-full object-cover"
                 />
               )}

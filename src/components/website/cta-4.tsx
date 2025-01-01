@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 
 const benefits = [
   "Free 7-day trial",
@@ -58,17 +59,21 @@ export function CTA4() {
             {/* Testimonial */}
             <figure className="mt-12">
               <blockquote className="text-lg font-medium leading-8">
-                "This platform has completely transformed how we handle our data
+                &ldquo;This platform has completely transformed how we handle our data
                 processing. The AI-powered insights have been a game-changer for our
-                business."
+                business.&rdquo;
               </blockquote>
               <figcaption className="mt-4">
                 <div className="flex items-center gap-4">
-                  <img
-                    className="h-12 w-12 rounded-full object-cover"
-                    src="https://i.pravatar.cc/150?img=50"
-                    alt="Sarah Chen"
-                  />
+                  <div className="relative h-12 w-12 overflow-hidden rounded-full">
+                    <Image
+                      src="https://picsum.photos/150/150?random=3"
+                      alt="Sarah Chen"
+                      width={150}
+                      height={150}
+                      className="object-cover"
+                    />
+                  </div>
                   <div>
                     <div className="font-medium">Sarah Chen</div>
                     <div className="text-sm text-muted-foreground">
