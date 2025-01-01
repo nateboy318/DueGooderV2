@@ -1,60 +1,86 @@
 'use client';
 
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Mail, MapPin, Phone } from 'lucide-react';
-import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useState } from "react";
+import { appConfig } from "@/lib/config";
+import { Mail, MapPin, Phone } from "lucide-react";
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  company: z.string().optional(),
+  message: z.string().min(10, {
+    message: "Message must be at least 10 characters.",
+  }),
+});
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      company: "",
+      message: "",
+    },
+  });
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      setIsSubmitting(true);
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(values),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit');
+        throw new Error("Failed to submit form");
       }
-      
-      toast.success('Message sent successfully!');
-      setFormData({ name: '', email: '', message: '' });
+
+      toast.success("Thank you for your message! We&apos;ll get back to you soon.");
+      form.reset();
     } catch {
-      toast.error('Failed to send message. Please try again.');
+      toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   return (
     <div className="min-h-screen">
-      {/* Header Section */}
-      <section className="relative w-full py-20 overflow-hidden bg-gradient-to-br from-orange-600 via-orange-500 to-orange-600 text-white">
+      {/* Hero Section */}
+      <section className="relative w-full overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary py-20 text-primary-foreground">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff33_1px,transparent_1px),linear-gradient(to_bottom,#ffffff33_1px,transparent_1px)] bg-[size:14px_14px]" />
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-600/50 via-transparent to-orange-600/50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/50 via-transparent to-primary/50" />
         </div>
         <div className="container relative mx-auto px-4">
-          <div className="text-center space-y-4">
-            <h1 className="text-3xl md:text-5xl font-bold">Get in Touch</h1>
-            <p className="text-xl text-white/90 max-w-[600px] mx-auto">
+          <div className="mx-auto max-w-2xl space-y-4 text-center">
+            <h1 className="text-3xl font-bold md:text-5xl">Get in Touch</h1>
+            <p className="text-xl text-primary-foreground/90">
               Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
             </p>
           </div>
@@ -64,12 +90,12 @@ export default function ContactPage() {
       {/* Contact Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
+          <div className="mx-auto grid max-w-6xl gap-16 md:grid-cols-2">
             {/* Contact Information */}
             <div className="space-y-12">
               <div>
-                <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
-                <p className="text-gray-600 mb-8">
+                <h2 className="mb-6 text-2xl font-bold">Contact Information</h2>
+                <p className="mb-8 text-muted-foreground">
                   Fill up the form and our Team will get back to you within 24 hours.
                 </p>
               </div>
@@ -79,34 +105,34 @@ export default function ContactPage() {
                   {
                     icon: Phone,
                     title: "Call Us",
-                    details: ["+91 9877110677"],
+                    details: [appConfig.legal.phone],
                   },
                   {
                     icon: Mail,
                     title: "Email Us",
-                    details: ["ssent.hq@gmail.com"],
+                    details: [appConfig.legal.email],
                   },
                   {
                     icon: MapPin,
                     title: "Visit Us",
                     details: [
-                      "SS Enterprises",
-                      "Plot No 337, Workyard",
-                      "Phase 2, Industrial Business & Park",
-                      "Chandigarh, India, 160002",
+                      appConfig.projectName,
+                      appConfig.legal.address.street,
+                      `${appConfig.legal.address.city}, ${appConfig.legal.address.state}`,
+                      `${appConfig.legal.address.postalCode}, ${appConfig.legal.address.country}`,
                     ],
                   },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center">
-                        <item.icon className="w-6 h-6 text-orange-600" />
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                        <item.icon className="h-6 w-6 text-primary" />
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-1">{item.title}</h3>
+                      <h3 className="mb-1 text-lg font-semibold">{item.title}</h3>
                       {item.details.map((detail, j) => (
-                        <p key={j} className="text-gray-600">{detail}</p>
+                        <p key={j} className="text-muted-foreground">{detail}</p>
                       ))}
                     </div>
                   </div>
@@ -115,60 +141,84 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Form */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Your name"
-                    className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+            <div className="rounded-2xl border bg-card p-8 shadow-lg">
+              <h2 className="mb-6 text-2xl font-bold">Send us a Message</h2>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="John Doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    type="email"
-                    id="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="your@email.com"
-                    className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="email"
+                            placeholder="john@example.com"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    required
-                    rows={4}
-                    value={formData.message}
-                    onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                    placeholder="How can we help you?"
-                    className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  <FormField
+                    control={form.control}
+                    name="company"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Acme Inc." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={cn(
-                    "w-full",
-                    "bg-orange-600 hover:bg-orange-700",
-                    "text-white font-medium",
-                    "transition-colors"
-                  )}
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </Button>
-              </form>
+                  <FormField
+                    control={form.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Message</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tell us how we can help..."
+                            className="min-h-[120px] resize-y"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    size="lg"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
+              </Form>
             </div>
           </div>
         </div>
