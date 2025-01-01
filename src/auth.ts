@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/nodemailer";
-
+import { type EmailConfig } from "next-auth/providers/email";
 import { db } from "./db";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import {
@@ -11,9 +10,21 @@ import {
   verificationTokens,
 } from "./db/schema/user";
 
+const emailProvider: EmailConfig = {
+  id: "email",
+  type: "email",
+  name: "Email",
+  async sendVerificationRequest(params) {
+    if (process.env.NODE_ENV === "development") {
+      console.log("Sending email: ", JSON.stringify(params, null, 2));
+    }
+  },
+};
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/sign-in",
+    signOut: "/sign-out",
   },
   adapter: DrizzleAdapter(db, {
     usersTable: users,
@@ -26,23 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
-    EmailProvider({
-      id: "email",
-      server: {
-        host: process.env.EMAIL_SERVER_HOST || "localhost",
-        port: process.env.EMAIL_SERVER_PORT || 1025,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER || "user",
-          pass: process.env.EMAIL_SERVER_PASSWORD || "pass",
-        },
-      },
-      from: process.env.EMAIL_FROM,
-      sendVerificationRequest(params) {
-        if (process.env.NODE_ENV === "development") {
-          console.log("Sending email: ", JSON.stringify(params, null, 2));
-        }
-      },
-    }),
-    // TODO: Add more providers here as needed
+    emailProvider,
+    // TIP: Add more providers here as needed like Apple, Facebook, etc.
   ],
 });
