@@ -11,4 +11,5 @@ export const contacts = pgTable("contact", {
   createdAt: timestamp("created_at", { mode: "date" })
     .notNull()
     .$defaultFn(() => new Date()),
+  readAt: timestamp("read_at", { mode: "date" }),
 });

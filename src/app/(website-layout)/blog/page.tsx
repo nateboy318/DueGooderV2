@@ -52,7 +52,7 @@ export default async function BlogListPage() {
                 <h2 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
                   {blog.frontmatter.title}
                 </h2>
-                <p className="text-gray-600 mb-4 line-clamp-2">
+                <p className="text-foreground/60 mb-4 line-clamp-2">
                   {blog.frontmatter.description}
                 </p>
 
@@ -61,7 +61,7 @@ export default async function BlogListPage() {
                   {blog.frontmatter.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full"
+                      className="inline-flex items-center text-xs text-foreground/60 bg-foreground/10 px-3 py-1 rounded-full"
                     >
                       <Tag className="w-3 h-3 mr-1" />
                       {tag}

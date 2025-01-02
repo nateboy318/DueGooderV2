@@ -25,11 +25,34 @@ export async function middleware(req: NextRequest) {
     }
 
     return NextResponse.redirect(
-      new URL(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`, req.url)
+      new URL(
+        `/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+        req.url
+      )
     );
   }
+
+  if (req.nextUrl.pathname.startsWith("/super-admin")) {
+    const adminEmails = process.env.SUPER_ADMIN_EMAILS?.split(",");
+    const currentUserEmail = session?.user?.email;
+    if (!currentUserEmail || !adminEmails?.includes(currentUserEmail)) {
+      return NextResponse.redirect(
+        new URL("/sign-in?error=unauthorized", req.url)
+      );
+    }
+    // Allow access to super admin pages
+    return NextResponse.next();
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/app/:path*", "/sign-in", "/sign-up", "/sign-out"],
+  matcher: [
+    "/app/:path*",
+    "/sign-in",
+    "/sign-up",
+    "/sign-out",
+    "/super-admin/:path*",
+  ],
 };
