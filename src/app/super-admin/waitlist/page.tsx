@@ -71,6 +71,7 @@ export default function WaitlistPage() {
       toast.success("Entry deleted successfully");
       mutate(); // Refresh the data
     } catch (error) {
+      console.error("Failed to delete entry", error);
       toast.error("Failed to delete entry");
     }
   };
@@ -97,6 +98,7 @@ export default function WaitlistPage() {
       
       toast.success("Waitlist exported successfully");
     } catch (error) {
+      console.error("Failed to export waitlist", error);
       toast.error("Failed to export waitlist");
     } finally {
       setIsExporting(false);

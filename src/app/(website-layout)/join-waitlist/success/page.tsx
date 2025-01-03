@@ -15,9 +15,9 @@ export default function WaitlistSuccessPage() {
         <div className="mb-6 flex justify-center">
           <CheckCircle className="h-16 w-16 text-green-500" />
         </div>
-        <h1 className="mb-2 text-3xl font-bold">You're on the Waitlist!</h1>
+        <h1 className="mb-2 text-3xl font-bold">You&apos;re on the Waitlist!</h1>
         <p className="mb-8 text-muted-foreground">
-          Thank you for joining. We'll notify you via email when our platform is ready.
+          Thank you for joining. We&apos;ll notify you via email when our platform is ready.
         </p>
         <Button asChild>
           <Link href="/">Return Home</Link>

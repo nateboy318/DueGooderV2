@@ -65,7 +65,7 @@ export function WebsiteTestimonials() {
               className="flex flex-col justify-between rounded-3xl bg-background p-8 shadow-sm ring-1 ring-border/60"
             >
               <blockquote className="text-lg leading-relaxed">
-                "{testimonial.quote}"
+                &quot;{testimonial.quote}&quot;
               </blockquote>
               <div className="mt-8 flex items-center gap-4">
                 <img

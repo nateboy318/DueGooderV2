@@ -4,9 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 import APIError from "@/lib/api/errors";
 import getOrCreateUser from "@/lib/users/getOrCreateUser";
 import downgradeToDefaultPlan from "@/lib/plans/downgradeToDefaultPlan";
-import { plans } from "@/db/schema/plans";
-import { eq } from "drizzle-orm";
-import { db } from "@/db";
 
 async function handler(req: NextRequest) {
   if (req.method === "POST") {
@@ -42,7 +39,7 @@ async function handler(req: NextRequest) {
       eventType = body.type;
     }
 
-    const { user, created } = await getOrCreateUser({
+    const { user } = await getOrCreateUser({
       emailId: data.object.customer_email,
       name: data.object.customer_name,
     });
@@ -57,15 +54,6 @@ async function handler(req: NextRequest) {
 
           console.log("Received event", eventType);
           console.log("Data", object);
-          const planId = await db
-            .select()
-            .from(plans)
-            .where(
-              eq(
-                plans.monthlyStripePriceId,
-                object.subscription?.items.data[0].price.id
-              )
-            );
           break;
         case "invoice.paid":
           // Continue to provision the subscription as payments continue to be made.

@@ -63,7 +63,7 @@ export function WebsitePricing() {
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Choose the plan that's right for you
+            Choose the plan that&apos;s right for you
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Simple, transparent pricing that grows with you. Try any plan free for

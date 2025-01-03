@@ -10,11 +10,11 @@ import { cn } from "@/lib/utils";
 import { CTA2 } from "@/components/website/cta-2";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const slug = await params.slug;
+  const { slug } = await params;
   const blog = await getBlogBySlug(slug);
 
   if (!blog) {
@@ -64,16 +64,14 @@ export async function generateStaticParams() {
 }
 
 async function UseCaseDetailPage({ params }: Props) {
-  const blog = await getBlogBySlug(params.slug);
+  const { slug } = await params;
+  const blog = await getBlogBySlug(slug);
 
   if (!blog) {
     notFound();
   }
 
-  const relatedBlogs = await getRelatedBlogs(
-    params.slug,
-    blog.frontmatter.tags
-  );
+  const relatedBlogs = await getRelatedBlogs(slug, blog.frontmatter.tags);
 
   return (
     <div className="max-w-6xl mx-auto py-6 md:py-10 px-4">

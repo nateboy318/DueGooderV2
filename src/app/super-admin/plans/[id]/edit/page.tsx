@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { PlanForm } from "@/components/forms/plan-form";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -8,16 +8,11 @@ import Link from "next/link";
 import useSWR from "swr";
 import type { PlanFormValues } from "@/lib/validations/plan.schema";
 
-interface EditPlanPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function EditPlanPage({ params }: EditPlanPageProps) {
+export default function EditPlanPage() {
+  const { id } = useParams();
   const router = useRouter();
   const { data: plan, error } = useSWR<PlanFormValues>(
-    `/api/super-admin/plans/${params.id}`
+    `/api/super-admin/plans/${id}`
   );
 
   const handleSubmit = async (data: PlanFormValues) => {
@@ -27,7 +22,7 @@ export default function EditPlanPage({ params }: EditPlanPageProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...data, id: params.id }),
+        body: JSON.stringify({ ...data, id }),
       });
 
       if (!response.ok) {
@@ -49,12 +44,7 @@ export default function EditPlanPage({ params }: EditPlanPageProps) {
           <p className="text-sm text-muted-foreground">
             Failed to load plan details. Please try again.
           </p>
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="mt-4"
-          >
+          <Button variant="ghost" size="sm" asChild className="mt-4">
             <Link href="/super-admin/plans">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Plans
@@ -97,4 +87,4 @@ export default function EditPlanPage({ params }: EditPlanPageProps) {
       </div>
     </div>
   );
-} 
+}
