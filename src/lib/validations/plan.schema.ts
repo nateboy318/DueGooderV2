@@ -30,7 +30,6 @@ export const planFormSchema = z.object({
   onetimeStripePriceId: z.string().nullable(),
   onetimeLemonSqueezyProductId: z.string().nullable(),
 
-  featuresList: z.array(z.string()).min(1, "At least one feature is required"),
   quotas: quotaSchema,
 });
 

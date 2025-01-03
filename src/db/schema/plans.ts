@@ -51,6 +51,5 @@ export const plans = pgTable("plans", {
   onetimeStripePriceId: text("onetimeStripePriceId"),
   onetimeLemonSqueezyProductId: text("onetimeLemonSqueezyProductId"),
 
-  featuresList: jsonb("featuresList").$type<string[]>(),
   quotas: jsonb("quotas").$type<Quotas>(),
 });

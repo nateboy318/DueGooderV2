@@ -33,9 +33,6 @@ export function PlanForm({
   submitLabel = "Save Plan",
 }: PlanFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [features, setFeatures] = useState<string[]>(
-    initialData?.featuresList || [""]
-  );
 
   const form = useForm<PlanFormValues>({
     resolver: zodResolver(planFormSchema),
@@ -52,7 +49,6 @@ export function PlanForm({
       yearlyPriceAnchor: 0,
       onetimePrice: 0,
       onetimePriceAnchor: 0,
-      featuresList: [""],
       quotas: {
         canUseApp: false,
         numberOfThings: 0,
@@ -60,19 +56,6 @@ export function PlanForm({
       },
     },
   });
-
-  const addFeature = () => {
-    setFeatures([...features, ""]);
-  };
-
-  const removeFeature = (index: number) => {
-    const newFeatures = features.filter((_, i) => i !== index);
-    setFeatures(newFeatures);
-    form.setValue(
-      "featuresList",
-      newFeatures.filter((f) => f !== "")
-    );
-  };
 
   const handleSubmit = async (data: PlanFormValues) => {
     try {
@@ -262,199 +245,156 @@ export function PlanForm({
                     />
                   </div>
                 </div>
-              )}    
+              )}
 
               {hasYearlyPricing && (
                 <div className="space-y-4">
                   <h4 className="font-medium">Yearly</h4>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="yearlyPrice"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Price (Cents)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="yearlyPriceAnchor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Anchor Price (Cents)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="yearlyStripePriceId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Stripe Price ID</FormLabel>
-                        <FormControl>
-                          <Input {...field} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="yearlyLemonSqueezyProductId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>LemonSqueezy Product ID</FormLabel>
-                        <FormControl>
-                          <Input {...field} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="yearlyPrice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Price (Cents)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="yearlyPriceAnchor"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Anchor Price (Cents)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="yearlyStripePriceId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Stripe Price ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="yearlyLemonSqueezyProductId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>LemonSqueezy Product ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               )}
 
               {hasOnetimePricing && (
                 <div className="space-y-4">
                   <h4 className="font-medium">One-time</h4>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="onetimePrice"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Price (Cents)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="onetimePriceAnchor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Anchor Price (Cents)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="onetimeStripePriceId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Stripe Price ID</FormLabel>
-                        <FormControl>
-                          <Input {...field} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="onetimeLemonSqueezyProductId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>LemonSqueezy Product ID</FormLabel>
-                        <FormControl>
-                          <Input {...field} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="onetimePrice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Price (Cents)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="onetimePriceAnchor"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Anchor Price (Cents)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="onetimeStripePriceId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Stripe Price ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="onetimeLemonSqueezyProductId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>LemonSqueezy Product ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               )}
             </div>
-          </div>
-        </div>
-
-        {/* Features */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <h3 className="text-lg font-medium">Features</h3>
-              <p className="text-sm text-muted-foreground">
-                Human readable features are displayed to users in the order they
-                are added.
-              </p>
-            </div>
-            <Button type="button" variant="outline" onClick={addFeature}>
-              Add Feature
-            </Button>
-          </div>
-          <div className="space-y-2">
-            {features.map((_, index) => (
-              <div key={index} className="flex gap-2">
-                <FormField
-                  control={form.control}
-                  name={`featuresList.${index}`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        <Input placeholder="Feature description" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {features.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => removeFeature(index)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-            ))}
           </div>
         </div>
 
