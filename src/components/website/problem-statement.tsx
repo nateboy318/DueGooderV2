@@ -1,55 +1,66 @@
-import { ArrowRight } from "lucide-react";
-
-interface JourneyStep {
-  emoji: string;
-  text: string;
-}
+import { ArrowDown } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import Link from "next/link";
 
 export function ProblemStatement() {
-  const steps: JourneyStep[] = [
-    {
-      emoji: "👨‍💻",
-      text: "8 hrs to add Stripe",
-    },
-    {
-      emoji: "😪",
-      text: "Struggle to find time",
-    },
-    {
-      emoji: "😔",
-      text: "Quit project",
-    },
-  ];
-
   return (
-    <section className="py-24 px-4 md:px-6 lg:px-8 bg-background">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6 text-foreground">
-          80% of startups fail because<br />founders never launch
-        </h2>
-        
-        <p className="text-xl md:text-2xl text-center mb-16 text-muted-foreground">
-          Emails, DNS records, user authentication... There&apos;s so much going on.
-        </p>
-
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-          {steps.map((step, index) => (
-            <div key={index} className="flex items-center gap-8">
-              <div className="flex flex-col items-center gap-3 bg-card dark:bg-card/80 p-6 rounded-lg border border-border shadow-sm">
-                <span className="text-4xl md:text-5xl" role="img" aria-label="emoji">
-                  {step.emoji}
-                </span>
-                <span className="text-lg md:text-xl text-center text-card-foreground">
-                  {step.text}
-                </span>
-              </div>
-              {index < steps.length - 1 && (
-                <ArrowRight className="hidden md:block w-8 h-8 text-muted-foreground" />
-              )}
-            </div>
-          ))}
-        </div>
+    <section className="py-24 px-4 md:px-6 lg:px-8 bg-background w-full">
+      <div className="flex flex-col gap-4 max-w-3xl mx-auto relative justify-center items-center w-full">
+        <Card className="bg-red-200 dark:bg-red-800/50 text-foreground text-left md:text-center border-none w-fit">
+          <CardHeader>
+            <CardTitle>I&apos;ve quit 10+ times!</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg mb-4">
+              I wanted to build simple apps to launch over the weekend. I was so
+              frustrated implementing billing, stripe, auth, quota management,
+              etc. I just gave up.
+            </p>
+            <hr className="my-4 border-foreground/20" />
+            <ul className="list-disc list-inside mb-4">
+              <li>
+                <b>4 hrs+</b> to set up emails
+              </li>
+              <li>
+                <b>6 hrs+</b> designing a landing page
+              </li>
+              <li>
+                <b>4 hrs+</b> to handle Stripe webhooks
+              </li>
+              <li>
+                <b>4 hrs+</b> for SEO tags
+              </li>
+              <li>
+                <b>4 hrs+</b> for setting up basic auth
+              </li>
+              <li>
+                <b>3 hrs+</b> for DNS records
+              </li>
+              <li>
+                <b>2 hrs+</b> for protected API routes
+              </li>
+              <li>
+                <b>10+ hrs+</b> for billing, quota management, etc.
+              </li>
+              <li>
+                <b>∞ hrs+</b> overthinking/clueless...
+              </li>
+            </ul>
+            <p className="text-lg mb-4">
+              <b>37+ hours of headaches</b>
+            </p>
+            <p className="text-lg">
+              <b>No inspiration or confidence for building the app</b>
+            </p>
+          </CardContent>
+        </Card>
+        <Link
+          href="/#features"
+          className="flex flex-row gap-2 items-center text-foreground/50 hover:text-foreground"
+        >
+          I knew there was a better way <ArrowDown className="w-4 h-4" />
+        </Link>
       </div>
     </section>
   );
-} 
+}

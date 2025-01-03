@@ -1,26 +1,23 @@
 "use client";
 
-import { Upload, Play, LineChart } from "lucide-react";
+import { Github, Code, Upload } from "lucide-react";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 
 const steps = [
   {
-    title: "Upload Your Data",
-    description:
-      "Simply upload your data to our secure platform. We support various file formats and data types to ensure a seamless integration with your existing systems.",
+    title: "Clone github repo",
+    description: "Simply clone the github repo and install the dependencies.",
+    icon: Github,
+  },
+  {
+    title: "Make changes to the code",
+    description: "Make changes to the code and test it locally.",
+    icon: Code,
+  },
+  {
+    title: "Deploy to Vercel",
+    description: "Deploy to Vercel and start marketing your product.",
     icon: Upload,
-  },
-  {
-    title: "Click Start",
-    description:
-      "Our advanced AI algorithms automatically process and analyze your data, extracting valuable insights and patterns that would be difficult to identify manually.",
-    icon: Play,
-  },
-  {
-    title: "Get Actionable Insights",
-    description:
-      "Receive clear, actionable insights and recommendations based on the AI analysis. Use these insights to make data-driven decisions and improve your business strategies.",
-    icon: LineChart,
   },
 ];
 
@@ -33,7 +30,7 @@ export function HowItWorks() {
             How it works
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Just 3 steps to get started with our AI-powered platform
+            Just 3 steps to get started with Indiekit (5 minutes)
           </p>
         </div>
 
@@ -71,14 +68,14 @@ export function HowItWorks() {
               className="dark:hidden block"
               animationStyle="top-in-bottom-out"
               videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-              thumbnailSrc="https://startup-template-sage.vercel.app/demo-light.png"
+              thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
               thumbnailAlt="Product Demo"
             />
             <HeroVideoDialog
               className="hidden dark:block"
               animationStyle="top-in-bottom-out"
               videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-              thumbnailSrc="https://startup-template-sage.vercel.app/demo-dark.png"
+              thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
               thumbnailAlt="Product Demo"
             />
           </div>
@@ -86,4 +83,4 @@ export function HowItWorks() {
       </div>
     </section>
   );
-} 
+}

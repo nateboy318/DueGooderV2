@@ -9,48 +9,76 @@ import {
 
 const faqs = [
   {
-    question: "What is acme.ai?",
+    question: "What is Indie Kit?",
     answer:
-      "Acme.ai is a cutting-edge AI platform designed to help businesses automate their workflows and improve productivity through advanced artificial intelligence solutions.",
+      "Indie Kit is a complete starter kit for indie hackers and startups that provides all the essential features needed to launch a SaaS product. It includes authentication, payment processing, email systems, background jobs, SEO optimization, and much more, all pre-configured and ready to use.",
   },
   {
-    question: "How can I get started with acme.ai?",
+    question: "What tech stack does Indie Kit use?",
     answer:
-      "Getting started is easy! Simply sign up for a free trial, no credit card required. You'll have immediate access to our platform and can start exploring our features right away.",
+      "Indie Kit is built with modern technologies including Next.js, TypeScript, TailwindCSS, Shadcn UI, Drizzle ORM, and more. For services, it integrates with industry standards like Stripe/Lemon Squeezy for payments, various email providers (Resend, SES, etc.), and Inngest for background jobs.",
   },
   {
-    question: "What types of AI models does acme.ai support?",
+    question: "Do I need to be an experienced developer to use Indie Kit?",
     answer:
-      "We support a wide range of AI models including natural language processing, computer vision, predictive analytics, and custom models tailored to your specific needs.",
+      "While some development experience is helpful, Indie Kit is designed to be accessible. The codebase is well-documented, follows best practices, and comes with detailed guides. We also provide a supportive Discord community where you can get help when needed.",
   },
   {
-    question: "Is acme.ai suitable for beginners in AI development?",
+    question: "Can I customize the design and features?",
     answer:
-      "Absolutely! Our platform is designed to be user-friendly for beginners while offering advanced capabilities for experienced users. We provide comprehensive documentation and support to help you get started.",
+      "Absolutely! Indie Kit provides a solid foundation that's fully customizable. All components are built with TailwindCSS and Shadcn UI, making it easy to modify the design. You can also add, remove, or modify features to match your specific needs.",
   },
   {
-    question: "What kind of support does acme.ai provide?",
+    question: "What kind of support is included?",
     answer:
-      "We offer 24/7 customer support, comprehensive documentation, video tutorials, and a community forum. Enterprise customers also get dedicated support and custom training.",
+      "Indie Kit comes with comprehensive documentation, integration guides, and access to our Discord community. You'll get support for technical issues, guidance on best practices, and can connect with other indie hackers building with the kit.",
+  },
+  {
+    question: "How does the payment integration work?",
+    answer:
+      "Indie Kit includes pre-built integrations with Stripe and Lemon Squeezy, handling both one-time payments and subscriptions. It includes features like plan management, usage quotas, and customer portals. PayPal integration is coming soon.",
+  },
+  {
+    question: "What about email functionality?",
+    answer:
+      "The kit includes a complete email system with beautiful, responsive templates built using react-email. It supports multiple providers (Resend, SES, Mailgun, etc.) and includes automated sequences for onboarding, notifications, and marketing.",
+  },
+  {
+    question: "How does Indie Kit handle SEO?",
+    answer:
+      "Indie Kit comes with built-in SEO optimization including automated sitemap generation, structured data (JSON-LD), Open Graph tags, and a complete blog structure using MDX. All UI components are also optimized for search engines.",
+  },
+  {
+    question: "What databases are supported?",
+    answer:
+      "Indie Kit supports PostgreSQL, MySQL, and MongoDB out of the box. It uses Drizzle ORM for type-safe database operations and includes features like automated migrations and connection pooling for better performance.",
+  },
+  {
+    question: "How much time can Indie Kit save me?",
+    answer:
+      "Based on our estimates, Indie Kit can save you 50+ hours of development time by providing pre-built features and integrations. This includes time saved on authentication (12h), payment processing (8h), email setup (4h), background jobs (7h), and more.",
   },
 ];
 
 export function WebsiteFAQs() {
   return (
-    <section className="bg-muted/40 py-16 sm:py-24">
+    <section className="bg-muted/40 py-16 sm:py-24" id="faq">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Frequently asked questions
+            Frequently Asked Questions
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Still have questions? Email us at{" "}
+            Can&apos;t find what you&apos;re looking for? Join our{" "}
             <a
-              href="mailto:support@acme.ai"
+              href="https://discord.gg/indiekit"
               className="font-medium text-primary hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              support@acme.ai
-            </a>
+              Discord community
+            </a>{" "}
+            for support
           </p>
         </div>
         <div className="mx-auto mt-12 max-w-3xl">
