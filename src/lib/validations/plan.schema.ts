@@ -1,10 +1,13 @@
+import { quotaSchema } from "@/db/schema/plans";
 import { z } from "zod";
 
 export const planFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   codename: z.string().min(1, "Codename is required"),
   default: z.boolean().default(false),
-  isLifetime: z.boolean().default(false),
+  hasOnetimePricing: z.boolean().default(false),
+  hasMonthlyPricing: z.boolean().default(false),
+  hasYearlyPricing: z.boolean().default(false),
 
   monthlyPrice: z.number().min(0, "Monthly price must be non-negative"),
   monthlyPriceAnchor: z
@@ -28,11 +31,7 @@ export const planFormSchema = z.object({
   onetimeLemonSqueezyProductId: z.string().nullable(),
 
   featuresList: z.array(z.string()).min(1, "At least one feature is required"),
-  quotas: z.object({
-    canDoSomething: z.boolean(),
-    numberOfThings: z.number().min(0),
-    somethingElse: z.string(),
-  }),
+  quotas: quotaSchema,
 });
 
 export type PlanFormValues = z.infer<typeof planFormSchema>;

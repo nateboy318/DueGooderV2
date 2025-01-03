@@ -9,14 +9,11 @@ export const GET = withSuperAdminAuthRequired(async (req, context) => {
     const plan = await db
       .select()
       .from(plans)
-      .where(eq(plans.id, context.params.id))
+      .where(eq(plans.id, (await context.params).id))
       .limit(1);
 
     if (!plan[0]) {
-      return NextResponse.json(
-        { error: "Plan not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Plan not found" }, { status: 404 });
     }
 
     return NextResponse.json(plan[0]);
@@ -27,4 +24,4 @@ export const GET = withSuperAdminAuthRequired(async (req, context) => {
       { status: 500 }
     );
   }
-}); 
+});

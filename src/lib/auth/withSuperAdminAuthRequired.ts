@@ -21,25 +21,13 @@ const withSuperAdminAuthRequired = (handler: WithManagerHandler) => {
   ) => {
     const session = await auth();
 
-    if (!session) {
+    if (!session || !session.user || !session.user.id || !session.user.email) {
       return NextResponse.json(
         {
           error: "Unauthorized",
           message: "You are not authorized to perform this action",
         },
         { status: 401 }
-      );
-    }
-
-    // Check if user is a super admin by checking
-    // in env variable
-    if (!session.user?.email) {
-      return NextResponse.json(
-        {
-          error: "Unauthorized",
-          message: "Only super admins can access this resource",
-        },
-        { status: 403 }
       );
     }
 

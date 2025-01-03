@@ -9,6 +9,7 @@ import {
   users,
   verificationTokens,
 } from "./db/schema/user";
+import onUserCreate from "./lib/users/onUserCreate";
 
 const emailProvider: EmailConfig = {
   id: "email",
@@ -22,17 +23,31 @@ const emailProvider: EmailConfig = {
   },
 };
 
+const adapter = DrizzleAdapter(db, {
+  usersTable: users,
+  accountsTable: accounts,
+  sessionsTable: sessions,
+  verificationTokensTable: verificationTokens,
+});
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/sign-in",
     signOut: "/sign-out",
   },
-  adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
+  adapter: {
+    ...adapter,
+    createUser: async (user) => {
+      if (!adapter.createUser) {
+        throw new Error("Adapter is not initialized");
+      }
+      const newUser = await adapter.createUser(user);
+      // Update the user with the default plan
+      await onUserCreate(newUser);
+
+      return newUser;
+    },
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,

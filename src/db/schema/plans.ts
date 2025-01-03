@@ -9,12 +9,18 @@ import {
 import { z } from "zod";
 
 export const quotaSchema = z.object({
-  canDoSomething: z.boolean(),
+  canUseApp: z.boolean().default(true),
   numberOfThings: z.number(),
   somethingElse: z.string(),
 });
 
 export type Quotas = z.infer<typeof quotaSchema>;
+
+export const defaultQuotas: Quotas = {
+  canUseApp: false,
+  numberOfThings: 10,
+  somethingElse: "something",
+};
 
 export const plans = pgTable("plans", {
   id: text("id")
@@ -24,7 +30,10 @@ export const plans = pgTable("plans", {
   codename: text("codename").unique(),
   default: boolean("default").default(false),
 
-  isLifetime: boolean("isLifetime").default(false),
+  hasOnetimePricing: boolean("hasOnetimePricing").default(false),
+  hasMonthlyPricing: boolean("hasMonthlyPricing").default(false),
+  hasYearlyPricing: boolean("hasYearlyPricing").default(false),
+
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 
   monthlyPrice: integer("monthlyPrice"),

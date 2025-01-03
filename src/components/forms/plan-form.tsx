@@ -43,7 +43,9 @@ export function PlanForm({
       name: "",
       codename: "",
       default: false,
-      isLifetime: false,
+      hasOnetimePricing: false,
+      hasMonthlyPricing: false,
+      hasYearlyPricing: false,
       monthlyPrice: 0,
       monthlyPriceAnchor: 0,
       yearlyPrice: 0,
@@ -52,7 +54,7 @@ export function PlanForm({
       onetimePriceAnchor: 0,
       featuresList: [""],
       quotas: {
-        canDoSomething: false,
+        canUseApp: false,
         numberOfThings: 0,
         somethingElse: "",
       },
@@ -80,6 +82,10 @@ export function PlanForm({
       setIsSubmitting(false);
     }
   };
+
+  const hasOnetimePricing = form.watch("hasOnetimePricing");
+  const hasMonthlyPricing = form.watch("hasMonthlyPricing");
+  const hasYearlyPricing = form.watch("hasYearlyPricing");
 
   return (
     <Form {...form}>
@@ -135,7 +141,7 @@ export function PlanForm({
             />
             <FormField
               control={form.control}
-              name="isLifetime"
+              name="hasOnetimePricing"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2">
                   <FormControl>
@@ -144,7 +150,37 @@ export function PlanForm({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="!mt-0">Lifetime Access</FormLabel>
+                  <FormLabel className="!mt-0">One-time Pricing</FormLabel>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="hasMonthlyPricing"
+              render={({ field }) => (
+                <FormItem className="flex items-center gap-2">
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="!mt-0">Monthly Pricing</FormLabel>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="hasYearlyPricing"
+              render={({ field }) => (
+                <FormItem className="flex items-center gap-2">
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="!mt-0">Yearly Pricing</FormLabel>
                 </FormItem>
               )}
             />
@@ -154,80 +190,83 @@ export function PlanForm({
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Pricing</h3>
             <div className="grid gap-4">
-              <div className="space-y-4">
-                <h4 className="font-medium">Monthly</h4>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="monthlyPrice"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Price (Cents)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="monthlyPriceAnchor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Anchor Price (Cents)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              {hasMonthlyPricing && (
+                <div className="space-y-4">
+                  <h4 className="font-medium">Monthly</h4>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="monthlyPrice"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Price (Cents)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="monthlyPriceAnchor"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Anchor Price (Cents)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="monthlyStripePriceId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Stripe Price ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="monthlyLemonSqueezyProductId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>LemonSqueezy Product ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="monthlyStripePriceId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Stripe Price ID</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="monthlyLemonSqueezyProductId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>LemonSqueezy Product ID</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
+              )}    
 
-              <div className="space-y-4">
-                <h4 className="font-medium">Yearly</h4>
+              {hasYearlyPricing && (
+                <div className="space-y-4">
+                  <h4 className="font-medium">Yearly</h4>
                 <div className="grid gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
@@ -296,10 +335,12 @@ export function PlanForm({
                     )}
                   />
                 </div>
-              </div>
+                </div>
+              )}
 
-              <div className="space-y-4">
-                <h4 className="font-medium">One-time</h4>
+              {hasOnetimePricing && (
+                <div className="space-y-4">
+                  <h4 className="font-medium">One-time</h4>
                 <div className="grid gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
@@ -368,7 +409,8 @@ export function PlanForm({
                     )}
                   />
                 </div>
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -427,7 +469,7 @@ export function PlanForm({
           <div className="grid gap-4 md:grid-cols-3">
             <FormField
               control={form.control}
-              name="quotas.canDoSomething"
+              name="quotas.canUseApp"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2">
                   <FormControl>
@@ -436,10 +478,11 @@ export function PlanForm({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="!mt-0">Can Do Something</FormLabel>
+                  <FormLabel className="!mt-0">Can Use App</FormLabel>
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="quotas.numberOfThings"
