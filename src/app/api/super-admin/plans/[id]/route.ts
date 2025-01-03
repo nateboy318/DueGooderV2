@@ -5,11 +5,12 @@ import { plans } from "@/db/schema/plans";
 import { eq } from "drizzle-orm";
 
 export const GET = withSuperAdminAuthRequired(async (req, context) => {
+  const { id } = await context.params as { id: string };
   try {
     const plan = await db
       .select()
       .from(plans)
-      .where(eq(plans.id, (await context.params).id))
+      .where(eq(plans.id, id))
       .limit(1);
 
     if (!plan[0]) {

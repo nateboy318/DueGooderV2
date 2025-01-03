@@ -32,7 +32,6 @@ export const GET = withSuperAdminAuthRequired(async (req) => {
         name: users.name,
         email: users.email,
         image: users.image,
-        active: users.active,
         createdAt: users.createdAt,
       })
       .from(users)

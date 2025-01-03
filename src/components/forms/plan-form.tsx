@@ -241,7 +241,7 @@ export function PlanForm({
                         <FormItem>
                           <FormLabel>Stripe Price ID</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input {...field} value={field.value || ""} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -254,7 +254,7 @@ export function PlanForm({
                         <FormItem>
                           <FormLabel>LemonSqueezy Product ID</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input {...field} value={field.value || ""} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -315,7 +315,7 @@ export function PlanForm({
                       <FormItem>
                         <FormLabel>Stripe Price ID</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -328,7 +328,7 @@ export function PlanForm({
                       <FormItem>
                         <FormLabel>LemonSqueezy Product ID</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -389,7 +389,7 @@ export function PlanForm({
                       <FormItem>
                         <FormLabel>Stripe Price ID</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -402,7 +402,7 @@ export function PlanForm({
                       <FormItem>
                         <FormLabel>LemonSqueezy Product ID</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

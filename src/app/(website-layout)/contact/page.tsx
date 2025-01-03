@@ -32,10 +32,12 @@ const formSchema = z.object({
   }),
 });
 
+type ContactFormValues = z.infer<typeof formSchema>;
+
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm({
+  const form = useForm<ContactFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -45,7 +47,7 @@ export default function ContactPage() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: ContactFormValues) {
     try {
       setIsSubmitting(true);
       const response = await fetch("/api/contact", {
