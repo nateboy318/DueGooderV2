@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { plans } from "@/db/schema/plans";
+import { createCheckoutSession } from "@/lib/lemonsqueezy";
 import {
   PlanProvider,
   PlanType,
@@ -51,7 +52,7 @@ async function SubscribePage({
         return notFound();
       }
       //  Create checkout session
-      const checkoutSession = await stripe.checkout.sessions.create({
+      const stripeCheckoutSession = await stripe.checkout.sessions.create({
         mode: type === PlanType.ONETIME ? "payment" : "subscription",
         line_items: [
           {
@@ -64,12 +65,37 @@ async function SubscribePage({
         cancel_url: `${process.env.NEXT_PUBLIC_URL}/subscribe/cancel`,
       });
 
-      if (!checkoutSession.url) {
+      if (!stripeCheckoutSession.url) {
         throw new Error("Checkout session URL not found");
       }
-      return redirect(checkoutSession.url);
+      return redirect(stripeCheckoutSession.url);
     case PlanProvider.LEMON_SQUEEZY:
-      return <div>Lemon Squeezy is not implemented yet</div>;
+      const lemonsqueezyKey: keyof typeof plan | null =
+        type === PlanType.MONTHLY
+          ? "monthlyLemonSqueezyVariantId"
+          : type === PlanType.YEARLY
+            ? "yearlyLemonSqueezyVariantId"
+            : type === PlanType.ONETIME
+              ? "onetimeLemonSqueezyVariantId"
+              : null;
+
+      if (!lemonsqueezyKey) {
+        return notFound();
+      }
+      const lemonsqueezyVariantId = plan[lemonsqueezyKey];
+      if (!lemonsqueezyVariantId) {
+        return notFound();
+      }
+
+      const checkoutSession = await createCheckoutSession({
+        variantId: lemonsqueezyVariantId,
+        customerEmail: session?.user?.email ?? "",
+        
+      });
+      if (!checkoutSession.data.url) {
+        throw new Error("Checkout session URL not found");
+      }
+      return redirect(checkoutSession.data.url);
     default:
       return <div>Provider not found</div>;
   }

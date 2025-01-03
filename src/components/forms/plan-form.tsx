@@ -232,7 +232,7 @@ export function PlanForm({
                     />
                     <FormField
                       control={form.control}
-                      name="monthlyLemonSqueezyProductId"
+                      name="monthlyLemonSqueezyVariantId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>LemonSqueezy Product ID</FormLabel>
@@ -306,7 +306,7 @@ export function PlanForm({
                     />
                     <FormField
                       control={form.control}
-                      name="yearlyLemonSqueezyProductId"
+                      name="yearlyLemonSqueezyVariantId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>LemonSqueezy Product ID</FormLabel>
@@ -380,7 +380,7 @@ export function PlanForm({
                     />
                     <FormField
                       control={form.control}
-                      name="onetimeLemonSqueezyProductId"
+                      name="onetimeLemonSqueezyVariantId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>LemonSqueezy Product ID</FormLabel>
