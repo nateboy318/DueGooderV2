@@ -119,9 +119,9 @@ export default function MessagesPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <h1 className="text-2xl font-bold">Messages</h1>
-        <div className="relative w-64">
+        <div className="relative w-full sm:w-64">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search messages..."
@@ -132,15 +132,15 @@ export default function MessagesPage() {
         </div>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>From</TableHead>
-              <TableHead>Company</TableHead>
-              <TableHead>Message</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead className="min-w-[200px]">From</TableHead>
+              <TableHead className="min-w-[120px]">Company</TableHead>
+              <TableHead className="min-w-[200px]">Message</TableHead>
+              <TableHead className="min-w-[120px]">Date</TableHead>
+              <TableHead className="min-w-[100px]">Status</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -201,13 +201,13 @@ export default function MessagesPage() {
       </div>
 
       {data?.pagination && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-muted-foreground text-center sm:text-left">
             Showing {(page - 1) * limit + 1} to{" "}
             {Math.min(page * limit, data.pagination.total)} of{" "}
             {data.pagination.total} messages
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Button
               variant="outline"
               size="sm"
@@ -229,7 +229,7 @@ export default function MessagesPage() {
       )}
 
       <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="w-[95vw] max-w-[600px] sm:w-full">
           <DialogHeader>
             <DialogTitle>Message Details</DialogTitle>
           </DialogHeader>
@@ -257,8 +257,8 @@ export default function MessagesPage() {
               </div>
             </div>
           )}
-          <DialogFooter className="flex items-center justify-between sm:justify-between">
-            <div className="flex gap-2">
+          <DialogFooter className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Button
                 variant="outline"
                 onClick={() =>

@@ -57,9 +57,9 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <h1 className="text-2xl font-bold">Users</h1>
-        <div className="relative w-64">
+        <div className="relative w-full sm:w-64">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search users..."
@@ -70,15 +70,15 @@ export default function UsersPage() {
         </div>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>User</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead>ID</TableHead>
+              <TableHead className="min-w-[200px]">User</TableHead>
+              <TableHead className="min-w-[200px]">Email</TableHead>
+              <TableHead className="min-w-[100px]">Status</TableHead>
+              <TableHead className="min-w-[120px]">Created At</TableHead>
+              <TableHead className="min-w-[150px]">ID</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -130,13 +130,13 @@ export default function UsersPage() {
       </div>
 
       {data?.pagination && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-muted-foreground text-center sm:text-left">
             Showing {(page - 1) * limit + 1} to{" "}
             {Math.min(page * limit, data.pagination.total)} of{" "}
             {data.pagination.total} users
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Button
               variant="outline"
               size="sm"

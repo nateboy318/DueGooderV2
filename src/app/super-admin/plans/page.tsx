@@ -81,10 +81,10 @@ export default function PlansPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <h1 className="text-2xl font-bold">Plans</h1>
-        <div className="flex items-center gap-4">
-          <div className="relative w-64">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search plans..."
@@ -93,7 +93,7 @@ export default function PlansPage() {
               onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
-          <Button asChild>
+          <Button className="w-full sm:w-auto" asChild>
             <Link href="/super-admin/plans/create">
               <Plus className="h-4 w-4 mr-2" />
               Create Plan
@@ -102,17 +102,17 @@ export default function PlansPage() {
         </div>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Codename</TableHead>
-              <TableHead>Monthly</TableHead>
-              <TableHead>Yearly</TableHead>
-              <TableHead>One-time</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Created</TableHead>
+              <TableHead className="min-w-[150px]">Name</TableHead>
+              <TableHead className="min-w-[120px]">Codename</TableHead>
+              <TableHead className="min-w-[100px]">Monthly</TableHead>
+              <TableHead className="min-w-[100px]">Yearly</TableHead>
+              <TableHead className="min-w-[100px]">One-time</TableHead>
+              <TableHead className="min-w-[100px]">Status</TableHead>
+              <TableHead className="min-w-[120px]">Created</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -198,13 +198,13 @@ export default function PlansPage() {
       </div>
 
       {data?.pagination && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-muted-foreground text-center sm:text-left">
             Showing {(page - 1) * limit + 1} to{" "}
             {Math.min(page * limit, data.pagination.total)} of{" "}
             {data.pagination.total} plans
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Button
               variant="outline"
               size="sm"

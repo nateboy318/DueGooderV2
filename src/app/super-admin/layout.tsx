@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -6,12 +8,19 @@ import {
   CreditCard,
   Users,
   MessageSquare,
-  Rocket,
   LogOut,
   ClipboardList,
+  Menu,
 } from "lucide-react";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { appConfig } from "@/lib/config";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navigation = [
   { name: "Dashboard", href: "/super-admin", icon: LayoutDashboard },
@@ -19,7 +28,6 @@ const navigation = [
   { name: "Users", href: "/super-admin/users", icon: Users },
   { name: "Messages", href: "/super-admin/messages", icon: MessageSquare },
   { name: "Waitlist", href: "/super-admin/waitlist", icon: ClipboardList },
-  { name: "Roadmap", href: "/super-admin/roadmap", icon: Rocket },
   { name: "Logout", href: "/super-admin/logout", icon: LogOut },
 ];
 
@@ -33,6 +41,30 @@ function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
       {/* Top Navigation */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-14 items-center px-4 gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-52">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <DropdownMenuItem key={item.name} asChild>
+                    <Link
+                      href={item.href}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <Icon className="h-4 w-4" />
+                      {item.name}
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="flex flex-1 items-center justify-between">
             <Link href="/super-admin" className="font-semibold">
               {appConfig.projectName} Admin Dashboard
@@ -45,8 +77,8 @@ function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
       </header>
 
       <div className="flex">
-        {/* Side Navigation */}
-        <aside className="fixed left-0 top-14 z-30 h-[calc(100vh-3.5rem)] w-64 border-r border-border/40 bg-background">
+        {/* Side Navigation - Desktop Only */}
+        <aside className="hidden md:block w-64 border-r border-border/40 bg-background">
           <nav className="space-y-1 p-4">
             {navigation.map((item) => {
               const Icon = item.icon;
@@ -68,8 +100,8 @@ function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 pl-64">
-          <div className="container py-6 px-6">{children}</div>
+        <main className="flex-1 w-full">
+          <div className="px-4 py-6">{children}</div>
         </main>
       </div>
     </div>

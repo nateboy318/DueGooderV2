@@ -105,10 +105,10 @@ export default function WaitlistPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <h1 className="text-2xl font-bold">Waitlist</h1>
-        <div className="flex items-center gap-4">
-          <div className="relative w-64">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search waitlist..."
@@ -122,6 +122,7 @@ export default function WaitlistPage() {
             size="sm"
             onClick={handleExport}
             disabled={isExporting}
+            className="w-full sm:w-auto"
           >
             {isExporting ? (
               "Exporting..."
@@ -135,14 +136,14 @@ export default function WaitlistPage() {
         </div>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Twitter</TableHead>
-              <TableHead>Joined</TableHead>
+              <TableHead className="min-w-[150px]">Name</TableHead>
+              <TableHead className="min-w-[200px]">Email</TableHead>
+              <TableHead className="min-w-[120px]">Twitter</TableHead>
+              <TableHead className="min-w-[120px]">Joined</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -201,13 +202,13 @@ export default function WaitlistPage() {
       </div>
 
       {data?.pagination && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-muted-foreground text-center sm:text-left">
             Showing {(page - 1) * limit + 1} to{" "}
             {Math.min(page * limit, data.pagination.total)} of{" "}
             {data.pagination.total} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Button
               variant="outline"
               size="sm"
