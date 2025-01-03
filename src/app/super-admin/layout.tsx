@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Rocket,
   LogOut,
+  ClipboardList,
 } from "lucide-react";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { appConfig } from "@/lib/config";
@@ -17,6 +18,7 @@ const navigation = [
   { name: "Plans", href: "/super-admin/plans", icon: CreditCard },
   { name: "Users", href: "/super-admin/users", icon: Users },
   { name: "Messages", href: "/super-admin/messages", icon: MessageSquare },
+  { name: "Waitlist", href: "/super-admin/waitlist", icon: ClipboardList },
   { name: "Roadmap", href: "/super-admin/roadmap", icon: Rocket },
   { name: "Logout", href: "/super-admin/logout", icon: LogOut },
 ];

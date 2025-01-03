@@ -6,9 +6,8 @@ import { Session } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { plans } from "@/db/schema/plans";
 import { MeResponse } from "@/app/api/app/me/types";
-import { RouteModuleHandleContext } from "next/dist/server/route-modules/route-module";
 
-interface WithAuthRequiredHandler {
+interface WithManagerHandler {
   (
     req: NextRequest,
     context: {
@@ -18,13 +17,18 @@ interface WithAuthRequiredHandler {
         }
       >;
       getCurrentPlan: () => Promise<MeResponse["currentPlan"]>;
-      params: RouteModuleHandleContext["params"];
+      params: Promise<Record<string, unknown>>;
     }
   ): Promise<NextResponse | Response>;
 }
 
-const withAuthRequired = (handler: WithAuthRequiredHandler) => {
-  return async (req: NextRequest, context: RouteModuleHandleContext) => {
+const withAuthRequired = (handler: WithManagerHandler) => {
+  return async (
+    req: NextRequest,
+    context: {
+      params: Promise<Record<string, unknown>>;
+    }
+  ) => {
     const session = await auth();
 
     if (!session || !session.user || !session.user.id || !session.user.email) {

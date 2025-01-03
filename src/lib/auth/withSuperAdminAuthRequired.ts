@@ -7,9 +7,7 @@ interface WithManagerHandler {
     req: NextRequest,
     context: {
       session: NonNullable<Session>;
-      params: {
-        [key: string]: string;
-      };
+      params: Promise<Record<string, unknown>>;
     }
   ): Promise<NextResponse | Response>;
 }
@@ -17,7 +15,9 @@ interface WithManagerHandler {
 const withSuperAdminAuthRequired = (handler: WithManagerHandler) => {
   return async (
     req: NextRequest,
-    context?: { params: { [key: string]: string } }
+    context: {
+      params: Promise<Record<string, unknown>>;
+    }
   ) => {
     const session = await auth();
 
@@ -54,7 +54,7 @@ const withSuperAdminAuthRequired = (handler: WithManagerHandler) => {
     }
 
     return await handler(req, {
-      params: context?.params || {},
+      ...context,
       session: session,
     });
   };
