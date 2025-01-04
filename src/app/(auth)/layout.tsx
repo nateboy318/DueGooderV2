@@ -25,7 +25,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           </h2>
         </div>
 
-        <div className="bg-background py-8 px-4 rounded-lg sm:px-10 border border-border">
+        <div className="bg-background py-8 px-4 rounded-lg sm:px-10 border border-border shadow-lg">
           {children}
         </div>
 
