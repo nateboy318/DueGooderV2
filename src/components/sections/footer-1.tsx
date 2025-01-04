@@ -1,0 +1,37 @@
+import Link from "next/link";
+import { appConfig } from "@/lib/config";
+
+const FooterSection = () => {
+  return (
+    <section className="mx-auto -mb-4 w-full p-4">
+      <div className="container">
+        <div className="rounded-full border bg-background/95 px-6 py-4 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex flex-col items-center justify-between gap-4 text-sm sm:flex-row">
+            <div className="flex items-center gap-2">
+              <Link href="/" className="font-semibold">
+                {appConfig.projectName}
+              </Link>
+              <span className="text-muted-foreground">
+                © {new Date().getFullYear()}
+              </span>
+            </div>
+            
+            <nav className="flex items-center gap-6 text-muted-foreground">
+              <Link href="/terms" className="hover:text-primary">
+                Terms
+              </Link>
+              <Link href="/privacy" className="hover:text-primary">
+                Privacy
+              </Link>
+              <Link href="/contact" className="hover:text-primary">
+                Contact
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default FooterSection; 

@@ -38,6 +38,8 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.3",
+    "embla-carousel-auto-scroll": "^8.5.1",
+    "embla-carousel-react": "^8.5.1",
     "inngest": "^3.28.0",
     "iron-session": "^8.0.4",
     "lucide-react": "^0.469.0",

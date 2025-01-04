@@ -11,13 +11,17 @@ import { CTA4 } from "@/components/website/cta-4";
 import { CompanyLogos } from "@/components/website/company-logos";
 import { WithWithout } from "@/components/website/with-without";
 import { ProblemStatement } from "@/components/website/problem-statement";
+import Hero2 from "@/components/sections/hero-2";
+import Testimonial1 from "@/components/sections/testimonial-1";
+import Testimonial2 from "@/components/sections/testimonial-2";
+import FeatureGrid from "@/components/sections/feature-grid";
 
 export default function WebsiteHomepage() {
   return (
     <main>
-      <WebsiteHero />
+      <Hero2 />
       <CompanyLogos />
-      <WebsiteFeatures />
+      <FeatureGrid />
       <ProblemStatement />
       <WithWithout />
       <HowItWorks />
