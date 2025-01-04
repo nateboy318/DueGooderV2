@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export function ProblemStatement() {
   return (
-    <section className="py-24 px-4 md:px-6 lg:px-8 bg-background w-full">
+    <section className="py-24 px-4 md:px-6 lg:px-8 bg-background w-full" aria-label="Problem Statement">
       <div className="flex flex-col gap-4 max-w-3xl mx-auto relative justify-center items-center w-full">
         <Card className="bg-red-200 dark:bg-red-800/50 text-foreground text-left md:text-center border-none w-fit">
           <CardHeader>

@@ -73,7 +73,7 @@ export function WithWithout() {
   ];
 
   return (
-    <section className="py-16 px-4 md:px-6 lg:px-8">
+    <section className="py-16 px-4 md:px-6 lg:px-8" aria-label="Comparison">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-12">
           Experience the Difference

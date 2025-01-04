@@ -31,7 +31,7 @@ export function CTA4() {
   };
 
   return (
-    <section className="relative overflow-hidden">
+    <aside className="relative overflow-hidden" aria-label="Call to Action">
       {/* Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5" />
 
@@ -140,6 +140,6 @@ export function CTA4() {
           </div>
         </div>
       </div>
-    </section>
+    </aside>
   );
 } 

@@ -62,7 +62,7 @@ const faqs = [
 
 export function WebsiteFAQs() {
   return (
-    <section className="bg-muted/40 py-16 sm:py-24" id="faq">
+    <aside className="bg-muted/40 py-16 sm:py-24" aria-label="Frequently Asked Questions">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -94,6 +94,6 @@ export function WebsiteFAQs() {
           </Accordion>
         </div>
       </div>
-    </section>
+    </aside>
   );
-} 
+}

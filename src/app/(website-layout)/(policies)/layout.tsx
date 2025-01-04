@@ -4,10 +4,10 @@ interface PolicyLayoutProps {
 
 export default function PolicyLayout({ children }: PolicyLayoutProps) {
   return (
-    <div className="py-16">
-      <div className="mx-auto max-w-3xl space-y-8">
+    <article className="py-16">
+      <div className="mx-auto max-w-3xl space-y-8 prose prose-gray dark:prose-invert">
         {children}
       </div>
-    </div>
+    </article>
   );
 } 

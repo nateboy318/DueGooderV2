@@ -10,7 +10,7 @@ import { CompanyLogos } from "@/components/website/company-logos";
 import { WithWithout } from "@/components/website/with-without";
 import { ProblemStatement } from "@/components/website/problem-statement";
 import { appConfig } from "@/lib/config";
-import { WebPageJsonLd } from "next-seo";
+import { WebPageJsonLd, OrganizationJsonLd, BrandJsonLd, FAQPageJsonLd } from "next-seo";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -46,7 +46,7 @@ export default function WebsiteHomepage() {
     <main>
       <WebPageJsonLd
         useAppDir
-        id={`${process.env.NEXT_PUBLIC_APP_URL}`}
+        id={process.env.NEXT_PUBLIC_APP_URL}
         title={appConfig.projectName}
         description={appConfig.description}
         isAccessibleForFree={true}
@@ -56,17 +56,85 @@ export default function WebsiteHomepage() {
           url: process.env.NEXT_PUBLIC_APP_URL,
         }}
       />
-      <WebsiteHero />
-      <CompanyLogos />
-      <WebsiteFeatures />
-      <ProblemStatement />
-      <WithWithout />
-      <HowItWorks />
-      <WebsiteTestimonials />
-      <CTA4 />
-      <WebsitePricing />
-      <WebsiteFAQs />
-      <CTA2 />
+      <OrganizationJsonLd
+        useAppDir
+        type="Organization"
+        id={process.env.NEXT_PUBLIC_APP_URL}
+        logo={`${process.env.NEXT_PUBLIC_APP_URL}/images/og.png`}
+        legalName={appConfig.projectName}
+        name={appConfig.projectName}
+        address={{
+          streetAddress: appConfig.legal.address.street,
+          addressLocality: appConfig.legal.address.city,
+          addressRegion: appConfig.legal.address.state,
+          postalCode: appConfig.legal.address.postalCode,
+          addressCountry: appConfig.legal.address.country,
+        }}
+        contactPoint={{
+          telephone: appConfig.legal.phone,
+          contactType: "customer service",
+          email: appConfig.legal.email,
+          areaServed: "Worldwide",
+          availableLanguage: ["English"],
+        }}
+        url={process.env.NEXT_PUBLIC_APP_URL}
+      />
+      <BrandJsonLd
+        useAppDir
+        id={process.env.NEXT_PUBLIC_APP_URL}
+        slogan={appConfig.description}
+        logo={`${process.env.NEXT_PUBLIC_APP_URL}/images/og.png`}
+      />
+      <FAQPageJsonLd
+        useAppDir
+        mainEntity={[
+          {
+            questionName: "What is Indiekit?",
+            acceptedAnswerText: "Indiekit is a modern publishing platform that helps you create and manage your content independently.",
+          },
+          {
+            questionName: "How does it work?",
+            acceptedAnswerText: "Indiekit provides a simple yet powerful interface to manage your content, with features like markdown support, media management, and more.",
+          },
+          {
+            questionName: "Is it open source?",
+            acceptedAnswerText: "Yes, Indiekit is open source and can be self-hosted or used through our managed service.",
+          },
+        ]}
+      />
+      <article>
+        <header>
+          <WebsiteHero />
+          <CompanyLogos />
+        </header>
+        <section aria-label="Features">
+          <WebsiteFeatures />
+        </section>
+        <section aria-label="Problem Statement">
+          <ProblemStatement />
+        </section>
+        <section aria-label="Comparison">
+          <WithWithout />
+        </section>
+        <section aria-label="How It Works">
+          <HowItWorks />
+        </section>
+        <section aria-label="Testimonials">
+          <WebsiteTestimonials />
+        </section>
+        <aside aria-label="Call to Action">
+          <CTA4 />
+        </aside>
+        <section aria-label="Pricing">
+          <WebsitePricing />
+        </section>
+        <section aria-label="FAQs">
+          <WebsiteFAQs />
+        </section>
+        <aside aria-label="Final Call to Action">
+          <CTA2 />
+        </aside>
+      </article>
     </main>
   );
 }

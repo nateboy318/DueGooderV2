@@ -42,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PrivacyPolicyPage() {
   const policy = await getPolicyBySlug("privacy");
-
+  
   if (!policy) {
     notFound();
   }
@@ -66,17 +66,16 @@ export default async function PrivacyPolicyPage() {
           name: "Privacy Policy",
         }}
       />
-      <div className="mb-8 space-y-4">
+      <header className="mb-8 space-y-4">
         <h1 className="text-4xl font-bold">{policy.frontmatter.title}</h1>
         <p className="text-sm text-muted-foreground">
-          Last updated:{" "}
-          {format(new Date(policy.frontmatter.lastUpdated), "MMMM d, yyyy")}
+          Last updated: {format(new Date(policy.frontmatter.lastUpdated), "MMMM d, yyyy")}
         </p>
-      </div>
+      </header>
 
-      <div className="prose prose-gray dark:prose-invert max-w-none">
+      <main className="policy-content">
         {policy.content}
-      </div>
+      </main>
     </>
   );
 }

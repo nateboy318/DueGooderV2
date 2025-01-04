@@ -58,7 +58,7 @@ export function WebsiteHero() {
   return (
     <>
       {/* Hero Section */}
-      <section className="overflow-hidden pb-16 pt-8 sm:pb-24 sm:pt-12">
+      <section className="overflow-hidden pb-16 pt-8 sm:pb-24 sm:pt-12" aria-label="Hero">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-16">
             {/* Left Column */}

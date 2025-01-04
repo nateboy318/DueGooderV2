@@ -299,7 +299,7 @@ export const WebsiteFeatures = () => {
   const [activeTab, setActiveTab] = useState("1");
 
   return (
-    <section className="py-32" id="features">
+    <section className="py-32" id="features" aria-label="Features">
       <div className="container">
         <div className="mx-auto flex max-w-screen-md flex-col items-center gap-6">
           <h2 className="mb-4 text-center text-4xl font-semibold md:text-5xl">
