@@ -21,7 +21,6 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
-
     try {
       await signIn("google", {
         callbackUrl: callbackUrl || searchParams?.get("callbackUrl") || "/app",
@@ -45,7 +44,6 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
         callbackUrl: callbackUrl || searchParams?.get("callbackUrl") || "/app",
       });
 
-      console.log(result);
       if (result?.error) {
         toast.error("Failed to send login email");
       } else {
@@ -61,55 +59,59 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
   };
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
-      <form onSubmit={handleEmailSignIn}>
-        <div className="grid gap-2">
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
-            <Input
-              id="email"
-              placeholder="name@example.com"
-              type="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              disabled={isLoading}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <Button disabled={isLoading}>
-            {isLoading && <FaSpinner className="mr-2 h-4 w-4 animate-spin" />}
-            Continue with Email
-          </Button>
-        </div>
-      </form>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-border" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div>
+    <div className={cn("flex flex-col space-y-6", className)} {...props}>
       <Button
         variant="outline"
         type="button"
         disabled={isLoading}
         onClick={handleGoogleSignIn}
+        className="w-full py-6"
       >
         {isLoading ? (
           <FaSpinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <FaGoogle className="mr-2 h-4 w-4" />
-        )}{" "}
-        Google
+        )}
+        Continue with Google
       </Button>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white dark:bg-gray-800 px-2 text-muted-foreground">
+            Or continue with email
+          </span>
+        </div>
+      </div>
+
+      <form onSubmit={handleEmailSignIn} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email address</Label>
+          <Input
+            id="email"
+            placeholder="name@example.com"
+            type="email"
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect="off"
+            disabled={isLoading}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full py-6"
+          />
+        </div>
+        <Button 
+          type="submit" 
+          disabled={isLoading}
+          className="w-full py-6"
+        >
+          {isLoading && <FaSpinner className="mr-2 h-4 w-4 animate-spin" />}
+          Continue with Email
+        </Button>
+      </form>
     </div>
   );
 }

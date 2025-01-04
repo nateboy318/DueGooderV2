@@ -10,27 +10,26 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
   return (
-    <div className="h-full flex items-center justify-center py-10">
-      <div className="w-full max-w-sm space-y-6 px-2">
-        <div className="flex flex-col space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Create an account
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Sign up for your account to get started with {appConfig.projectName}
-          </p>
-        </div>
-        {/* TODO: Configure this to redirect to the onboarding page if required */}
-        <AuthForm callbackUrl="/app" />
-        <p className="text-center text-sm text-muted-foreground">
-          <Link
-            href="/sign-in"
-            className="hover:text-primary underline underline-offset-4"
-          >
-            Already have an account? Sign in
-          </Link>
+    <>
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight mb-2">
+          Create an account
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Get started with {appConfig.projectName} today
         </p>
       </div>
-    </div>
+
+      <AuthForm />
+
+      <div className="mt-6 text-center">
+        <Link
+          href="/sign-in"
+          className="text-sm text-primary hover:text-primary/90 underline underline-offset-4"
+        >
+          Already have an account? Sign in
+        </Link>
+      </div>
+    </>
   )
 } 
