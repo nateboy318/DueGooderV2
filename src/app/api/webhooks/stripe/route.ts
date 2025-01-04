@@ -3,12 +3,161 @@ import stripe from "@/lib/stripe";
 import { NextRequest, NextResponse } from "next/server";
 import APIError from "@/lib/api/errors";
 import getOrCreateUser from "@/lib/users/getOrCreateUser";
+import { users } from "@/db/schema/user";
+import { plans } from "@/db/schema/plans";
+import { db } from "@/db";
+import { eq, or } from "drizzle-orm";
+import updatePlan from "@/lib/plans/updatePlan";
 import downgradeToDefaultPlan from "@/lib/plans/downgradeToDefaultPlan";
+
+type User = typeof users.$inferSelect;
+
+class StripeWebhookHandler {
+  private data: Stripe.Event.Data;
+  private eventType: string;
+  private user: User;
+
+  constructor(data: Stripe.Event.Data, eventType: string, user: User) {
+    this.data = data;
+    this.user = user;
+    this.eventType = eventType;
+  }
+  async handleOutsidePlanManagementProductInvoicePaid() {
+    // @ts-expect-error Stripe types are not fully compatible with Next.js
+    const object: Stripe.Invoice = this.data.object;
+    console.log("Outside plan management product invoice paid", object);
+    // TODO: Implement
+  }
+
+  async onInvoicePaid() {
+    // @ts-expect-error Stripe types are not fully compatible with Next.js
+    const object: Stripe.Invoice = this.data.object;
+
+    // Get first item
+    const item = object.lines.data[0];
+    if (!item) {
+      throw new APIError("No item found in invoice");
+    }
+
+    if (item.subscription) {
+      // Subscription is created, skip "customer.subscription.created" or "customer.subscription.updated" will handle this
+      return;
+    }
+
+    const price = item.price;
+
+    if (price) {
+      // Check if item is a subscription
+      const dbPlan = await this._getPlanFromStripePriceId(price.id);
+
+      if (!dbPlan) {
+        await this.handleOutsidePlanManagementProductInvoicePaid();
+      } else {
+        await updatePlan({
+          userId: this.user.id,
+          newPlanId: dbPlan.id,
+        });
+      }
+    } else {
+      await this.handleOutsidePlanManagementProductInvoicePaid();
+    }
+  }
+
+  async _getPlanFromStripePriceId(priceId: string) {
+    const plan = await db
+      .select()
+      .from(plans)
+      .where(
+        or(
+          eq(plans.monthlyStripePriceId, priceId),
+          eq(plans.yearlyStripePriceId, priceId),
+          eq(plans.onetimeStripePriceId, priceId)
+        )
+      )
+      .limit(1);
+
+    if (plan.length === 0) {
+      return null;
+    }
+
+    return plan[0];
+  }
+
+  async onSubscriptionUpdated() {
+    // @ts-expect-error Stripe types are not fully compatible with Next.js
+    const object: Stripe.Subscription = this.data.object;
+
+    if (this.user.stripeSubscriptionId !== object.id) {
+      // Subscription is not for this user, skip
+      return;
+    }
+
+    const price = object.items.data[0].price;
+    if (!price) {
+      throw new APIError("No price found in subscription");
+    }
+
+    const isActive = object.status === "active" || object.status === "trialing";
+
+    if (!isActive) {
+      // Subscription is cancelled, downgrade to free plan
+      await downgradeToDefaultPlan({ userId: this.user.id });
+      return;
+    }
+
+    const dbPlan = await this._getPlanFromStripePriceId(price.id);
+    if (!dbPlan) {
+      // TIP: Handle outside plan management subscription
+      return;
+    }
+
+    await updatePlan({ userId: this.user.id, newPlanId: dbPlan.id });
+  }
+
+  async onSubscriptionCreated() {
+    // @ts-expect-error Stripe types are not fully compatible with Next.js
+    const object: Stripe.Subscription = this.data.object;
+    const price = object.items.data[0].price;
+    if (!price) {
+      throw new APIError("No price found in subscription");
+    }
+    const dbPlan = await this._getPlanFromStripePriceId(price.id);
+    if (!dbPlan) {
+      // TIP: Handle outside plan management subscription
+      throw new APIError("Plan not found");
+    }
+    await db.transaction(async (tx) => {
+      await tx
+        .update(users)
+        .set({ stripeSubscriptionId: object.id })
+        .where(eq(users.id, this.user.id));
+      await updatePlan({ userId: this.user.id, newPlanId: dbPlan.id });
+    });
+  }
+
+  async onSubscriptionDeleted() {
+    // @ts-expect-error Stripe types are not fully compatible with Next.js
+    const object: Stripe.Subscription = this.data.object;
+
+    if (this.user.stripeSubscriptionId !== object.id) {
+      // Subscription is not for this user, skip
+      return;
+    }
+    await downgradeToDefaultPlan({ userId: this.user.id });
+  }
+
+  async onCustomerCreated() {
+    // @ts-expect-error Stripe types are not fully compatible with Next.js
+    const object: Stripe.Customer = this.data.object;
+    await db
+      .update(users)
+      .set({ stripeCustomerId: object.id })
+      .where(eq(users.id, this.user.id));
+  }
+}
 
 async function handler(req: NextRequest) {
   if (req.method === "POST") {
-    // Wait for 5 seconds to simulate a long running process
-    await new Promise((resolve) => setTimeout(resolve, 5000));
     let data;
     let eventType;
     // Check if webhook signing is configured.
@@ -44,42 +193,27 @@ async function handler(req: NextRequest) {
       name: data.object.customer_name,
     });
 
+    const handler = new StripeWebhookHandler(data, eventType, user);
     try {
       switch (eventType) {
-        case "checkout.session.completed":
-          // Payment is successful and the subscription is created.
-          // You should provision the subscription and save the customer ID to your database.
-          // We cannot manage both onetime and recurring products in same checkout session
-          const object: Stripe.Checkout.Session = data.object;
-
-          console.log("Received event", eventType);
-          console.log("Data", object);
-          break;
         case "invoice.paid":
-          // Continue to provision the subscription as payments continue to be made.
-          // Store the status in your database and check when a user accesses your service.
-          // This approach helps you avoid hitting rate limits.
-          // Do not do anything since we already created the subscription in checkout.session.completed
+          await handler.onInvoicePaid();
           break;
-        case "invoice.payment_failed":
-          // The payment failed or the customer does not have a valid payment method.
-          // The subscription becomes past_due. Notify your customer and send them to the
-          // customer portal to update their payment information.
-          await downgradeToDefaultPlan({ userId: user.id });
+        case "customer.created":
+          await handler.onCustomerCreated();
           break;
-        case "customer.subscription.deleted":
-          // Delete the subscription.
-          // Archive the customer.
-          await downgradeToDefaultPlan({ userId: user.id });
+        case "customer.subscription.created":
+          await handler.onSubscriptionCreated();
           break;
         case "customer.subscription.updated":
-          // Update the subscription.
-          // TODO: Implement this
-          console.log("Received event", eventType);
-          console.log("Data", data);
+          await handler.onSubscriptionUpdated();
+          break;
+        case "customer.subscription.deleted":
+          await handler.onSubscriptionDeleted();
           break;
         default:
-        // Unhandled event type
+          // Unhandled event type
+          break;
       }
     } catch (error) {
       if (error instanceof APIError) {

@@ -3,6 +3,7 @@ import { plans } from "@/db/schema/plans";
 import { eq } from "drizzle-orm";
 import APIError from "../api/errors";
 import updatePlan from "./updatePlan";
+import { users } from "@/db/schema/user";
 
 const downgradeToDefaultPlan = async ({ userId }: { userId: string }) => {
   const defaultPlan = await db
@@ -21,6 +22,11 @@ const downgradeToDefaultPlan = async ({ userId }: { userId: string }) => {
     newPlanId: defaultPlanId,
     sendEmail: false,
   });
+
+  await db
+    .update(users)
+    .set({ stripeSubscriptionId: null, lemonSqueezySubscriptionId: null })
+    .where(eq(users.id, userId));
   // Send Update Plan Email
 };
 
