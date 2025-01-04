@@ -69,6 +69,7 @@ async function SubscribePage({
 
   const plan = plansList[0];
 
+  console.log("user", user);
   switch (provider) {
     case PlanProvider.STRIPE:
       // Check type and get price id from db

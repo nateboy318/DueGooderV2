@@ -14,8 +14,8 @@ const updatePlan = async ({
   newPlanId: string;
   sendEmail?: boolean;
 }) => {
+  console.log("updatePlan", userId, newPlanId);
   await db.update(users).set({ planId: newPlanId }).where(eq(users.id, userId));
-
   if (sendEmail) {
     const plan = await db
       .select({ name: plans.name })

@@ -9,12 +9,16 @@ const getOrCreateUser = async ({
   name,
 }: {
   emailId: string;
-  name: string;
+  name: string | null | undefined;
 }) => {
   // Find user by emailId
-  const user = await db.select().from(users).where(eq(users.email, emailId));
+  const user = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, emailId))
+    .limit(1);
 
-  if (!user) {
+  if (!user?.[0]) {
     // Create user
     const newUser = await db
       .insert(users)
