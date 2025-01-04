@@ -62,6 +62,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return newUser;
     },
   },
+  callbacks: {
+    async signIn() {
+      return process.env.NEXT_PUBLIC_SIGNIN_ENABLED === "true";
+    },
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,

@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <div className="flex flex-col items-center">
           {/* Replace with your actual logo path */}
           <Image
-            src="/assets/icons/logo.png"
+            src="/assets/logo.png"
             alt={appConfig.projectName}
             width={48}
             height={48}
