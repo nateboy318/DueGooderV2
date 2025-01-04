@@ -5,33 +5,33 @@ import Link from "next/link";
 
 const companies = [
   {
-    name: "Hacker News",
-    image: "/assets/logos/company-1.svg",
-    url: "https://news.ycombinator.com/",
+    name: "Google Drive",
+    image: "https://simpleicons.org/icons/googledrive.svg",
+    url: "https://www.google.com/",
   },
   {
     name: "Product Hunt",
-    image: "/assets/logos/company-2.svg",
+    image: "https://simpleicons.org/icons/producthunt.svg",
     url: "https://www.producthunt.com/",
   },
   {
-    name: "Twitter",
-    image: "/assets/logos/company-3.svg",
+    name: "X",
+    image: "https://simpleicons.org/icons/x.svg",
     url: "https://x.com/",
   },
   {
     name: "Reddit",
-    image: "/assets/logos/company-4.svg",
+    image: "https://simpleicons.org/icons/reddit.svg",
     url: "https://www.reddit.com/",
   },
   {
-    name: "BSKY",
-    image: "/assets/logos/company-5.svg",
-    url: "https://bsky.app/",
+    name: "Notion",
+    image: "https://simpleicons.org/icons/notion.svg",
+    url: "https://www.notion.so/",
   },
   {
     name: "Indie Hackers",
-    image: "/assets/logos/company-6.svg",
+    image: "https://simpleicons.org/icons/indiehackers.svg",
     url: "https://www.indiehackers.com/",
   },
 ];

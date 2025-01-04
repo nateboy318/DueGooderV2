@@ -17,6 +17,9 @@ const FooterSection = () => {
             </div>
             
             <nav className="flex items-center gap-6 text-muted-foreground">
+              <Link href="/about" className="hover:text-primary">
+                About
+              </Link>
               <Link href="/terms" className="hover:text-primary">
                 Terms
               </Link>
