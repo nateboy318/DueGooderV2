@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { appConfig } from "@/lib/config";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { WebPageJsonLd } from "next-seo";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -73,6 +74,24 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen">
+      <WebPageJsonLd
+        useAppDir
+        id={`${process.env.NEXT_PUBLIC_APP_URL}/contact`}
+        title="Contact Us"
+        description="Get in touch with us. We'd love to hear from you."
+        isAccessibleForFree={true}
+        publisher={{
+          "@type": "Organization",
+          name: appConfig.projectName,
+          url: process.env.NEXT_PUBLIC_APP_URL,
+          contactPoint: {
+            "@type": "ContactPoint",
+            telephone: appConfig.legal.phone,
+            email: appConfig.legal.email,
+            contactType: "customer service",
+          },
+        }}
+      />
       {/* Hero Section */}
       <section className="relative w-full overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary py-20 text-primary-foreground">
         <div className="absolute inset-0">

@@ -40,19 +40,19 @@ export default function AboutPage() {
             <div className="space-y-2">
               <h3 className="font-medium">Independence</h3>
               <p className="text-sm text-muted-foreground">
-                We champion the independent web. Our platform gives you full control over your content and how it's presented to the world.
+                We champion the independent web. Our platform gives you full control over your content and how it&apos;s presented to the world.
               </p>
             </div>
             <div className="space-y-2">
               <h3 className="font-medium">Innovation</h3>
               <p className="text-sm text-muted-foreground">
-                We're constantly pushing the boundaries of what's possible in web publishing, bringing you the latest technologies and best practices.
+                We&apos;re constantly pushing the boundaries of what&apos;s possible in web publishing, bringing you the latest technologies and best practices.
               </p>
             </div>
             <div className="space-y-2">
               <h3 className="font-medium">Community</h3>
               <p className="text-sm text-muted-foreground">
-                We believe in the power of community. We're building tools that help creators connect with their audience and each other.
+                We believe in the power of community. We&apos;re building tools that help creators connect with their audience and each other.
               </p>
             </div>
           </div>

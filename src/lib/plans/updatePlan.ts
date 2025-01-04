@@ -28,6 +28,7 @@ const updatePlan = async ({
     }
 
     const planName = plan[0].name;
+    console.log("planName", planName);
 
     // TODO: Implement this
   }
