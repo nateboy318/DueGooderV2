@@ -7,6 +7,7 @@ export interface MeResponse {
     name: (typeof plans.$inferSelect)["name"];
     codename: (typeof plans.$inferSelect)["codename"];
     quotas: (typeof plans.$inferSelect)["quotas"];
+    default: (typeof plans.$inferSelect)["default"];
   } | null;
   user: typeof users.$inferSelect;
 }

@@ -62,6 +62,7 @@ const withAuthRequired = (handler: WithManagerHandler) => {
           name: plans.name,
           codename: plans.codename,
           quotas: plans.quotas,
+          default: plans.default,
         })
         .from(plans)
         .where(eq(plans.id, user[0].planId));

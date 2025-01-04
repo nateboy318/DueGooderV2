@@ -16,18 +16,19 @@ function AppHomepage() {
           ? `You are on the ${currentPlan.name} plan.`
           : "You are not subscribed to any plan."}
       </p>
-      {currentPlan ? (
-        <Link href="/app/billing">
-          <Button>
-            <CreditCardIcon className="w-4 h-4" />
-            <span>Manage Subscription</span>
-          </Button>
-        </Link>
-      ) : (
+      {/* If not on any plan or on default plan, show subscribe button */}
+      {!currentPlan || currentPlan.default ? (
         <Link href="/#pricing">
           <Button>
             <CreditCardIcon className="w-4 h-4" />
             <span>Subscribe</span>
+          </Button>
+        </Link>
+      ) : (
+        <Link href="/app/billing">
+          <Button>
+            <CreditCardIcon className="w-4 h-4" />
+            <span>Manage Subscription</span>
           </Button>
         </Link>
       )}

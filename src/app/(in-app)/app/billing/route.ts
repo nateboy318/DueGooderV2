@@ -1,4 +1,6 @@
 import withAuthRequired from "@/lib/auth/withAuthRequired";
+import stripe from "@/lib/stripe";
+import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export const GET = withAuthRequired(async (req, context) => {
@@ -7,7 +9,12 @@ export const GET = withAuthRequired(async (req, context) => {
   const stripeCustomerId = user.stripeCustomerId;
 
   if (stripeCustomerId) {
-    // TODO: Get stripe customer and redirect to stripe customer portal
+    // create customer portal link
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: stripeCustomerId,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/app`,
+    });
+    return redirect(portalSession.url);
   }
   const lemonSqueezyCustomerId = user.lemonSqueezyCustomerId;
   if (lemonSqueezyCustomerId) {
@@ -18,4 +25,3 @@ export const GET = withAuthRequired(async (req, context) => {
     message: "You are not subscribed to any plan.",
   });
 });
-
