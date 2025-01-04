@@ -7,6 +7,15 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 
+const navItems: { label: string; href: string }[] = [
+  // { label: "Pricing", href: "/#pricing" },
+];
+
+const CTAText = "Get Started";
+const CTAHref = "/#pricing";
+
+const signInEnabled = process.env.NEXT_PUBLIC_SIGNIN_ENABLED === "true";
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -23,25 +32,30 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex md:items-center md:space-x-6">
-            <Link href="/features" className="text-sm font-medium text-muted-foreground hover:text-primary">
-              Features
-            </Link>
-            <Link href="/solutions" className="text-sm font-medium text-muted-foreground hover:text-primary">
-              Solutions
-            </Link>
-            <Link href="/blog" className="text-sm font-medium text-muted-foreground hover:text-primary">
-              Blog
-            </Link>
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="text-sm font-medium text-muted-foreground hover:text-primary"
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden items-center space-x-4 md:flex">
             <ThemeSwitcher />
-            <Link href="/sign-in" className="text-sm font-medium text-muted-foreground hover:text-primary">
-              Sign In
-            </Link>
+            {signInEnabled && (
+              <Link
+                href="/sign-in"
+                className="text-sm font-medium text-muted-foreground hover:text-primary"
+              >
+                Sign In
+              </Link>
+            )}
             <Button asChild>
-              <Link href="/get-started">Get Started</Link>
+              <Link href={CTAHref}>{CTAText}</Link>
             </Button>
           </div>
 
@@ -97,4 +111,4 @@ export function Header() {
       </div>
     </header>
   );
-} 
+}

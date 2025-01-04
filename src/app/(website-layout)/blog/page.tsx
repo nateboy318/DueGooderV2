@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { CTA2 } from "@/components/website/cta-2";
 import { appConfig } from "@/lib/config";
 import { WebPageJsonLd, BreadcrumbJsonLd } from "next-seo";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: `Blog | ${appConfig.projectName}`,
@@ -37,6 +38,10 @@ export const metadata: Metadata = {
 
 export default async function BlogListPage() {
   const blogs = await getAllBlogs();
+
+  if (blogs.length === 0) {
+    return notFound();
+  }
 
   return (
     <article className="max-w-6xl mx-auto py-10 px-4">

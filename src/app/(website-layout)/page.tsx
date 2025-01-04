@@ -10,8 +10,18 @@ import { CompanyLogos } from "@/components/website/company-logos";
 import { WithWithout } from "@/components/website/with-without";
 import { ProblemStatement } from "@/components/website/problem-statement";
 import { appConfig } from "@/lib/config";
-import { WebPageJsonLd, OrganizationJsonLd, BrandJsonLd, FAQPageJsonLd } from "next-seo";
+import {
+  WebPageJsonLd,
+  OrganizationJsonLd,
+  BrandJsonLd,
+  FAQPageJsonLd,
+} from "next-seo";
 import { Metadata } from "next";
+import Hero1 from "@/components/sections/hero-1";
+import Hero2 from "@/components/sections/hero-2";
+import CTA1 from "@/components/website/cta-1";
+import MonthlyAnnualPricing from "@/components/website/monthly-annual-pricing";
+import TextRevealByWord from "@/components/ui/text-reveal";
 
 export const metadata: Metadata = {
   title: appConfig.projectName,
@@ -90,50 +100,33 @@ export default function WebsiteHomepage() {
         mainEntity={[
           {
             questionName: "What is Indiekit?",
-            acceptedAnswerText: "Indiekit is a modern publishing platform that helps you create and manage your content independently.",
+            acceptedAnswerText:
+              "Indiekit is a modern publishing platform that helps you create and manage your content independently.",
           },
           {
             questionName: "How does it work?",
-            acceptedAnswerText: "Indiekit provides a simple yet powerful interface to manage your content, with features like markdown support, media management, and more.",
+            acceptedAnswerText:
+              "Indiekit provides a simple yet powerful interface to manage your content, with features like markdown support, media management, and more.",
           },
           {
             questionName: "Is it open source?",
-            acceptedAnswerText: "Yes, Indiekit is open source and can be self-hosted or used through our managed service.",
+            acceptedAnswerText:
+              "Yes, Indiekit is open source and can be self-hosted or used through our managed service.",
           },
         ]}
       />
       <article>
-        <header>
-          <WebsiteHero />
-          <CompanyLogos />
-        </header>
-        <section aria-label="Features">
-          <WebsiteFeatures />
-        </section>
-        <section aria-label="Problem Statement">
-          <ProblemStatement />
-        </section>
-        <section aria-label="Comparison">
-          <WithWithout />
-        </section>
-        <section aria-label="How It Works">
-          <HowItWorks />
-        </section>
-        <section aria-label="Testimonials">
-          <WebsiteTestimonials />
-        </section>
-        <aside aria-label="Call to Action">
-          <CTA4 />
-        </aside>
-        <section aria-label="Pricing">
-          <WebsitePricing />
-        </section>
-        <section aria-label="FAQs">
-          <WebsiteFAQs />
-        </section>
-        <aside aria-label="Final Call to Action">
-          <CTA2 />
-        </aside>
+        <Hero2 />
+        <CTA1 />
+
+        <MonthlyAnnualPricing />
+
+        <TextRevealByWord text="Still not sure? My users are able to create their own blogs and websites with ease. It was very difficult to find a solution that was easy to use and affordable." />
+
+        <WithWithout />
+        <MonthlyAnnualPricing />
+        <WebsiteFAQs />
+        <CTA2 />
       </article>
     </main>
   );

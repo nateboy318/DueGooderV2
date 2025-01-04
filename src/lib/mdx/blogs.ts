@@ -91,7 +91,9 @@ export async function getRelatedBlogs(currentSlug: string, tags: string[]) {
 }
 
 export async function getAllBlogs(): Promise<Blog[]> {
-  const files = fs.readdirSync(blogsDirectory);
+  const files = fs
+    .readdirSync(blogsDirectory)
+    .filter((file) => file.endsWith(".mdx"));
 
   const blogs = await Promise.all(
     files.map(async (filename) => {
