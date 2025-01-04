@@ -33,33 +33,40 @@ export const Layout = ({ children, previewText }: LayoutProps) => {
           theme: {
             extend: {
               colors: {
-                primary: "#000000",
+                // TODO: Change this to the correct color
+                primary: "#f97316",
+                background: "#f9fafb",
+                foreground: "#111827",
+                border: "#e5e7eb",
+                muted: "#9ca3af",
+                ["primary-foreground"]: "#f8fafc",
               },
             },
           },
         }}
       >
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
-            <div className="flex justify-center">
+        <Body className="bg-background my-auto mx-auto font-sans">
+          <Container className="border border-solid border-border rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
+            <div className="flex justify-center items-center">
               <Img
-                src={`${baseUrl}/assets/images/icon.png`}
+                src={`${baseUrl}/assets/icons/logo.png`}
                 width="20"
                 height="20"
                 alt={`${appConfig.projectName} Logo`}
                 className="my-0 mx-0"
               />
+              <Text className="text-foreground ">{appConfig.projectName}</Text>
             </div>
             {children}
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
+            <Hr className="border border-solid border-border my-[26px] mx-0 w-full" />
             <Img
-              src={`${baseUrl}/assets/images/icon.png`}
+              src={`${baseUrl}/assets/icons/logo.png`}
               width="20"
               height="20"
               alt={`${appConfig.projectName} Logo`}
               className="my-0 mx-0"
             />
-            <Text className="text-[#666666] text-[11px] leading-[24px]">
+            <Text className="text-muted text-[11px] leading-[24px]">
               This email was sent to you by {appConfig.projectName}.
               <br />
               Registered Office: {appConfig.legal.address.street},{" "}

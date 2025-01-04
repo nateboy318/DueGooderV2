@@ -10,6 +10,10 @@ import {
   verificationTokens,
 } from "./db/schema/user";
 import onUserCreate from "./lib/users/onUserCreate";
+import { render } from "@react-email/components";
+import MagicLinkEmail from "./emails/MagicLinkEmail";
+import sendMail from "./lib/email/sendMail";
+import { appConfig } from "./lib/config";
 
 const emailProvider: EmailConfig = {
   id: "email",
@@ -17,9 +21,19 @@ const emailProvider: EmailConfig = {
   name: "Email",
   async sendVerificationRequest(params) {
     if (process.env.NODE_ENV === "development") {
-      console.log("Sending email: ", JSON.stringify(params, null, 2));
+      console.log(
+        `Magic link for ${params.identifier}: ${params.url} expires at ${params.expires}`
+      );
     }
-    // TODO: Implement email provider
+    const html = await render(
+      MagicLinkEmail({ url: params.url, expiresAt: params.expires })
+    );
+
+    await sendMail(
+      params.identifier,
+      `Sign in to ${appConfig.projectName}`,
+      html
+    );
   },
 };
 

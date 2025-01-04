@@ -14,51 +14,35 @@ interface WelcomeEmailProps {
 export default function Welcome({ userName, dashboardUrl }: WelcomeEmailProps) {
   return (
     <Html>
-      <Layout previewText={`Welcome to Gloow, ${userName}! 👋`}>
+      <Layout
+        previewText={`Welcome to ${appConfig.projectName}, ${userName}! 👋`}
+      >
         <Text>
           Welcome to {appConfig.projectName}, {userName}! 👋
         </Text>
 
         <Text>We&apos;re excited to have you on board!</Text>
 
-        <Container style={{ marginLeft: "24px", marginTop: "24px" }}>
-          <Text style={{ margin: "8px 0" }}>
+        <Container className="ml-4 mt-4">
+          <Text className="mb-2">
             🚀 Here&apos;s what you can do with {appConfig.projectName}:
           </Text>
-          <Text style={{ margin: "8px 0", paddingLeft: "16px" }}>
-            {/* TODO: Edit these lines */}
-            • Create interactive links with CTAs
-          </Text>
-          <Text style={{ margin: "8px 0", paddingLeft: "16px" }}>
-            • Track engagement and conversions
-          </Text>
-          <Text style={{ margin: "8px 0", paddingLeft: "16px" }}>
-            • Customize your link appearance
-          </Text>
-          <Text style={{ margin: "8px 0", paddingLeft: "16px" }}>
-            • Analyze performance metrics
-          </Text>
+          <Text className="ml-4 mb-2">• Lorem ipsum dolor sit amet</Text>
+          <Text className="ml-4 mb-2">• Lorem ipsum dolor sit amet</Text>
+          <Text className="ml-4 mb-2">• Lorem ipsum dolor sit amet</Text>
+          <Text className="ml-4 mb-2">• Lorem ipsum dolor sit amet</Text>
         </Container>
 
-        <Text style={{ marginTop: "24px" }}>
-          {/* TODO: Edit this line */}
-          Ready to create your first interactive link?
-        </Text>
+        <Text className="mt-4">Ready to get started?</Text>
 
         <Button
           href={dashboardUrl}
-          style={{
-            background: "#f97316",
-            color: "#fff",
-            padding: "12px 20px",
-            marginTop: "16px",
-            borderRadius: "6px",
-          }}
+          className="bg-primary text-primary-foreground rounded-md py-2 px-4 mt-4"
         >
           Get Started
         </Button>
 
-        <Text style={{ fontSize: "14px", color: "#666", marginTop: "24px" }}>
+        <Text className="mt-4 text-muted">
           Need help getting started? Reply to this email and our support team
           will be happy to help!
         </Text>
