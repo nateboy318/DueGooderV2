@@ -80,7 +80,7 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white dark:bg-gray-800 px-2 text-muted-foreground">
+          <span className="bg-background px-2 text-muted-foreground">
             Or continue with email
           </span>
         </div>
@@ -103,11 +103,7 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
             className="w-full py-6"
           />
         </div>
-        <Button 
-          type="submit" 
-          disabled={isLoading}
-          className="w-full py-6"
-        >
+        <Button type="submit" disabled={isLoading} className="w-full py-6">
           {isLoading && <FaSpinner className="mr-2 h-4 w-4 animate-spin" />}
           Continue with Email
         </Button>
