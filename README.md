@@ -26,8 +26,4 @@ Join our [Discord community](https://indiekit.pro/app) to connect with other dev
 
 ## License
 
-This project is licensed under the [Custom License](LICENSE).
-
-## Next Steps:
-
-- Work in progress
+This project is licensed under the [Custom License](License.md).
