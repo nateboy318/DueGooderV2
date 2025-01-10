@@ -2,6 +2,7 @@ import { ChevronRight, Play } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const Hero1 = () => {
   return (
@@ -47,10 +48,11 @@ const Hero1 = () => {
           </div>
         </div>
         <div className="rounded-t-lg border-x border-t px-1 pt-1">
-          <img
+          <Image
             src="https://shadcnblocks.com/images/block/placeholder.svg"
             alt="placeholder"
             className="max-h-80 w-full rounded-t-lg object-cover md:max-h-[430px]"
+            fill
           />
         </div>
       </div>

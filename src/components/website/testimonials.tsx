@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 const testimonials = [
   {
     quote:
@@ -68,10 +70,11 @@ export function WebsiteTestimonials() {
                 &quot;{testimonial.quote}&quot;
               </blockquote>
               <div className="mt-8 flex items-center gap-4">
-                <img
+                <Image
                   className="h-10 w-10 rounded-full object-cover"
                   src={testimonial.image}
                   alt={testimonial.author}
+                  fill
                 />
                 <div>
                   <div className="font-semibold">{testimonial.author}</div>
@@ -86,4 +89,4 @@ export function WebsiteTestimonials() {
       </div>
     </section>
   );
-} 
+}

@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import Image from "next/image";
 
 const integrations = [
   {
@@ -55,9 +56,7 @@ const FeatureGrid = () => {
   return (
     <section className="py-32">
       <div className="container">
-        <h2 className="mb-4 text-2xl font-semibold lg:text-4xl">
-          Features
-        </h2>
+        <h2 className="mb-4 text-2xl font-semibold lg:text-4xl">Features</h2>
         <p className="text-muted-foreground lg:text-lg">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate qui
           dignissimos odit.
@@ -66,10 +65,12 @@ const FeatureGrid = () => {
           {integrations.map((integration, i) => (
             <li key={i}>
               <Card className="p-6">
-                <img
+                <Image
                   src={integration.image}
                   alt={integration.title}
                   className="w-14"
+                  width={56}
+                  height={56}
                 />
                 <h3 className="mb-1 mt-4 text-lg font-medium">
                   {integration.title}

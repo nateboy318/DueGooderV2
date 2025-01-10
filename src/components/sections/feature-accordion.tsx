@@ -9,6 +9,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import Image from "next/image";
 
 const features = [
   {
@@ -98,9 +99,11 @@ const FeatureAccordion = () => {
                 className="md:aspect-w-1 md:aspect-h-1 h-[min(24rem,80vw)] w-[min(24rem,80vw)] shrink-0 md:h-auto md:w-full"
               >
                 <div className="overflow-clip rounded-lg border border-border bg-accent">
-                  <img
+                  <Image
                     src={feature.image}
                     alt={feature.title}
+                    width={1024}
+                    height={768}
                     className="aspect-square h-full w-full"
                   />
                 </div>
@@ -115,9 +118,11 @@ const FeatureAccordion = () => {
               <CarouselContent className="mx-0 h-full w-full">
                 {features.map((feature) => (
                   <CarouselItem key={feature.id} className="px-0">
-                    <img
+                    <Image
                       src={feature.image}
                       alt={feature.title}
+                      width={1024}
+                      height={768}
                       className="h-full w-full object-cover object-center"
                     />
                   </CarouselItem>
