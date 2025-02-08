@@ -49,6 +49,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/sign-in",
     signOut: "/sign-out",
   },
+  session: {
+    strategy: "jwt",
+  },
   adapter: {
     ...adapter,
     createUser: async (user) => {
@@ -65,6 +68,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn() {
       return process.env.NEXT_PUBLIC_SIGNIN_ENABLED === "true";
+    },
+    async session({ session, token }) {
+      if (token.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
     },
   },
   providers: [
