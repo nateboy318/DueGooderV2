@@ -20,9 +20,17 @@ export const subscribeParams = z.object({
   trialPeriodDays: z
     .number()
     .optional()
-    .refine((n) => n && trialPeriodDays.includes(n), {
-      message: `Trial period days must be ${trialPeriodDays.join(" or ")}`,
-    }),
+    .refine(
+      (n) => {
+        if (n === undefined || n === null) {
+          return true;
+        }
+        return trialPeriodDays.includes(n);
+      },
+      {
+        message: `Trial period days must be ${trialPeriodDays.join(" or ")}`,
+      }
+    ),
 });
 
 export type SubscribeParams = z.infer<typeof subscribeParams>;
@@ -33,7 +41,11 @@ const getSubscribeUrl = ({
   provider,
   trialPeriodDays,
 }: SubscribeParams) => {
-  return `${process.env.NEXT_PUBLIC_APP_URL}/subscribe?codename=${codename}&type=${type}&provider=${provider}&trialPeriodDays=${trialPeriodDays}`;
+  let url = `${process.env.NEXT_PUBLIC_APP_URL}/app/subscribe?codename=${codename}&type=${type}&provider=${provider}`;
+  if (trialPeriodDays) {
+    url += `&trialPeriodDays=${trialPeriodDays}`;
+  }
+  return url;
 };
 
 export default getSubscribeUrl;
