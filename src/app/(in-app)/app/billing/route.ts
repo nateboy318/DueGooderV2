@@ -1,10 +1,18 @@
+import { db } from "@/db";
+import { users } from "@/db/schema/user";
 import withAuthRequired from "@/lib/auth/withAuthRequired";
+import { eq } from "drizzle-orm";
 import stripe from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export const GET = withAuthRequired(async (req, context) => {
-  const user = context.session.user;
+  const user = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, context.session.user.id))
+    .limit(1)
+    .then((res) => res[0]);
 
   const stripeCustomerId = user.stripeCustomerId;
 
