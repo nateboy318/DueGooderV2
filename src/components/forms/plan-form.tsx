@@ -44,9 +44,11 @@ export function PlanForm({
       hasMonthlyPricing: false,
       monthlyStripePriceId: "",
       monthlyLemonSqueezyVariantId: "",
+      monthlyDodoProductId: "",
       hasYearlyPricing: false,
       yearlyStripePriceId: "",
       yearlyLemonSqueezyVariantId: "",
+      yearlyDodoProductId: "",
       monthlyPrice: 0,
       monthlyPriceAnchor: 0,
       yearlyPrice: 0,
@@ -54,6 +56,7 @@ export function PlanForm({
       onetimePrice: 0,
       onetimeStripePriceId: "",
       onetimeLemonSqueezyVariantId: "",
+      onetimeDodoProductId: "",
       onetimePriceAnchor: 0,
       quotas: {
         canUseApp: false,
@@ -249,6 +252,19 @@ export function PlanForm({
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="monthlyDodoProductId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Dodo Product ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
               )}
@@ -323,6 +339,19 @@ export function PlanForm({
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="yearlyDodoProductId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Dodo Product ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
               )}
@@ -390,6 +419,19 @@ export function PlanForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>LemonSqueezy Product ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="onetimeDodoProductId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Dodo Product ID</FormLabel>
                           <FormControl>
                             <Input {...field} value={field.value || ""} />
                           </FormControl>

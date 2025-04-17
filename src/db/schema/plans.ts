@@ -40,16 +40,19 @@ export const plans = pgTable("plans", {
   monthlyPriceAnchor: integer("monthlyPriceAnchor"),
   monthlyStripePriceId: text("monthlyStripePriceId"),
   monthlyLemonSqueezyVariantId: text("monthlyLemonSqueezyVariantId"),
+  monthlyDodoProductId: text("monthlyDodoProductId"),
 
   yearlyPrice: integer("yearlyPrice"),
   yearlyPriceAnchor: integer("yearlyPriceAnchor"),
   yearlyStripePriceId: text("yearlyStripePriceId"),
   yearlyLemonSqueezyVariantId: text("yearlyLemonSqueezyVariantId"),
+  yearlyDodoProductId: text("yearlyDodoProductId"),
 
   onetimePrice: integer("onetimePrice"),
   onetimePriceAnchor: integer("onetimePriceAnchor"),
   onetimeStripePriceId: text("onetimeStripePriceId"),
   onetimeLemonSqueezyVariantId: text("onetimeLemonSqueezyVariantId"),
+  onetimeDodoProductId: text("onetimeDodoProductId"),
 
   quotas: jsonb("quotas").$type<Quotas>(),
 });

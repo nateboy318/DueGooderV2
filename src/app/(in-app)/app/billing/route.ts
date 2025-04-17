@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import stripe from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
+import client from "@/lib/dodopayments/client";
 
 export const GET = withAuthRequired(async (req, context) => {
   const user = await db
@@ -27,6 +28,14 @@ export const GET = withAuthRequired(async (req, context) => {
   const lemonSqueezyCustomerId = user.lemonSqueezyCustomerId;
   if (lemonSqueezyCustomerId) {
     // TODO: Get lemonSqueezy customer and redirect to lemonSqueezy customer portal
+  }
+
+  const dodoCustomerId = user.dodoCustomerId;
+  if (dodoCustomerId) {
+    const customerPortalSession = await client.customers.customerPortal.create(
+      dodoCustomerId
+    );
+    return redirect(customerPortalSession.link);
   }
 
   return NextResponse.json({

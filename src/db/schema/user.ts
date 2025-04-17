@@ -24,6 +24,9 @@ export const users = pgTable("app_user", {
   stripeSubscriptionId: text("stripeSubscriptionId"),
   lemonSqueezyCustomerId: text("lemonSqueezyCustomerId"),
   lemonSqueezySubscriptionId: text("lemonSqueezySubscriptionId"),
+  dodoCustomerId: text("dodoCustomerId"),
+  dodoSubscriptionId: text("dodoSubscriptionId"),
+
   planId: text("planId").references(() => plans.id),
 });
 
