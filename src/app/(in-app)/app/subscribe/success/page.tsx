@@ -1,54 +1,42 @@
-'use client';
+import { PlanProvider } from "@/lib/plans/getSubscribeUrl";
+import SuccessRedirector from "./SuccessRedirector";
+import client from "@/lib/dodopayments/client";
+import ErrorRedirector from "./ErrorRedirector";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { CheckCircle2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+export default async function SubscribeSuccessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    session_id?: string; // STRIPE
+    provider: PlanProvider;
+    subscription_id?: string; // DODO
+    status?: string; // DODO
+    payment_id?: string; // DODO
+  }>;
+}) {
+  const { provider, subscription_id, payment_id } = await searchParams;
 
-export default function SubscribeSuccessPage() {
-  const router = useRouter();
-  const [countdown, setCountdown] = useState(5);
-
-  useEffect(() => {
-    const countdownInterval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownInterval);
-          router.push('/app');
-          return 0;
+  switch (provider) {
+    case PlanProvider.DODO:
+      // Check if subscription is active
+      if (subscription_id) {
+        // Subscription Case
+        const subscription = await client.subscriptions.retrieve(
+          subscription_id
+        );
+        if (subscription.status !== "active") {
+          return <ErrorRedirector />;
         }
-        return prev - 1;
-      });
-    }, 1000);
+      }
+      // Payment Case
+      if (payment_id) {
+        const payment = await client.payments.retrieve(payment_id);
+        if (payment.status !== "succeeded") {
+          return <ErrorRedirector />;
+        }
+      }
+      break;
+  }
 
-    return () => {
-      clearInterval(countdownInterval);
-    };
-  }, [router]);
-
-  return (
-    <div className="container max-w-lg mx-auto py-12">
-      <Card className="p-6">
-        <div className="flex flex-col items-center text-center space-y-4">
-          <CheckCircle2 className="h-12 w-12 text-green-500" />
-          <h1 className="text-2xl font-bold">Payment Successful!</h1>
-          <p className="text-muted-foreground">
-            Thank you for your payment. You will be redirected to the dashboard in{' '}
-            <span className="font-medium">{countdown}</span> seconds.
-          </p>
-          
-          <div className="flex flex-row gap-2 items-center">
-            <Button asChild>
-              <Link href="/app">Go to Dashboard</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/app/billing">View Billing</Link>
-            </Button>
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-} 
+  return <SuccessRedirector />;
+}
