@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,36 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>("");
   const searchParams = useSearchParams();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const impersonateToken = searchParams?.get("impersonateToken");
+    if (impersonateToken) {
+      handleImpersonation(impersonateToken);
+    }
+  }, [searchParams]);
+
+  const handleImpersonation = async (token: string) => {
+    setIsLoading(true);
+    try {
+      const result = await signIn("credentials", {
+        signedToken: token,
+        redirect: false,
+        callbackUrl: callbackUrl || searchParams?.get("callbackUrl") || "/app",
+      });
+
+      if (result?.error) {
+        toast.error("Failed to impersonate user");
+      } else if (result?.url) {
+        router.push(result.url);
+      }
+    } catch (error) {
+      console.error("Impersonation error:", error);
+      toast.error("Failed to impersonate user");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 interface User {
   id: string;
@@ -103,15 +104,17 @@ export default function UsersPage() {
             ) : (
               data?.users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="flex items-center gap-2">
-                    <Avatar>
-                      <AvatarImage src={user.image || undefined} />
-                      <AvatarFallback>
-                        {user.name ? getInitials(user.name) : "?"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span>{user.name || "Unnamed"}</span>
-                  </TableCell>
+                  <Link href={`/super-admin/users/${user.id}`}>
+                    <TableCell className="flex items-center gap-2">
+                      <Avatar>
+                        <AvatarImage src={user.image || undefined} />
+                        <AvatarFallback>
+                          {user.name ? getInitials(user.name) : "?"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span>{user.name || "Unnamed"}</span>
+                    </TableCell>
+                  </Link>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <Badge variant={user.active ? "default" : "secondary"}>

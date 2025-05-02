@@ -134,6 +134,9 @@ importers:
       iron-session:
         specifier: ^8.0.4
         version: 8.0.4
+      jose:
+        specifier: ^6.0.10
+        version: 6.0.10
       js-cookie:
         specifier: ^3.0.5
         version: 3.0.5
