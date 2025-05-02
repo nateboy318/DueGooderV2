@@ -69,6 +69,7 @@
     "react-hook-form": "^7.55.0",
     "react-icon-cloud": "^4.1.7",
     "react-icons": "^5.5.0",
+    "recharts": "^2.15.3",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
