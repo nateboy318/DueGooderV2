@@ -9,6 +9,8 @@ export const planFormSchema = z.object({
   hasMonthlyPricing: z.boolean().default(false),
   hasYearlyPricing: z.boolean().default(false),
 
+  requiredCouponCount: z.number().min(0, "Required coupons must be non-negative").nullable(),
+
   monthlyPrice: z.number().min(0, "Monthly price must be non-negative"),
   monthlyPriceAnchor: z
     .number()

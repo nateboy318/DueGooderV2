@@ -30,6 +30,8 @@ export const plans = pgTable("plans", {
   codename: text("codename").unique(),
   default: boolean("default").default(false),
 
+  requiredCouponCount: integer("requiredCouponCount").default(0), // For LTD plans: Number of coupons required to redeem the plan
+
   hasOnetimePricing: boolean("hasOnetimePricing").default(false),
   hasMonthlyPricing: boolean("hasMonthlyPricing").default(false),
   hasYearlyPricing: boolean("hasYearlyPricing").default(false),
