@@ -30,14 +30,13 @@ export default function BillingSettingsPage() {
   // Determine subscription status
   const hasSubscription = plan && !plan.default;
 
-
   useEffect(() => {
     if (isLoading) return;
     if (!currentPlan) {
       toast.info("You need to subscribe to a plan to continue");
       router.push("/#pricing");
     }
-  }, [currentPlan, isLoading]);
+  }, [currentPlan, router, isLoading]);
 
   // Function to render quota features
   const renderQuotaFeatures = () => {

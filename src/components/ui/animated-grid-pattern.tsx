@@ -69,7 +69,7 @@ export default function AnimatedGridPattern({
     if (dimensions.width && dimensions.height) {
       setSquares(generateSquares(numSquares));
     }
-  }, [dimensions, numSquares]);
+  }, [dimensions, generateSquares, numSquares]);
 
   // Resize observer to update container dimensions
   useEffect(() => {

@@ -20,12 +20,6 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  React.useEffect(() => {
-    const impersonateToken = searchParams?.get("impersonateToken");
-    if (impersonateToken) {
-      handleImpersonation(impersonateToken);
-    }
-  }, [searchParams]);
 
   const handleImpersonation = async (token: string) => {
     setIsLoading(true);
@@ -48,6 +42,14 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
       setIsLoading(false);
     }
   };
+
+  
+  React.useEffect(() => {
+    const impersonateToken = searchParams?.get("impersonateToken");
+    if (impersonateToken) {
+      handleImpersonation(impersonateToken);
+    }
+  }, [searchParams, handleImpersonation]);
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
