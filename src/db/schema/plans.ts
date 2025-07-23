@@ -43,18 +43,22 @@ export const plans = pgTable("plans", {
   monthlyStripePriceId: text("monthlyStripePriceId"),
   monthlyLemonSqueezyVariantId: text("monthlyLemonSqueezyVariantId"),
   monthlyDodoProductId: text("monthlyDodoProductId"),
+  // Paypal plan id
+  monthlyPaypalPlanId: text("monthlyPaypalPlanId"),
 
   yearlyPrice: integer("yearlyPrice"),
   yearlyPriceAnchor: integer("yearlyPriceAnchor"),
   yearlyStripePriceId: text("yearlyStripePriceId"),
   yearlyLemonSqueezyVariantId: text("yearlyLemonSqueezyVariantId"),
   yearlyDodoProductId: text("yearlyDodoProductId"),
-
+  yearlyPaypalPlanId: text("yearlyPaypalPlanId"),
+  
   onetimePrice: integer("onetimePrice"),
   onetimePriceAnchor: integer("onetimePriceAnchor"),
   onetimeStripePriceId: text("onetimeStripePriceId"),
   onetimeLemonSqueezyVariantId: text("onetimeLemonSqueezyVariantId"),
   onetimeDodoProductId: text("onetimeDodoProductId"),
-
+  onetimePaypalPlanId: text("onetimePaypalPlanId"), // Not Required, Added for standardization
+  
   quotas: jsonb("quotas").$type<Quotas>(),
 });

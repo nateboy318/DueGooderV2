@@ -8,6 +8,10 @@ import {
 } from "@/lib/dodopayments";
 import { createCheckoutSession } from "@/lib/lemonsqueezy";
 import {
+  createPaypalOrderLink,
+  createPaypalSubscriptionLink,
+} from "@/lib/paypal/api";
+import {
   PlanProvider,
   PlanType,
   subscribeParams,
@@ -83,16 +87,31 @@ async function SubscribePage({
   const plan = plansList[0];
 
   switch (provider) {
+    case PlanProvider.PAYPAL:
+      // If this is one time plan then create Order
+      // else create subscription
+      if (type === PlanType.ONETIME) {
+        const orderLink = await createPaypalOrderLink(plan.id, user.id);
+        return redirect(orderLink);
+      } else {
+        const subscriptionLink = await createPaypalSubscriptionLink(
+          plan.id,
+          user.id,
+          type
+        );
+        return redirect(subscriptionLink);
+      }
+    break;
     case PlanProvider.STRIPE:
       // Check type and get price id from db
       const key: keyof typeof plan | null =
         type === PlanType.MONTHLY
           ? "monthlyStripePriceId"
           : type === PlanType.YEARLY
-          ? "yearlyStripePriceId"
-          : type === PlanType.ONETIME
-          ? "onetimeStripePriceId"
-          : null;
+            ? "yearlyStripePriceId"
+            : type === PlanType.ONETIME
+              ? "onetimeStripePriceId"
+              : null;
 
       if (!key) {
         return notFound();
@@ -133,7 +152,7 @@ async function SubscribePage({
         customer: user.stripeCustomerId ?? undefined,
         customer_email: user.stripeCustomerId
           ? undefined
-          : session?.user?.email ?? undefined,
+          : (session?.user?.email ?? undefined),
         billing_address_collection: "required",
         tax_id_collection: {
           enabled: true,
@@ -151,10 +170,10 @@ async function SubscribePage({
         type === PlanType.MONTHLY
           ? "monthlyLemonSqueezyVariantId"
           : type === PlanType.YEARLY
-          ? "yearlyLemonSqueezyVariantId"
-          : type === PlanType.ONETIME
-          ? "onetimeLemonSqueezyVariantId"
-          : null;
+            ? "yearlyLemonSqueezyVariantId"
+            : type === PlanType.ONETIME
+              ? "onetimeLemonSqueezyVariantId"
+              : null;
 
       if (!lemonsqueezyKey) {
         return notFound();
@@ -190,11 +209,10 @@ async function SubscribePage({
         type === PlanType.MONTHLY
           ? "monthlyDodoProductId"
           : type === PlanType.YEARLY
-          ? "yearlyDodoProductId"
-          : type === PlanType.ONETIME
-          ? "onetimeDodoProductId"
-          : null;
-
+            ? "yearlyDodoProductId"
+            : type === PlanType.ONETIME
+              ? "onetimeDodoProductId"
+              : null;
 
       if (!dodoKey) {
         return notFound();

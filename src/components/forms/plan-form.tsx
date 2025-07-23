@@ -46,10 +46,12 @@ export function PlanForm({
       monthlyStripePriceId: "",
       monthlyLemonSqueezyVariantId: "",
       monthlyDodoProductId: "",
+      monthlyPaypalPlanId: "",
       hasYearlyPricing: false,
       yearlyStripePriceId: "",
       yearlyLemonSqueezyVariantId: "",
       yearlyDodoProductId: "",
+      yearlyPaypalPlanId: "",
       monthlyPrice: 0,
       monthlyPriceAnchor: 0,
       yearlyPrice: 0,
@@ -59,6 +61,7 @@ export function PlanForm({
       onetimeLemonSqueezyVariantId: "",
       onetimeDodoProductId: "",
       onetimePriceAnchor: 0,
+      onetimePaypalPlanId: "",
       quotas: {
         canUseApp: false,
         numberOfThings: 0,
@@ -295,6 +298,19 @@ export function PlanForm({
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="monthlyPaypalPlanId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>PayPal Plan ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
               )}
@@ -375,6 +391,19 @@ export function PlanForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Dodo Product ID</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="yearlyPaypalPlanId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>PayPal Plan ID</FormLabel>
                           <FormControl>
                             <Input {...field} value={field.value || ""} />
                           </FormControl>
@@ -464,6 +493,19 @@ export function PlanForm({
                           <FormLabel>Dodo Product ID</FormLabel>
                           <FormControl>
                             <Input {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="onetimePaypalPlanId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>PayPal Plan ID (Not Required for One-time Plans)</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={"-"} disabled />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

@@ -8,6 +8,7 @@ type ErrorCodeType =
   | "LEMON_SQUEEZY_CANCEL_BEFORE_SUBSCRIBING"
   | "DODO_CANCEL_BEFORE_SUBSCRIBING"
   | "DODO_MISSING_BILLING_INFO"
+  | "PAYPAL_CANCELLED"
   | "INVALID_PARAMS";
 
 type ErrorMessages = {
@@ -23,6 +24,7 @@ const errorMessages: ErrorMessages = {
     "Please cancel your current subscription before subscribing to a new onetime plan.",
   DODO_MISSING_BILLING_INFO:
     "Billing information is required to complete your DodoPayments subscription.",
+  PAYPAL_CANCELLED: "PayPal subscription cancelled.",
   INVALID_PARAMS: "Invalid parameters.",
 };
 
@@ -86,7 +88,13 @@ export default async function SubscribeErrorPage({
               </Button>
             </div>
           )}
-
+          {code === "PAYPAL_CANCELLED" && (
+            <div className="flex flex-col gap-2 items-center">
+              <p>
+                 PayPal subscription cancelled. Please try again.
+              </p>
+            </div>
+          )}
           {/* Contact Support */}
           <div className="flex flex-row gap-2 items-center">
             <Button variant="outline" asChild>

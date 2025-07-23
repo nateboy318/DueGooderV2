@@ -18,7 +18,7 @@ export const planFormSchema = z.object({
   monthlyStripePriceId: z.string().nullable(),
   monthlyLemonSqueezyVariantId: z.string().nullable(),
   monthlyDodoProductId: z.string().nullable(),
-
+  monthlyPaypalPlanId: z.string().nullable(),
   yearlyPrice: z.number().min(0, "Yearly price must be non-negative"),
   yearlyPriceAnchor: z
     .number()
@@ -26,7 +26,7 @@ export const planFormSchema = z.object({
   yearlyStripePriceId: z.string().nullable(),
   yearlyLemonSqueezyVariantId: z.string().nullable(),
   yearlyDodoProductId: z.string().nullable(),
-
+  yearlyPaypalPlanId: z.string().nullable(),
   onetimePrice: z.number().min(0, "One-time price must be non-negative"),
   onetimePriceAnchor: z
     .number()
@@ -34,7 +34,7 @@ export const planFormSchema = z.object({
   onetimeStripePriceId: z.string().nullable(),
   onetimeLemonSqueezyVariantId: z.string().nullable(),
   onetimeDodoProductId: z.string().nullable(),
-  
+  onetimePaypalPlanId: z.string().nullable(),
   quotas: quotaSchema,
 });
 
