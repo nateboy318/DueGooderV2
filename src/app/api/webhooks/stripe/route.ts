@@ -201,6 +201,61 @@ class StripeWebhookHandler {
       .set({ stripeCustomerId: object.id })
       .where(eq(users.id, user.id));
   }
+
+  async onCheckoutSessionCompleted() {
+    // @ts-expect-error Stripe types are not fully compatible with Next.js
+    const object: Stripe.Checkout.Session = this.data.object;
+
+    // Only proceed if payment was successful
+    if (object.payment_status !== "paid") {
+      return;
+    }
+
+    // If this is a subscription checkout, let subscription events handle it
+    if (object.mode === "subscription") {
+      return;
+    }
+
+    const customer = await this._getStripeCustomer(object.customer as string);
+    if (!customer || !customer.email) {
+      throw new APIError("No customer found in checkout session");
+    }
+    const { user } = await getOrCreateUser({
+      emailId: customer.email,
+      name: customer.name,
+    });
+
+    await db
+      .update(users)
+      .set({
+        stripeCustomerId: customer.id,
+      })
+      .where(eq(users.id, user.id));
+
+    // Get line items to find the plan
+    const lineItems = await stripe.checkout.sessions.listLineItems(object.id);
+
+    if (lineItems.data.length === 0) {
+      throw new APIError("No line items found in checkout session");
+    }
+
+    const firstItem = lineItems.data[0];
+    if (!firstItem.price) {
+      throw new APIError("No price found in checkout session line item");
+    }
+
+    const dbPlan = await this._getPlanFromStripePriceId(firstItem.price.id);
+
+    if (!dbPlan) {
+      // Handle outside plan management product
+      return;
+    }
+
+    await updatePlan({
+      userId: user.id,
+      newPlanId: dbPlan.id,
+    });
+  }
 }
 
 async function handler(req: NextRequest) {
@@ -240,6 +295,9 @@ async function handler(req: NextRequest) {
       switch (eventType) {
         case "invoice.paid":
           await handler.onInvoicePaid();
+          break;
+        case "checkout.session.completed":
+          await handler.onCheckoutSessionCompleted();
           break;
         case "customer.created":
           await handler.onCustomerCreated();

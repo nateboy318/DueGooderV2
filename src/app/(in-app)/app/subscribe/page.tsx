@@ -101,7 +101,7 @@ async function SubscribePage({
         );
         return redirect(subscriptionLink);
       }
-    break;
+      break;
     case PlanProvider.STRIPE:
       // Check type and get price id from db
       const key: keyof typeof plan | null =
@@ -157,6 +157,11 @@ async function SubscribePage({
         tax_id_collection: {
           enabled: true,
         },
+        customer_update: {
+          name: "auto",
+          address: "auto",
+        },
+        customer_creation: user.stripeCustomerId ? undefined : "always",
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/subscribe/success?provider=${provider}&codename=${codename}&type=${type}&sessionId={CHECKOUT_SESSION_ID}&trialPeriodDays=${trialPeriodDays}`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/subscribe/cancel?provider=${provider}&codename=${codename}&type=${type}&sessionId={CHECKOUT_SESSION_ID}&trialPeriodDays=${trialPeriodDays}`,
       });
