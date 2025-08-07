@@ -1,24 +1,30 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useEffect, useId, useRef, useState } from "react";
+import {
+  ComponentPropsWithoutRef,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
-interface AnimatedGridPatternProps {
+export interface AnimatedGridPatternProps
+  extends ComponentPropsWithoutRef<"svg"> {
   width?: number;
   height?: number;
   x?: number;
   y?: number;
-  strokeDasharray?: unknown;
+  strokeDasharray?: any;
   numSquares?: number;
-  className?: string;
   maxOpacity?: number;
   duration?: number;
   repeatDelay?: number;
 }
 
-export default function AnimatedGridPattern({
+export function AnimatedGridPattern({
   width = 40,
   height = 40,
   x = -1,
@@ -28,6 +34,7 @@ export default function AnimatedGridPattern({
   className,
   maxOpacity = 0.5,
   duration = 4,
+  repeatDelay = 0.5,
   ...props
 }: AnimatedGridPatternProps) {
   const id = useId();
@@ -69,12 +76,12 @@ export default function AnimatedGridPattern({
     if (dimensions.width && dimensions.height) {
       setSquares(generateSquares(numSquares));
     }
-  }, [dimensions, generateSquares, numSquares]);
+  }, [dimensions, numSquares]);
 
   // Resize observer to update container dimensions
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
+      for (let entry of entries) {
         setDimensions({
           width: entry.contentRect.width,
           height: entry.contentRect.height,
@@ -88,7 +95,6 @@ export default function AnimatedGridPattern({
 
     return () => {
       if (containerRef.current) {
-        // eslint-disable-next-line
         resizeObserver.unobserve(containerRef.current);
       }
     };
@@ -116,7 +122,7 @@ export default function AnimatedGridPattern({
           <path
             d={`M.5 ${height}V.5H${width}`}
             fill="none"
-            strokeDasharray={strokeDasharray as string}
+            strokeDasharray={strokeDasharray}
           />
         </pattern>
       </defs>
