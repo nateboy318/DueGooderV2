@@ -17,6 +17,7 @@ export interface AnimatedGridPatternProps
   height?: number;
   x?: number;
   y?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   strokeDasharray?: any;
   numSquares?: number;
   maxOpacity?: number;
@@ -31,10 +32,9 @@ export function AnimatedGridPattern({
   y = -1,
   strokeDasharray = 0,
   numSquares = 50,
-  className,
+  className = "",
   maxOpacity = 0.5,
   duration = 4,
-  repeatDelay = 0.5,
   ...props
 }: AnimatedGridPatternProps) {
   const id = useId();
@@ -81,7 +81,7 @@ export function AnimatedGridPattern({
   // Resize observer to update container dimensions
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         setDimensions({
           width: entry.contentRect.width,
           height: entry.contentRect.height,
