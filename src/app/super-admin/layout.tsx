@@ -41,7 +41,7 @@ function SuperAdminLayout({ children }: SuperAdminLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-xs supports-backdrop-filter:bg-background/60">
         <div className="flex h-14 items-center px-4 gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="md:hidden">

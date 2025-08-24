@@ -68,7 +68,7 @@ const plans = [
 export function WebsitePricing() {
   return (
     <section className="py-16 sm:py-24" id="pricing">
-      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-(--breakpoint-xl) px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -86,7 +86,7 @@ export function WebsitePricing() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-3xl ${plan.isCompetitor ? "bg-muted/20" : "bg-muted/40"} p-8 shadow-sm ring-1 ring-border/60`}
+              className={`relative rounded-3xl ${plan.isCompetitor ? "bg-muted/20" : "bg-muted/40"} p-8 shadow-xs ring-1 ring-border/60`}
             >
               {plan.showBorderBeam && <BorderBeam />}
               <div className="mb-8">
@@ -160,7 +160,7 @@ export function WebsitePricing() {
 
         {/* B2B Card */}
         <div className="mt-16 max-w-2xl mx-auto">
-          <div className="rounded-3xl bg-muted/40 p-8 shadow-sm ring-1 ring-border/60">
+          <div className="rounded-3xl bg-muted/40 p-8 shadow-xs ring-1 ring-border/60">
             <div className="mb-8">
               <h3 className="text-xl font-bold">B2B Indie Kit</h3>
               <p className="mt-2 text-sm text-muted-foreground">

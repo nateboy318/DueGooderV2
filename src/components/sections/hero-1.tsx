@@ -20,10 +20,10 @@ const Hero1 = () => {
               <ChevronRight className="mt-0.5 size-4 shrink-0" />
             </p>
           </a>
-          <h1 className="mx-auto my-5 max-w-screen-lg text-balance text-center text-3xl md:text-5xl">
+          <h1 className="mx-auto my-5 max-w-(--breakpoint-lg) text-balance text-center text-3xl md:text-5xl">
             Generate your website in minutes with AI in your browser
           </h1>
-          <p className="mx-auto max-w-screen-md text-center text-sm text-muted-foreground md:text-base">
+          <p className="mx-auto max-w-(--breakpoint-md) text-center text-sm text-muted-foreground md:text-base">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
             possimus fugit ab cumque consequuntur pariatur provident? Nulla
             consequuntur nisi eum!

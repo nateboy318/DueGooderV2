@@ -204,7 +204,7 @@ async function BlogDetailPage({ params }: Props) {
               "prose-headings:scroll-mt-20 prose-headings:font-bold",
               "prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-h4:text-lg",
               "prose-img:rounded-lg",
-              "prose-a:text-primary hover:prose-a:text-primary/90",
+              "prose-a:text-primary prose-a:hover:text-primary/90",
               "prose-code:text-primary prose-code:before:content-none prose-code:after:content-none",
               // Responsive prose sizes
               "prose-sm sm:prose-base md:prose-lg",
@@ -230,7 +230,7 @@ async function BlogDetailPage({ params }: Props) {
                               src={related.frontmatter.featuredImage}
                               alt={related.frontmatter.title}
                               fill
-                              className="object-cover shadow-sm"
+                              className="object-cover shadow-xs"
                             />
                           </figure>
                         )}

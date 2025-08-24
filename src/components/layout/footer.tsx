@@ -8,7 +8,7 @@ import { Twitter, Instagram, Youtube } from "lucide-react";
 export function Footer() {
   return (
     <footer className="border-t border-border/40">
-      <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-(--breakpoint-xl) px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-12">
           {/* Brand and Description */}
           <div className="sm:col-span-2 md:col-span-2 lg:col-span-3">

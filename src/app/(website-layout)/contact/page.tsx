@@ -93,10 +93,10 @@ export default function ContactPage() {
         }}
       />
       {/* Hero Section */}
-      <section className="relative w-full overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-primary py-20 text-primary-foreground">
+      <section className="relative w-full overflow-hidden bg-linear-to-br from-primary via-primary/90 to-primary py-20 text-primary-foreground">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff33_1px,transparent_1px),linear-gradient(to_bottom,#ffffff33_1px,transparent_1px)] bg-[size:14px_14px]" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/50 via-transparent to-primary/50" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff33_1px,transparent_1px),linear-gradient(to_bottom,#ffffff33_1px,transparent_1px)] bg-size-[14px_14px]" />
+          <div className="absolute inset-0 bg-linear-to-br from-primary/50 via-transparent to-primary/50" />
         </div>
         <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-2xl space-y-4 text-center">
@@ -147,7 +147,7 @@ export default function ContactPage() {
                   },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                         <item.icon className="h-6 w-6 text-primary" />
                       </div>

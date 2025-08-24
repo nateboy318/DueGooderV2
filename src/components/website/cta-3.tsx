@@ -12,7 +12,7 @@ export function CTA3() {
 
   return (
     <section className="overflow-hidden bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-(--breakpoint-xl) px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
           <div className="flex flex-col justify-center">
             <h2 className="text-3xl font-bold sm:text-4xl">
@@ -73,7 +73,7 @@ export function CTA3() {
           </div>
 
           <div className="relative">
-            <div className="aspect-square overflow-hidden rounded-[2rem] bg-primary-foreground/10">
+            <div className="aspect-square overflow-hidden rounded-4xl bg-primary-foreground/10">
               {theme === 'dark' ? (
                 <Image
                   src="https://picsum.photos/800/800?random=1"
@@ -94,7 +94,7 @@ export function CTA3() {
             </div>
 
             {/* Floating Stats Card */}
-            <div className="absolute -bottom-6 -left-6 rounded-[1.5rem] bg-background p-6 shadow-xl ring-1 ring-border/10 sm:-bottom-8 sm:-left-8 sm:p-8">
+            <div className="absolute -bottom-6 -left-6 rounded-3xl bg-background p-6 shadow-xl ring-1 ring-border/10 sm:-bottom-8 sm:-left-8 sm:p-8">
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>
                   <p className="text-3xl font-bold">50%</p>

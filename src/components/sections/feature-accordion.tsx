@@ -76,16 +76,16 @@ const FeatureAccordion = () => {
             {features.map((feature, i) => (
               <li
                 key={feature.id}
-                className="group relative flex w-[min(24rem,80vw)] shrink-0 cursor-pointer transition md:w-full md:overflow-hidden md:rounded-lg md:px-4 md:py-6 md:data-[open]:bg-accent lg:p-6"
+                className="group relative flex w-[min(24rem,80vw)] shrink-0 cursor-pointer transition md:w-full md:overflow-hidden md:rounded-lg md:px-4 md:py-6 md:data-open:bg-accent lg:p-6"
                 data-open={selection === i ? "true" : undefined}
                 onClick={() => setSelection(i)}
               >
                 <feature.icon className="mr-3 size-5 shrink-0 lg:mr-6 lg:size-6" />
                 <div>
-                  <div className="mb-3 h-5 text-sm font-semibold text-accent-foreground md:text-muted-foreground md:group-hover:text-accent-foreground md:group-data-[open]:text-accent-foreground lg:mb-4 lg:text-lg">
+                  <div className="mb-3 h-5 text-sm font-semibold text-accent-foreground md:text-muted-foreground md:group-hover:text-accent-foreground md:group-data-open:text-accent-foreground lg:mb-4 lg:text-lg">
                     {feature.title}
                   </div>
-                  <div className="text-xs text-muted-foreground md:hidden md:text-sm md:group-data-[open]:block lg:text-base">
+                  <div className="text-xs text-muted-foreground md:hidden md:text-sm md:group-data-open:block lg:text-base">
                     {feature.description}
                   </div>
                 </div>

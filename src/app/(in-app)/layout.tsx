@@ -33,8 +33,8 @@ function DashboardSkeleton() {
       </div>
 
       {/* Content Shimmer */}
-      <div className="flex-grow p-4">
-        <div className="max-w-7xl mx-auto space-y-6">
+      <div className="grow p-4">
+        <div className="max-w-7xl mx-auto flex flex-col gap-6">
           {/* Page title shimmer */}
           <div className="h-8 w-64 bg-gray-200 rounded-md animate-pulse" />
 
@@ -45,7 +45,7 @@ function DashboardSkeleton() {
                 key={i}
                 className="p-6 rounded-lg border border-border/40 bg-card"
               >
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="h-4 w-24 bg-gray-200 rounded-md animate-pulse" />
                   <div className="h-8 w-32 bg-gray-200 rounded-md animate-pulse" />
                   <div className="h-4 w-full bg-gray-200 rounded-md animate-pulse" />
@@ -89,7 +89,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col h-screen gap-4">
       <AppHeader />
-      <div className="flex-grow p-4 sm:p-2 max-w-7xl mx-auto w-full">{children}</div>
+      <div className="grow p-4 sm:p-2 max-w-7xl mx-auto w-full">{children}</div>
       <Footer />
     </div>
   );

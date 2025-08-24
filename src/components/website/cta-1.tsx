@@ -22,7 +22,7 @@ const CTA1 = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-0 bg-background/20 backdrop-blur-sm hover:bg-background/30 hover:text-primary-foreground"
+                className="border-0 bg-background/20 backdrop-blur-xs hover:bg-background/30 hover:text-primary-foreground"
               >
                 Learn More
               </Button>

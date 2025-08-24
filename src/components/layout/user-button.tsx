@@ -25,7 +25,7 @@ export function UserButton() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 outline-none">
+      <DropdownMenuTrigger className="flex items-center gap-2 outline-hidden">
         <Avatar>
           <AvatarImage src={user?.image || undefined} />
           <AvatarFallback>

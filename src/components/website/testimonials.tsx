@@ -50,7 +50,7 @@ const testimonials = [
 export function WebsiteTestimonials() {
   return (
     <section className="bg-muted/40 py-16 sm:py-24" aria-label="Testimonials">
-      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-(--breakpoint-xl) px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             What our customers are saying
@@ -64,7 +64,7 @@ export function WebsiteTestimonials() {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.author}
-              className="flex flex-col justify-between rounded-3xl bg-background p-8 shadow-sm ring-1 ring-border/60"
+              className="flex flex-col justify-between rounded-3xl bg-background p-8 shadow-xs ring-1 ring-border/60"
             >
               <blockquote className="text-lg leading-relaxed">
                 &quot;{testimonial.quote}&quot;

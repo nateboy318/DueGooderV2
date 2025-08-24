@@ -301,7 +301,7 @@ export const WebsiteFeatures = () => {
   return (
     <section className="py-32" id="features" aria-label="Features">
       <div className="container">
-        <div className="mx-auto flex max-w-screen-md flex-col items-center gap-6">
+        <div className="mx-auto flex max-w-(--breakpoint-md) flex-col items-center gap-6">
           <h2 className="mb-4 text-center text-4xl font-semibold md:text-5xl">
             Bootstrap your app instantly,{" "}
             <HyperText
@@ -340,7 +340,7 @@ export const WebsiteFeatures = () => {
                     value={tab.id.toString()}
                     className={`flex items-center gap-2 rounded-full border border-solid border-transparent px-4 py-2 text-sm font-semibold transition ${
                       activeTab === tab.id.toString()
-                        ? "border border-solid border-muted2 shadow-sm"
+                        ? "border border-solid border-muted2 shadow-xs"
                         : ""
                     }`}
                   >

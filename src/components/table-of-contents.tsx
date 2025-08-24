@@ -35,7 +35,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   }, [headings])
 
   return (
-    <nav className="space-y-2 text-sm relative z-[60] ">
+    <nav className="space-y-2 text-sm relative z-60 ">
       <p className="font-medium mb-4">Table of Contents</p>
       {headings.map((heading) => (
         <a

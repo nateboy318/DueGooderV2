@@ -89,7 +89,7 @@ export default function BillingSettingsPage() {
       <p className="text-xs text-muted-foreground">
         Need help with your subscription? Please contact support and mention
         your user ID:
-        <span className="font-mono ml-1 bg-muted px-1 py-0.5 rounded text-xs">
+        <span className="font-mono ml-1 bg-muted px-1 py-0.5 rounded-sm text-xs">
           {user?.id || "Not available"}
         </span>
       </p>

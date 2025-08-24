@@ -160,7 +160,7 @@ export function PlanForm({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="!mt-0">Default Plan</FormLabel>
+                  <FormLabel className="mt-0!">Default Plan</FormLabel>
                 </FormItem>
               )}
             />
@@ -175,7 +175,7 @@ export function PlanForm({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="!mt-0">One-time Pricing</FormLabel>
+                  <FormLabel className="mt-0!">One-time Pricing</FormLabel>
                 </FormItem>
               )}
             />
@@ -190,7 +190,7 @@ export function PlanForm({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="!mt-0">Monthly Pricing</FormLabel>
+                  <FormLabel className="mt-0!">Monthly Pricing</FormLabel>
                 </FormItem>
               )}
             />
@@ -205,7 +205,7 @@ export function PlanForm({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="!mt-0">Yearly Pricing</FormLabel>
+                  <FormLabel className="mt-0!">Yearly Pricing</FormLabel>
                 </FormItem>
               )}
             />
@@ -538,7 +538,7 @@ export function PlanForm({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="!mt-0">Can Use App</FormLabel>
+                  <FormLabel className="mt-0!">Can Use App</FormLabel>
                 </FormItem>
               )}
             />

@@ -67,7 +67,7 @@ export default function RedeemLTDPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div>
         <h3 className="text-lg font-medium">Redeem Lifetime Deal Coupon</h3>
         <p className="text-sm text-muted-foreground">
@@ -91,7 +91,7 @@ export default function RedeemLTDPage() {
               </div>
             ) : null}
 
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <label className="text-sm font-medium" htmlFor="coupon-code">
                 Coupon Code
               </label>
@@ -116,11 +116,11 @@ export default function RedeemLTDPage() {
               </div>
             )}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex justify-end mt-2">
             <Button
               type="submit"
               disabled={isSubmitting || !couponCode.trim()}
-              className="w-full"
+              className="w-fit"
             >
               {isSubmitting ? "Redeeming..." : "Redeem Coupon"}
               {!isSubmitting && <BadgePlusIcon className="ml-2 h-4 w-4" />}

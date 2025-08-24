@@ -95,7 +95,7 @@ export default async function BlogListPage() {
                         src={blog.frontmatter.featuredImage}
                         alt={blog.frontmatter.title}
                         fill
-                        className="object-cover shadow-sm"
+                        className="object-cover shadow-xs"
                       />
                     </figure>
                   )}

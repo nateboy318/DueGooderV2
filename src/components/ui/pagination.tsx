@@ -72,4 +72,4 @@ export function Pagination({
       </div>
     </div>
   );
-} 
+}

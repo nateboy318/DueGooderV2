@@ -13,9 +13,11 @@ const MonthlyAnnualPricing = () => {
   return (
     <section className="py-32">
       <div className="container">
-        <div className="mx-auto mb-20 max-w-screen-md text-center">
+        <div className="mx-auto mb-20 max-w-(--breakpoint-md) text-center">
           <p className="text-primary font-medium mb-4">Special Launch Offer</p>
-          <h2 className="mb-4 text-4xl tracking-tight font-bold lg:text-5xl">Simple, Transparent Pricing</h2>
+          <h2 className="mb-4 text-4xl tracking-tight font-bold lg:text-5xl">
+            Simple, Transparent Pricing
+          </h2>
           <p className="text-muted-foreground text-lg">
             Choose the perfect plan for your needs. No hidden fees.
           </p>
@@ -65,8 +67,8 @@ const MonthlyAnnualPricing = () => {
               </div>
             </RadioGroup>
           </div>
-          <div className="mt-12 grid max-w-screen-md gap-8 md:grid-cols-2">
-            <div className="rounded-xl border-2 p-8 hover:border-primary/20 transition-colors">
+          <div className="mt-12 grid max-w-(--breakpoint-md) gap-8 md:grid-cols-2">
+            <div className="rounded-xl border border-2 border-gray-400 p-8 hover:border-primary transition-colors">
               <div className="flex h-full flex-col justify-between gap-6">
                 <div>
                   <h3 className="mb-4 text-2xl font-bold">Basic Plan</h3>
@@ -74,7 +76,9 @@ const MonthlyAnnualPricing = () => {
                     <span className="text-5xl font-bold">
                       {isAnnually ? "$63" : "$79"}
                     </span>
-                    <span className="ml-2 font-medium text-muted-foreground">per month</span>
+                    <span className="ml-2 font-medium text-muted-foreground">
+                      per month
+                    </span>
                   </div>
                   <p className="text-muted-foreground font-medium">
                     Good for small teams, or small businesses just starting out.
@@ -99,14 +103,18 @@ const MonthlyAnnualPricing = () => {
                     </li>
                     <li className="flex gap-3">
                       <Check className="mt-1 size-5 shrink-0 text-primary" />
-                      <span className="font-medium">No time tracking feature</span>
+                      <span className="font-medium">
+                        No time tracking feature
+                      </span>
                     </li>
                   </ul>
                 </div>
-                <Button size="lg" className="mt-8">Start a free trial</Button>
+                <Button size="lg" className="mt-8">
+                  Start a free trial
+                </Button>
               </div>
             </div>
-            <div className="rounded-xl border-2 p-8 hover:border-primary/20 transition-colors">
+            <div className="rounded-xl border border-gray-400 border-2 p-8 hover:border-primary transition-colors">
               <div className="flex h-full flex-col justify-between gap-6">
                 <div>
                   <h3 className="mb-4 text-2xl font-bold">Pro Plan</h3>
@@ -114,12 +122,17 @@ const MonthlyAnnualPricing = () => {
                     <span className="text-5xl font-bold">
                       {isAnnually ? "$239" : "$299"}
                     </span>
-                    <span className="ml-2 font-medium text-muted-foreground">per month</span>
+                    <span className="ml-2 font-medium text-muted-foreground">
+                      per month
+                    </span>
                   </div>
                   <p className="text-muted-foreground font-medium">
-                    Good for medium to large businesses. Get all the features you need.
+                    Good for medium to large businesses. Get all the features
+                    you need.
                   </p>
-                  <p className="mb-4 mt-8 font-bold text-lg">Everything in Basic, plus</p>
+                  <p className="mb-4 mt-8 font-bold text-lg">
+                    Everything in Basic, plus
+                  </p>
                   <ul className="flex flex-col gap-4">
                     <li className="flex gap-3">
                       <Check className="mt-1 size-5 shrink-0 text-primary" />
@@ -139,7 +152,9 @@ const MonthlyAnnualPricing = () => {
                     </li>
                   </ul>
                 </div>
-                <Button size="lg" className="mt-8">Start a free trial</Button>
+                <Button size="lg" className="mt-8">
+                  Start a free trial
+                </Button>
               </div>
             </div>
           </div>
