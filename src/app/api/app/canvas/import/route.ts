@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import ICAL from "ical.js";
 import withAuthRequired from "@/lib/auth/withAuthRequired";
 import { CLASS_COLORS } from "@/lib/colors";
+import { generateClassId } from "@/lib/utils/slug";
 
 
 interface ParsedClass {
@@ -74,7 +75,7 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
         // Assign color cyclically to ensure each class gets a different color
         const colorId = colorIndex % CLASS_COLORS.length;
         classMap.set(className, {
-          id: className.toLowerCase().replace(/\s+/g, "-"),
+          id: generateClassId(className),
           name: className,
           colorHex: CLASS_COLORS[colorId].hex,
           emoji: "📚", // Basic placeholder emoji for now

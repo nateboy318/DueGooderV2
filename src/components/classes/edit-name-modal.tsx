@@ -12,7 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pencil, Loader2 } from "lucide-react";
+import { Pencil, Loader2, Smile } from "lucide-react";
+import { EmojiPicker } from "@/components/ui/emoji-picker";
 
 interface EditNameModalProps {
   currentName: string;
@@ -27,6 +28,7 @@ export function EditNameModal({ currentName, currentEmoji, classId, onNameUpdate
   const [editedName, setEditedName] = useState(currentName);
   const [editedEmoji, setEditedEmoji] = useState(currentEmoji);
   const [isLoading, setIsLoading] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Sync editedName and editedEmoji with current values when they change
   useEffect(() => {
@@ -81,8 +83,14 @@ export function EditNameModal({ currentName, currentEmoji, classId, onNameUpdate
     if (!open) {
       setEditedName(currentName);
       setEditedEmoji(currentEmoji);
+      setShowEmojiPicker(false);
       onClose();
     }
+  };
+
+  const handleEmojiSelect = (emoji: string) => {
+    setEditedEmoji(emoji);
+    setShowEmojiPicker(false);
   };
 
   return (
@@ -120,21 +128,17 @@ export function EditNameModal({ currentName, currentEmoji, classId, onNameUpdate
           
           <div className="space-y-2">
             <Label htmlFor="classEmoji">Emoji</Label>
-            <Input
-              id="classEmoji"
-              value={editedEmoji}
-              onChange={(e) => setEditedEmoji(e.target.value)}
-              placeholder="Enter emoji (e.g., 📚, 🧮, 🔬)"
-              className="w-full"
-              maxLength={2}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleSave();
-                } else if (e.key === 'Escape') {
-                  handleCancel();
-                }
-              }}
-            />
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowEmojiPicker(true)}
+                className="h-10 px-3 text-lg hover:bg-gray-50"
+              >
+                {editedEmoji || "📚"}
+              </Button>
+              <span className="text-sm text-gray-500">Click to choose emoji</span>
+            </div>
           </div>
           
           <div className="flex justify-end gap-2">
@@ -161,6 +165,14 @@ export function EditNameModal({ currentName, currentEmoji, classId, onNameUpdate
           </div>
         </div>
       </DialogContent>
+
+      {/* Emoji Picker */}
+      <EmojiPicker
+        isOpen={showEmojiPicker}
+        onClose={() => setShowEmojiPicker(false)}
+        onEmojiSelect={handleEmojiSelect}
+        currentEmoji={editedEmoji}
+      />
     </Dialog>
   );
 }

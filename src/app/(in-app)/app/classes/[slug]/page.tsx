@@ -8,6 +8,7 @@ import { ArrowLeft, Plus, Check, Pencil, Trash2 } from "lucide-react";
 import { AddAssignmentModal } from "@/components/classes/add-assignment-modal";
 import { EditAssignmentModal } from "@/components/classes/edit-assignment-modal";
 import { hexToRgba } from "@/lib/colors";
+import { generateClassId } from "@/lib/utils/slug";
 
 interface Assignment {
   id: string;
@@ -47,7 +48,7 @@ export default function ClassDetailPage() {
       
       const data = await response.json();
       const classData = data.classes.find((cls: Class) => 
-        cls.id === slug || cls.name.toLowerCase().replace(/\s+/g, '-') === slug
+        cls.id === slug || generateClassId(cls.name) === slug
       );
       
       if (!classData) {
