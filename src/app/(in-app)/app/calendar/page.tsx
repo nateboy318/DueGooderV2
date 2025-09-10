@@ -7,6 +7,7 @@ import { CalendarToolbar } from "@/components/calendar/calendar-toolbar";
 import { Button } from "@/components/ui/button";
 import { Plus, Calendar as CalendarIcon } from "lucide-react";
 import { TimeblockForm } from "@/components/calendar/timeblock-form";
+import { useAppData } from "@/contexts/AppDataContext";
 
 interface Timeblock {
   id: string;
@@ -33,9 +34,9 @@ interface Assignment {
 }
 
 export default function CalendarPage() {
+  const { classes } = useAppData();
   const [timeblocks, setTimeblocks] = useState<Timeblock[]>([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -44,23 +45,21 @@ export default function CalendarPage() {
   const [currentView, setCurrentView] = useState<"month" | "week" | "day" | "agenda">("week");
   const calendarRef = useRef<{ navigateToDate: (date: Date) => void; setView: (view: "month" | "week" | "day" | "agenda") => void }>(null);
 
-  // Extract unique classes from assignments
-  const classes = useMemo(() => {
-    const classMap = new Map<string, { id: string; name: string; color: string; emoji?: string }>();
+  // Use classes from context and create class map
+  const classMap = useMemo(() => {
+    const map = new Map<string, { id: string; name: string; color: string; emoji?: string }>();
     
-    assignments.forEach(assignment => {
-      if (!classMap.has(assignment.classId)) {
-        classMap.set(assignment.classId, {
-          id: assignment.classId,
-          name: assignment.className,
-          color: assignment.classColor || '#6b7280',
-          emoji: assignment.classEmoji
-        });
-      }
+    classes.forEach((cls) => {
+      map.set(cls.id, {
+        id: cls.id,
+        name: cls.name,
+        color: cls.colorHex,
+        emoji: cls.emoji,
+      });
     });
-
-    return Array.from(classMap.values());
-  }, [assignments]);
+    
+    return map;
+  }, [classes]);
 
   // Filter events based on selected classes
   const filteredTimeblocks = useMemo(() => {
@@ -77,10 +76,10 @@ export default function CalendarPage() {
     );
   }, [assignments, selectedClasses]);
 
+  const classesList = Array.from(classMap.values());
+
   const fetchData = async () => {
     try {
-      setIsLoading(true);
-      
       // Fetch timeblocks
       const timeblocksResponse = await fetch("/api/app/timeblocks");
       if (!timeblocksResponse.ok) {
@@ -89,21 +88,12 @@ export default function CalendarPage() {
       const timeblocksData = await timeblocksResponse.json();
       setTimeblocks(timeblocksData.timeblocks || []);
 
-      // Fetch classes to get assignments
-      const classesResponse = await fetch("/api/app/classes");
-      if (!classesResponse.ok) {
-        throw new Error("Failed to fetch classes");
-      }
-      const classesData = await classesResponse.json();
-      console.log("Classes data:", classesData);
-      
-      // Extract assignments from classes
+      // Extract assignments from classes (already loaded from context)
       const allAssignments: Assignment[] = [];
-      if (classesData.classes) {
-        classesData.classes.forEach((classData: any) => {
-          console.log("Class data:", classData);
+      if (classes) {
+        classes.forEach((classData) => {
           if (classData.assignments) {
-            classData.assignments.forEach((assignment: any) => {
+            classData.assignments.forEach((assignment) => {
               allAssignments.push({
                 id: assignment.id,
                 name: assignment.name,
@@ -119,20 +109,19 @@ export default function CalendarPage() {
           }
         });
       }
-      console.log("All assignments:", allAssignments);
       setAssignments(allAssignments);
 
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(error instanceof Error ? error.message : "Failed to fetch data");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (classes.length > 0) {
+      fetchData();
+    }
+  }, [classes]);
 
   const handleTimeblockComplete = async (timeblockId: string) => {
     try {
@@ -285,16 +274,6 @@ export default function CalendarPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <CalendarIcon className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-          <p className="text-gray-500">Loading calendar...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -323,9 +302,9 @@ export default function CalendarPage() {
       />
 
       {/* Class Filter */}
-      {classes.length > 0 && (
+      {classesList.length > 0 && (
         <SlidingClassFilter
-          classes={classes}
+          classes={classesList}
           selectedClasses={selectedClasses}
           onSelectionChange={setSelectedClasses}
           isOpen={isFilterOpen}

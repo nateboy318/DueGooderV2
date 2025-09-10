@@ -3,18 +3,18 @@ import React, { useState } from "react";
 import useCurrentPlan from "@/lib/users/useCurrentPlan";
 import useGoogleAccount from "@/hooks/useGoogleAccount";
 import useUserName from "@/hooks/useUserName";
+import { useAppData } from "@/contexts/AppDataContext";
 import { Button } from "@/components/ui/button";
 import { CreditCardIcon, Calendar, AlertTriangle, Settings, Upload, MessageCircle } from "lucide-react";
+import { Loader } from "@/components/ui/loader";
 import Link from "next/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { signIn } from "next-auth/react";
 import { FaGoogle, FaSpinner } from "react-icons/fa";
-import { CalendarList } from "@/components/google-calendar/calendar-list";
 import { CanvasIntegrationModal } from "@/components/canvas/canvas-integration-modal";
 import { ClassCard } from "@/components/classes/class-card";
 import { WeeklyBreakdown } from "@/components/dashboard/weekly-breakdown";
-import useSWR from "swr";
 
 interface Class {
   id: string;
@@ -37,9 +37,8 @@ function AppHomepage() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const { googleAccount, isLoading: googleAccountLoading } = useGoogleAccount(showGoogleStatus);
   
-  // Fetch classes data
-  const { data: classesResponse, error: classesError, mutate: mutateClasses } = useSWR<{success: boolean, classes: Class[], count: number}>('/api/app/classes');
-  const classes = classesResponse?.classes || [];
+  // Get classes data from context
+  const { classes, classesError, mutateClasses } = useAppData();
 
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
@@ -117,17 +116,13 @@ function AppHomepage() {
       {/* Main Content */}
       <div className="flex-1 px-12 py-8 space-y-6">
         {/* Weekly Breakdown */}
-        {classesResponse && classes.length > 0 && (
+        {classes.length > 0 && (
           <WeeklyBreakdown classes={classes} />
         )}
-
+        
         {classesError ? (
           <div className="text-center text-red-600">
             Failed to load classes. Please try again.
-          </div>
-        ) : !classesResponse ? (
-          <div className="text-center text-muted-foreground">
-            Loading classes...
           </div>
         ) : classes.length === 0 ? (
           <div className="text-center py-12">
