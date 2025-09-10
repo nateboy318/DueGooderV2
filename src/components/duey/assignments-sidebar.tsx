@@ -123,11 +123,11 @@ export function AssignmentsSidebar() {
   };
 
   return (
-    <div className="w-80 p-6 max-h-screen my-8 overflow-y-auto space-y-4 bg-gray-100 rounded-l-lg">
+    <div className="w-80 flex justify-between flex-col bg-gray-100 rounded-l-lg p-4 gap-4 my-8">
       {/* Overdue Assignments */}
-      <div className="bg-white ">
-        <div className="p-5 pb-0">
-          <div className="flex items-center justify-between">
+      <div className="bg-white flex flex-col" style={{ maxHeight: 'calc(50vh - 80px)' }}>
+        <div className="p-5 pb-0 flex-shrink-0">
+          <div className="flex items-center justify-betwee pb-4">
             <span className="flex items-center gap-2 font-semibold text-md">
               <AlertCircle className="w-4 h-4 text-red-500" />
               Overdue
@@ -137,15 +137,15 @@ export function AssignmentsSidebar() {
             </Button>
           </div>
         </div>
-        <div className="p-4 space-y-2">
+        <div className="p-4 flex-1 overflow-y-auto">
           {overdueAssignments.length === 0 ? (
             <div className="text-center py-4 text-muted-foreground text-sm">
               <CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-500" />
               <p>No overdue assignments!</p>
             </div>
           ) : (
-            <>
-              {overdueAssignments.slice(0, 3).map((assignment) => (
+            <div className="space-y-2">
+              {overdueAssignments.map((assignment) => (
                 <div key={assignment.id} className="relative flex items-start gap-3 p-3 rounded-lg border-2" style={{ borderColor: assignment.classColor, backgroundColor: `${assignment.classColor}20` }}>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -179,22 +179,15 @@ export function AssignmentsSidebar() {
                   </Button>
                 </div>
               ))}
-              {overdueAssignments.length > 3 && (
-                <div className="text-center py-2">
-                  <span className="text-sm text-gray-500 font-medium">
-                    +{overdueAssignments.length - 3} more assignments
-                  </span>
-                </div>
-              )}
-            </>
+            </div>
           )}
         </div>
       </div>
 
       {/* Coming Up Assignments */}
-      <div className="bg-white">
-        <div className="p-4 pb-0">
-          <div className="flex items-center justify-between">
+      <div className="bg-white flex flex-col" style={{ maxHeight: 'calc(50vh - 100px)' }}>
+        <div className="p-4 pb-0 flex-shrink-0">
+          <div className="flex items-center justify-between pb-4">
             <span className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-green-500" />
               <span className="font-semibold text-md">Coming Up</span>
@@ -204,15 +197,15 @@ export function AssignmentsSidebar() {
             </Button>
           </div>
         </div>
-        <div className="p-4 space-y-2">
+        <div className="p-4 flex-1 overflow-y-auto">
           {comingUpAssignments.length === 0 ? (
             <div className="text-center py-4 text-muted-foreground text-sm">
               <Calendar className="w-8 h-8 mx-auto mb-2 text-gray-400" />
               <p>No upcoming assignments</p>
             </div>
           ) : (
-            <>
-              {comingUpAssignments.slice(0, 3).map((assignment) => (
+            <div className="space-y-2">
+              {comingUpAssignments.map((assignment) => (
                 <div key={assignment.id} className="relative p-3 rounded-lg border-2" style={{ borderColor: assignment.classColor, backgroundColor: `${assignment.classColor}20` }}>
                   <div className="flex items-start gap-3">
                     <div className="flex-1 min-w-0">
@@ -240,19 +233,10 @@ export function AssignmentsSidebar() {
                   </Button>
                 </div>
               ))}
-              {comingUpAssignments.length > 3 && (
-                <div className="text-center py-2">
-                  <span className="text-sm text-gray-500 font-medium">
-                    +{comingUpAssignments.length - 3} more assignments
-                  </span>
-                </div>
-              )}
-            </>
+            </div>
           )}
         </div>
       </div>
-
-
     </div>
   );
 }

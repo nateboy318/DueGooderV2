@@ -2,6 +2,18 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { CLASS_COLORS, hexToRgba } from "@/lib/colors"
 
+const LOADER_COLORS = [
+  "#FF4646", // Red
+  "#4CAF50", // Green
+  "#5463FF", // Blue
+  "#FFC200", // Orange
+  "#9C27B0", // Purple
+  "#CDDC39", // Lime
+  "#00BCD4", // Cyan
+  "#000000", // Black
+  "#3F51B5", // Indigo
+];
+
 export interface LoaderProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: number
   gap?: number
@@ -15,7 +27,7 @@ export const Loader = React.forwardRef<HTMLDivElement, LoaderProps>(
     size = 30, 
     gap = 5, 
     speed = 1.2, 
-    colors = CLASS_COLORS.map(color => color.hex),
+    colors = LOADER_COLORS,
     ...props 
   }, ref) => {
     const containerStyle = {
@@ -93,7 +105,7 @@ export const Loader = React.forwardRef<HTMLDivElement, LoaderProps>(
               ...dotStyle,
               backgroundColor: hexToRgba(colors[0] || CLASS_COLORS[0].hex, 0.2),
               border: `2px solid ${colors[0] || CLASS_COLORS[0].hex}`
-            }}
+            }}  
           />
           <div 
             className="inner"

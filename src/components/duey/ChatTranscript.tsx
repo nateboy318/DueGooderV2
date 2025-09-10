@@ -27,13 +27,13 @@ export function ChatTranscript({ items }: ChatTranscriptProps) {
         className="h-full"
         followOutput={(atBottom: boolean) => (atBottom ? "smooth" : false)}
         itemContent={(index, item) => (
-          <div className="flex flex-col">
+          <div className="flex flex-col mb-6">
             <div className={`flex ${item.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[75%] rounded-2xl px-5 py-4 border shadow-sm ${
+                className={`max-w-[75%] rounded-md px-5 py-2 ${
                   item.role === "user"
-                    ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white border-blue-400"
-                    : "bg-white text-gray-900 border-gray-200"
+                    ? "bg-myBlue text-white"
+                    : "bg-white text-gray-900 border-[18px] border-gray-100"
                 }`}
               >
                 {item.role === "assistant" ? (

@@ -92,7 +92,7 @@ export function AssignmentsModal({ classData, isOpen, onClose }: AssignmentsModa
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl bg-white text-gray-900 max-h-[80vh] overflow-hidden flex flex-col">
+      <DialogContent className="sm:max-w-xl w-full bg-white text-gray-900 max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <FileText className="h-5 w-5" />

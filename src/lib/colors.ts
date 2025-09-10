@@ -1,12 +1,13 @@
 export const CLASS_COLORS = [
-  { id: 0, name: 'Green', hex: '#10b981' },
-  { id: 1, name: 'Purple', hex: '#8b5cf6' },
-  { id: 2, name: 'Red', hex: '#ef4444' },
-  { id: 3, name: 'Cyan', hex: '#06b6d4' },
-  { id: 4, name: 'Yellow', hex: '#eab308' },
-  { id: 5, name: 'Blue', hex: '#3b82f6' },
-  { id: 6, name: 'Pink', hex: '#ec4899' },
-  { id: 7, name: 'Indigo', hex: '#6366f1' },
+  { id: 0, name: 'Red', hex: '#FF4646' },
+  { id: 1, name: 'Green', hex: '#4CAF50' },
+  { id: 2, name: 'Blue', hex: '#5463FF' },
+  { id: 3, name: 'Orange', hex: '#FFC200' },
+  { id: 4, name: 'Purple', hex: '#9C27B0' },
+  { id: 5, name: 'Lime', hex: '#CDDC39' },
+  { id: 6, name: 'Cyan', hex: '#00BCD4' },
+  { id: 7, name: 'Black', hex: '#000000' },
+  { id: 8, name: 'Indigo', hex: '#3F51B5' },
 ];
 
 export const getClassColor = (colorId: number) => {

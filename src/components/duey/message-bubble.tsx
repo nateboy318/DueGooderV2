@@ -219,15 +219,15 @@ export function MessageBubble({ role, content, isStreaming = false, externalDriv
       isUser ? "justify-end" : "justify-start"
     )}>
       {isAssistant && (
-        <div className="flex-shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
+        <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-sm">
           <Bot className="w-5 h-5 text-white" />
         </div>
       )}
       
       <div className={cn(
-        "max-w-[75%] rounded-2xl px-5 py-4 shadow-sm border",
+        "max-w-[75%] rounded-md px-5 py-2 border-4",
         isUser 
-          ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white border-blue-400" 
+          ? "bg-black text-white border-red-500" 
           : "bg-white text-gray-900 border-gray-200"
       )}>
         {isAssistant ? (
