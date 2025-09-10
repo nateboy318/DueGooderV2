@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home Page -->
+  <url>
+    <loc>https://www.duegooder.com/</loc>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
+
+  <!-- Signup Page -->
+  <url>
+    <loc>https://www.duegooder.com/register</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Pricing Page -->
+  <url>
+    <loc>https://www.duegooder.com/pricing</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Blog Page -->
+  <url>
+    <loc>https://www.duegooder.com/blog</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- Individual Blog Posts -->
+  <url>
+    <loc>https://www.duegooder.com/blog/google-calendar-optimization-guide</loc>
+    <priority>0.6</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.duegooder.com/blog/due-sooner-feature</loc>
+    <priority>0.6</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://www.duegooder.com/blog/duegooder-recommended-start-date</loc>
+    <priority>0.6</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <!-- Repeat for additional blog posts -->
+</urlset>

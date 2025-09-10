@@ -2,6 +2,7 @@ import { appConfig } from "@/lib/config";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Header } from "@/components/layout/header";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -9,24 +10,14 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
+    <>
     <div className="min-h-screen flex flex-col items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div className="flex flex-col items-center">
-          {/* Replace with your actual logo path */}
-          <Image
-            src="/assets/logo.png"
-            alt={appConfig.projectName}
-            width={48}
-            height={48}
-            className="mb-4"
-          />
-          <h2 className="text-center text-3xl font-bold tracking-tight text-foreground">
-            {appConfig.projectName}
-          </h2>
-        </div>
-
-        <div className="bg-background py-8 px-4 rounded-lg sm:px-10 border border-border shadow-lg">
+      <div className="w-full max-w-xl space-y-8">
+        
+        <div className="rounded-md bg-gray-100 p-6">
+          <div className="bg-white rounded-md p-10">
           {children}
+          </div>
         </div>
 
         <p className="text-center text-sm text-muted-foreground">
@@ -47,5 +38,6 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         </p>
       </div>
     </div>
+    </>
   );
 }

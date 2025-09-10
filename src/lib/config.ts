@@ -1,19 +1,22 @@
 import { AppConfigPublic } from "./types";
 
 export const appConfig: AppConfigPublic = {
-  projectName: "Indie Kit",
-  projectSlug: "indie-kit",
+  projectName: "Due Gooder",
+  projectSlug: "due-gooder",
   keywords: [
-    "Indie Kit",
+    "Due Gooder",
+    "Due Gooder AI",
+    "Due Gooder AI Assistant",
+    "Due Gooder AI Assistant",
     "NextJS Boilerplate",
     "NextJS SaaS",
     "NextJS Starter Kit",
     "SaaS Boilerplate",
     "SaaS Starter Kit",
-    "Indie Kit Pro",
+    "Due Gooder Pro",
   ],
   description:
-    "Indie Kit is a NextJS starter kit for building your own SaaS in hours.",
+    "Due Gooder is a NextJS starter kit for building your own SaaS in hours.",
   legal: {
     address: {
       street: "Plot No 337, Workyard, Phase 2, Industrial Business &amp; Park",
@@ -22,7 +25,7 @@ export const appConfig: AppConfigPublic = {
       postalCode: "160002",
       country: "India",
     },
-    email: "ssent.hq@gmail.com",
+    email: "nate@duegooder.com",
     phone: "+91 9876543210",
   },
   social: {
@@ -33,7 +36,10 @@ export const appConfig: AppConfigPublic = {
     youtube: "https://youtube.com/-",
   },
   email: {
-    senderName: "Indie Kit",
-    senderEmail: "ssent.hq@gmail.com",
+    senderName: "Due Gooder",
+    senderEmail: "nate@duegooder.com",
+  },
+  auth: {
+    signInEnabled: true,
   },
 };

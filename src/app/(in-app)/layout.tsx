@@ -2,7 +2,8 @@
 
 import { Footer } from "@/components/layout/footer";
 import { AppHeader } from "@/components/layout/app-header";
-import React from "react";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import React, { useState } from "react";
 import useUser from "@/lib/users/useUser";
 
 function DashboardSkeleton() {
@@ -81,16 +82,42 @@ function DashboardSkeleton() {
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const { isLoading } = useUser();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
   if (isLoading) {
     return <DashboardSkeleton />;
   }
 
   return (
-    <div className="flex flex-col h-screen gap-4">
-      <AppHeader />
-      <div className="grow p-4 sm:p-2 max-w-7xl mx-auto w-full">{children}</div>
-      <Footer />
+    <div className="flex h-screen dark:bg-neutral-900">
+      {/* Sidebar */}
+      <AppSidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)}
+        isCollapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+      />
+      
+      {/* Main Content */}
+      <div className={`flex flex-col flex-1 transition-all duration-300 ${
+        sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'
+      }`}>
+        {/* Mobile Header with Toggle */}
+        <div className="lg:hidden">
+          <AppHeader onMenuClick={() => setSidebarOpen(true)} sidebarCollapsed={sidebarCollapsed} />
+        </div>
+        
+        {/* Desktop Header */}
+        <div className="hidden lg:block">
+          <AppHeader sidebarCollapsed={sidebarCollapsed} />
+        </div>
+        
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="w-full">{children}</div>
+        </main>
+      </div>
     </div>
   );
 }

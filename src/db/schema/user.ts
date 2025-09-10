@@ -5,6 +5,7 @@ import {
   text,
   primaryKey,
   integer,
+  json,
 } from "drizzle-orm/pg-core";
 
 import type { AdapterAccountType } from "next-auth/adapters";
@@ -26,6 +27,20 @@ export const users = pgTable("app_user", {
   lemonSqueezySubscriptionId: text("lemonSqueezySubscriptionId"),
   dodoCustomerId: text("dodoCustomerId"),
   dodoSubscriptionId: text("dodoSubscriptionId"),
+  
+  classes: json("classes").$type<{
+    id: string;
+    name: string;
+    colorHex: string;
+    emoji: string;
+    assignments: {
+      id: string;
+      name: string;
+      dueDate: string;
+      description?: string;
+      completed: boolean;
+    }[];
+  }[]>(),
   
   planId: text("planId").references(() => plans.id),
 });

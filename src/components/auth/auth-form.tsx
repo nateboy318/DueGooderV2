@@ -108,9 +108,6 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
       </Button>
 
       <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
             Or continue with email
@@ -132,10 +129,10 @@ export function AuthForm({ className, callbackUrl, ...props }: AuthFormProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full py-6"
+            className="w-full py-6 focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full py-6">
+        <Button type="submit" disabled={isLoading} variant="default" className="w-full py-6">
           {isLoading && <FaSpinner className="mr-2 h-4 w-4 animate-spin" />}
           Continue with Email
         </Button>

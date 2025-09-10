@@ -25,4 +25,7 @@ export interface AppConfigPublic {
     senderName: string;
     senderEmail: string;
   };
+  auth: {
+    signInEnabled: boolean;
+  };
 }

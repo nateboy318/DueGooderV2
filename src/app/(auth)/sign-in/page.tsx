@@ -12,8 +12,8 @@ export default function SignInPage() {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight mb-2">
-          Welcome back
+        <h1 className="text-4xl font-bold tracking-tight mb-2">
+          Welcome back 👋
         </h1>
         <p className="text-sm text-muted-foreground">
           Sign in to your account to continue

@@ -10,6 +10,7 @@ import {
   users,
   verificationTokens,
 } from "./db/schema/user";
+import { eq, and } from "drizzle-orm";
 import onUserCreate from "./lib/users/onUserCreate";
 import { render } from "@react-email/components";
 import MagicLinkEmail from "./emails/MagicLinkEmail";
@@ -87,8 +88,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   callbacks: {
-    async signIn() {
-      return process.env.NEXT_PUBLIC_SIGNIN_ENABLED === "true";
+    async signIn({ user, account, profile }) {
+      console.log("SIGNIN_ENABLED:", appConfig.auth.signInEnabled);
+      
+      // If this is a Google account sign-in, ensure we update the account with fresh tokens
+      if (account?.provider === "google" && account.refresh_token) {
+        try {
+          // Update the account with the new refresh token and scopes
+          await db
+            .update(accounts)
+            .set({
+              refresh_token: account.refresh_token,
+              access_token: account.access_token,
+              scope: account.scope,
+              expires_at: account.expires_at,
+            })
+            .where(
+              and(
+                eq(accounts.provider, "google"),
+                eq(accounts.providerAccountId, account.providerAccountId)
+              )
+            );
+          
+          console.log("Updated Google account with fresh tokens and scopes");
+        } catch (error) {
+          console.error("Failed to update Google account:", error);
+        }
+      }
+      
+      return appConfig.auth.signInEnabled === true;
     },
     async session({ session, token }) {
       if (token.sub) {
@@ -126,6 +154,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
+      authorization: {
+        params: {
+          scope: "openid profile email https://www.googleapis.com/auth/calendar",
+          access_type: "offline", // Add this to get refresh token
+          prompt: "consent", // Force consent screen to ensure we get updated scopes
+        },
+      },
+      // Force account updates by always treating as new
+      checks: ["none"],
     }),
     emailProvider,
     CredentialsProvider({

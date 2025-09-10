@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { appConfig } from "@/lib/config";
 import Providers from "./Providers";
 
-const inter = Inter({
-  variable: "--font-inter",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -38,7 +39,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/assets/logo.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${inter.variable} antialiased bg-background`}>
+      <body className={`${bricolage.variable} antialiased bg-background`} style={{ fontFamily: 'var(--font-bricolage), ui-sans-serif, system-ui, sans-serif' }}>
         <Providers>{children}</Providers>
       </body>
     </html>
