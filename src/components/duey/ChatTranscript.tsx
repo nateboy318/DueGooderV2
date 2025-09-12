@@ -21,14 +21,20 @@ type ChatTranscriptProps = {
 
 export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject }: ChatTranscriptProps) {
   const virtuosoRef = useRef<any>(null);
-  const [clickedMessages, setClickedMessages] = React.useState<Set<string>>(new Set());
+  const [clickedMessages, setClickedMessages] = React.useState<Record<string, "confirm" | "reject" | undefined>>({});
 
-  const handleClick = (messageId: string, handler?: (parsed: any, messageId: string) => void, parsed?: any) => {
-    if (!clickedMessages.has(messageId)) {
-      setClickedMessages(prev => new Set(prev).add(messageId));
+  const handleClick = (
+    messageId: string,
+    action: "confirm" | "reject",
+    handler?: (parsed: any, messageId: string) => void,
+    parsed?: any
+  ) => {
+    if (!clickedMessages[messageId]) {
+      setClickedMessages(prev => ({ ...prev, [messageId]: action }));
       handler && handler(parsed, messageId);
     }
   };
+
 
   return (
     <div className="h-full">
@@ -49,7 +55,6 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject }:
               } catch {}
             }
           }
-          const isClicked = clickedMessages.has(item.id);
           return (
             <div className="flex flex-col mb-6">
               <div className={`flex ${item.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -73,16 +78,16 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject }:
                         {showConfirmation && (
                           <div className="flex gap-4 mt-4 justify-center">
                             <button
-                              className={`px-4 py-2 rounded border border-gray-300 ${isClicked ? 'bg-[var(--color-myBlue)] text-white' : 'bg-white'}`}
-                              onClick={() => handleClick(item.id, onTimeblockConfirm, parsed)}
-                              disabled={isClicked}
+                              className={`px-4 py-2 rounded border border-gray-300 ${clickedMessages[item.id] === 'confirm' ? 'bg-[var(--color-myBlue)] text-white' : 'bg-white'}`}
+                              onClick={() => handleClick(item.id, 'confirm', onTimeblockConfirm, parsed)}
+                              disabled={!!clickedMessages[item.id]}
                             >
                               Looks good!
                             </button>
                             <button
-                              className="px-4 py-2 rounded border border-gray-300 bg-white"
-                              onClick={() => handleClick(item.id, onTimeblockReject, parsed)}
-                              disabled={isClicked}
+                              className={`px-4 py-2 rounded border border-gray-300 ${clickedMessages[item.id] === 'reject' ? 'bg-[var(--color-myBlue)] text-white' : 'bg-white'}`}
+                              onClick={() => handleClick(item.id, 'reject', onTimeblockReject, parsed)}
+                              disabled={!!clickedMessages[item.id]}
                             >
                               Let's try another.
                             </button>
@@ -102,5 +107,3 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject }:
     </div>
   );
 }
-
-
