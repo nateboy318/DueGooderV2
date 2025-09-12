@@ -14,21 +14,15 @@ export const GET = withAuthRequired(async (request: NextRequest, context) => {
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
     
-    let query = db
+    const conditions = [eq(timeblocks.userId, userId)];
+    if (startDate) conditions.push(gte(timeblocks.startTime, new Date(startDate)));
+    if (endDate) conditions.push(lte(timeblocks.endTime, new Date(endDate)));
+
+    const userTimeblocks = await db
       .select()
       .from(timeblocks)
-      .where(eq(timeblocks.userId, userId))
+      .where(and(...conditions))
       .orderBy(timeblocks.startTime);
-    
-    // Apply date range filter if provided
-    if (startDate) {
-      query = query.where(and(eq(timeblocks.userId, userId), gte(timeblocks.startTime, new Date(startDate))));
-    }
-    if (endDate) {
-      query = query.where(and(eq(timeblocks.userId, userId), lte(timeblocks.endTime, new Date(endDate))));
-    }
-    
-    const userTimeblocks = await query;
     
     return NextResponse.json({ timeblocks: userTimeblocks });
   } catch (error) {

@@ -237,11 +237,14 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
 - Focus on today and this week
 - Keep responses brief but helpful
 - Be proactive in suggesting timeblocks
+- No need to bold the time in the response.
+
 
 **Timezone:**
 - All times referenced by the user are in their local timezone: ${userTimezone}.
 - When you generate a timeblock, always interpret the requested time as ${userTimezone} local time.
-- Output all times as ISO 8601 UTC (ending with 'Z'). For example, 2:00pm ${userTimezone} should be output as its corresponding UTC time.
+- When responding to the user, always tell them the time of the time block in normal time. 
+
 
 **Capabilities:**
 - Analyze assignments and suggest study timeblocks
@@ -304,7 +307,7 @@ Respond concisely. Use markdown formatting for lists and emphasis. When appropri
               controller.enqueue(encoder.encode(data));
             }
           }
-          
+          /*
           // Check if response contains timeblock creation request
           const timeblockMatch = fullResponse.match(/```json\s*{\s*"action":\s*"create_timeblock"[\s\S]*?}\s*```/);
           if (timeblockMatch && !timeblockCreated) {
@@ -328,7 +331,7 @@ Respond concisely. Use markdown formatting for lists and emphasis. When appropri
               console.error("Error parsing timeblock creation:", parseError);
             }
           }
-          
+          */
           // Send completion signal
           const doneData = `data: ${JSON.stringify({ done: true })}\n\n`;
           controller.enqueue(encoder.encode(doneData));

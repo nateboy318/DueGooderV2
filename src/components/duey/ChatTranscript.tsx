@@ -15,10 +15,21 @@ export type ChatItem = {
 
 type ChatTranscriptProps = {
   items: ChatItem[];
+  onTimeblockConfirm?: (timeblock: any, messageId: string) => void;
+  onTimeblockReject?: (timeblock: any, messageId: string) => void;
 };
 
-export function ChatTranscript({ items }: ChatTranscriptProps) {
+export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject }: ChatTranscriptProps) {
   const virtuosoRef = useRef<any>(null);
+  const [clickedMessages, setClickedMessages] = React.useState<Set<string>>(new Set());
+
+  const handleClick = (messageId: string, handler?: (parsed: any, messageId: string) => void, parsed?: any) => {
+    if (!clickedMessages.has(messageId)) {
+      setClickedMessages(prev => new Set(prev).add(messageId));
+      handler && handler(parsed, messageId);
+    }
+  };
+
   return (
     <div className="h-full">
       <Virtuoso
@@ -27,7 +38,6 @@ export function ChatTranscript({ items }: ChatTranscriptProps) {
         className="h-full"
         followOutput={(atBottom: boolean) => (atBottom ? "smooth" : false)}
         itemContent={(index, item) => {
-          // Try to detect a create_timeblock action in the assistant message
           let parsed: any = null;
           let showConfirmation = false;
           if (item.role === "assistant") {
@@ -39,6 +49,7 @@ export function ChatTranscript({ items }: ChatTranscriptProps) {
               } catch {}
             }
           }
+          const isClicked = clickedMessages.has(item.id);
           return (
             <div className="flex flex-col mb-6">
               <div className={`flex ${item.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -61,8 +72,20 @@ export function ChatTranscript({ items }: ChatTranscriptProps) {
                         <StreamingMarkdownRenderer text={item.content} streaming={!!item.streaming} />
                         {showConfirmation && (
                           <div className="flex gap-4 mt-4 justify-center">
-                            <button className="px-4 py-2 rounded border border-gray-300 bg-white">Yes</button>
-                            <button className="px-4 py-2 rounded border border-gray-300 bg-white">Let's try another</button>
+                            <button
+                              className="px-4 py-2 rounded border border-gray-300 bg-white"
+                              onClick={() => handleClick(item.id, onTimeblockConfirm, parsed)}
+                              disabled={isClicked}
+                            >
+                              Looks good!
+                            </button>
+                            <button
+                              className="px-4 py-2 rounded border border-gray-300 bg-white"
+                              onClick={() => handleClick(item.id, onTimeblockReject, parsed)}
+                              disabled={isClicked}
+                            >
+                              Let's try another.
+                            </button>
                           </div>
                         )}
                       </>

@@ -57,7 +57,20 @@ export default function DueyPage() {
       streamingRef.current = false;
     }
   };
-// Comment for Dalton Initial Commit on a new branch
+  const onTimeblockConfirm = async (parsed: any, messageId: string) => {
+    if (!parsed?.timeblock) return;
+    try {
+      await fetch("/api/app/timeblocks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed.timeblock),
+      });
+      // Optionally, show a toast or update UI
+    } catch (error) {
+      // Optionally, show error UI
+      console.error("Failed to create timeblock", error);
+    }
+  };
   return (
     <div className="flex h-[calc(100vh-65px)]">
       <div className="flex-1 flex flex-col">
@@ -68,7 +81,7 @@ export default function DueyPage() {
         ) : (
           <div className="flex-1 overflow-hidden px-4 py-6">
             <div className="max-w-4xl mx-auto h-full">
-              <ChatTranscript items={items} />
+              <ChatTranscript items={items} onTimeblockConfirm={onTimeblockConfirm} />
             </div>
           </div>
         )}
