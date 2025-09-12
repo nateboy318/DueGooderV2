@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTimeblockActions } from "./hooks/useTimeblockActions";
 import { ChatInput } from "@/components/duey/chat-input";
 import { EmptyState } from "@/components/duey/empty-state";
 import { AssignmentsSidebar } from "@/components/duey/assignments-sidebar";
@@ -57,7 +58,15 @@ export default function DueyPage() {
       streamingRef.current = false;
     }
   };
-// Comment for Dalton Initial Commit on a new branch
+ 
+  const { onTimeblockConfirm, onTimeblockReject } = useTimeblockActions({
+    setItems,
+    setIsLoading,
+    setIsRateLimited,
+    streamingRef,
+    items,
+  });
+
   return (
     <div className="flex h-[calc(100vh-65px)]">
       <div className="flex-1 flex flex-col">
@@ -68,7 +77,7 @@ export default function DueyPage() {
         ) : (
           <div className="flex-1 overflow-hidden px-4 py-6">
             <div className="max-w-4xl mx-auto h-full">
-              <ChatTranscript items={items} />
+              <ChatTranscript items={items} onTimeblockConfirm={onTimeblockConfirm} onTimeblockReject={onTimeblockReject} />
             </div>
           </div>
         )}
