@@ -25,7 +25,7 @@ export default function DueyPage() {
       const response = await fetch("/api/duey/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [{ role: "user", content: userText }], options: { maxTokens: 600, temperature: 0.3 } }),
+        body: JSON.stringify({ messages: [{ role: "user", content: userText }], options: { maxTokens: 600, temperature: 0.3 }, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
       });
       if (response.status === 429) {
         setIsRateLimited(true);
@@ -57,7 +57,7 @@ export default function DueyPage() {
       streamingRef.current = false;
     }
   };
-
+// Comment for Dalton Initial Commit on a new branch
   return (
     <div className="flex h-[calc(100vh-65px)]">
       <div className="flex-1 flex flex-col">

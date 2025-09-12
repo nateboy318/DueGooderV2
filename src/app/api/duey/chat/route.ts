@@ -181,7 +181,8 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     }
 
     const body = await request.json();
-    const { messages, options = {} } = body;
+    const { messages, options = {}, timezone } = body;
+    const userTimezone = timezone || "UTC";
 
     // Validate messages
     if (!Array.isArray(messages) || messages.length === 0) {
@@ -236,6 +237,11 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
 - Focus on today and this week
 - Keep responses brief but helpful
 - Be proactive in suggesting timeblocks
+
+**Timezone:**
+- All times referenced by the user are in their local timezone: ${userTimezone}.
+- When you generate a timeblock, always interpret the requested time as ${userTimezone} local time.
+- Output all times as ISO 8601 UTC (ending with 'Z'). For example, 2:00pm ${userTimezone} should be output as its corresponding UTC time.
 
 **Capabilities:**
 - Analyze assignments and suggest study timeblocks
