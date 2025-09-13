@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dueySystemPrompt } from "@/DUEY/prompt/main";
-import { timeblockToolPrompt } from "@/DUEY/prompt/tool-prompt/timeblock";
+import { dueySystemPrompt } from "@/duey-engine/prompt/main";
+import { timeblockToolPrompt } from "@/duey-engine/prompt/tool-prompt/timeblock";
 import { detectToolIntent } from "./helpers/toolDetection";
 import { db } from "@/db";
 import { users } from "@/db/schema/user";
