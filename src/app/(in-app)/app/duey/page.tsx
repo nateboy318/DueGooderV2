@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useTimeblockActions } from "../../../../duey-brain/hooks/useTimeblockActions";
+import { useTimeblockActions } from "../../../../DUEY/hooks/useTimeblockActions";
 import { ChatInput } from "@/components/duey/chat-input";
 import { EmptyState } from "@/components/duey/empty-state";
 import { AssignmentsSidebar } from "@/components/duey/assignments-sidebar";

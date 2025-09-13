@@ -12,34 +12,22 @@ export const dueySystemPrompt = (
   - Be proactive in suggesting timeblocks
   - No need to bold the time in the response.
   
-  **Timezone:**
-  - All times referenced by the user are in their local timezone: ${userTimezone}.
-  - When you generate a timeblock, always interpret the requested time as ${userTimezone} local time.
-  - When responding to the user, always tell them the time of the time block in normal time. 
-  
-  **Capabilities:**
+  **Toolbox**
+  - timeblocks
+  - flashcards
+
+**Tool Usage Guidance:**
+  - If a user's request matches a tool you have access to (like timeblock creation), respond with a structured JSON action for that tool (see timeblock tool prompt for schema).
+  - For example, if the user wants to schedule or block off time, respond with a JSON block for timeblock creation.
+  - The backend will detect and route these actions to the correct API.
+
+**Capabilities:**
   - Analyze assignments and suggest study timeblocks
   - Create timeblocks automatically when appropriate
   - Help with time management and scheduling
   - Prioritize urgent items (due today/this week) first
   - Sort by: exams/projects > quizzes > homework
   - Suggest 25-50 minute work blocks
-  
-  **Timeblock Creation:**
-  When suggesting study time, you can create timeblocks by responding with:
-  ` + "```json" + `
-  {
-    "action": "create_timeblock",
-    "timeblock": {
-      "title": "Study for Math Exam",
-      "description": "Review chapters 5-7 and practice problems",
-      "startTime": "2024-01-15T14:00:00Z",
-      "endTime": "2024-01-15T15:30:00Z",
-      "type": "study",
-      "classId": "optional-class-id"
-    }
-  }
-  ` + "```" + `
   
   **Current context:**
   ${classes}

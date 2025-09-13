@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dueySystemPrompt } from "@/duey-brain/prompt/main";
+import { dueySystemPrompt } from "@/DUEY/prompt/main";
+import { timeblockToolPrompt } from "@/DUEY/prompt/tool-prompt/timeblock";
+import { detectToolIntent } from "./helpers/toolDetection";
 import { db } from "@/db";
 import { users } from "@/db/schema/user";
 import { timeblocks } from "@/db/schema/timeblocks";
@@ -203,7 +205,7 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
       );
     }
 
-    // Get user's classes and timeblocks
+    // Get user's classes
     const user = await db
       .select({ classes: users.classes })
       .from(users)
@@ -217,24 +219,26 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     const classes = user[0].classes || [];
     const nowIso = new Date().toISOString();
 
-    // Get user's timeblocks for this week
-    const weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-
     const userTimeblocks = await db
       .select()
       .from(timeblocks)
       .where(eq(timeblocks.userId, userId))
       .orderBy(timeblocks.startTime);
 
-    // Create system prompt
-    const systemPrompt = dueySystemPrompt(
-      userTimezone,
-      formatClassesForPrompt(classes, nowIso),
-      formatTimeblocksForPrompt(userTimeblocks, nowIso)
-    );
+  
+    const lastUserMessage = limitedMessages.slice().reverse().find(m => m.role === "user")?.content || "";
+    const { isTimeblockIntent } = detectToolIntent(lastUserMessage);
+
+    console.log("[Duey Chat] Timeblock intent detected:", isTimeblockIntent);
+    console.log("[Duey Chat] Using prompt:", isTimeblockIntent ? "timeblockToolPrompt" : "dueySystemPrompt");
+
+    const systemPrompt = isTimeblockIntent
+      ? timeblockToolPrompt(userTimezone)
+      : dueySystemPrompt(
+          userTimezone,
+          formatClassesForPrompt(classes, nowIso),
+          formatTimeblocksForPrompt(userTimeblocks, nowIso)
+        );
 
     // Prepare messages for OpenAI
     const openaiMessages = [
@@ -254,7 +258,6 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     // Create streaming response
     const encoder = new TextEncoder();
     let fullResponse = "";
-    let timeblockCreated = false;
     
     const streamResponse = new ReadableStream({
       async start(controller) {
@@ -267,32 +270,6 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
               controller.enqueue(encoder.encode(data));
             }
           }
-          /*
-          // Check if response contains timeblock creation request
-          const timeblockMatch = fullResponse.match(/```json\s*{\s*"action":\s*"create_timeblock"[\s\S]*?}\s*```/);
-          if (timeblockMatch && !timeblockCreated) {
-            try {
-              const jsonMatch = timeblockMatch[0].match(/\{[\s\S]*\}/);
-              if (jsonMatch) {
-                const parsedTimeblockData = JSON.parse(jsonMatch[0]);
-                if (parsedTimeblockData.action === "create_timeblock" && parsedTimeblockData.timeblock) {
-                  const newTimeblock = await createTimeblock(userId, parsedTimeblockData.timeblock);
-                  timeblockCreated = true;
-                  
-                  // Send timeblock creation confirmation
-                  const timeblockResponseData = `data: ${JSON.stringify({ 
-                    timeblockCreated: true, 
-                    timeblock: newTimeblock 
-                  })}\n\n`;
-                  controller.enqueue(encoder.encode(timeblockResponseData));
-                }
-              }
-            } catch (parseError) {
-              console.error("Error parsing timeblock creation:", parseError);
-            }
-          }
-          */
-          // Send completion signal
           const doneData = `data: ${JSON.stringify({ done: true })}\n\n`;
           controller.enqueue(encoder.encode(doneData));
           controller.close();
