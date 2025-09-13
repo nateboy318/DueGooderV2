@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { dueySystemPrompt } from "@/duey-engine/prompt/main";
+import { timeblockToolPrompt } from "@/duey-engine/prompt/tool-prompt/timeblock";
+import { detectToolIntent } from "./helpers/toolDetection";
 import { db } from "@/db";
 import { users } from "@/db/schema/user";
 import { timeblocks } from "@/db/schema/timeblocks";
@@ -202,7 +205,7 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
       );
     }
 
-    // Get user's classes and timeblocks
+    // Get user's classes
     const user = await db
       .select({ classes: users.classes })
       .from(users)
@@ -216,65 +219,26 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     const classes = user[0].classes || [];
     const nowIso = new Date().toISOString();
 
-    // Get user's timeblocks for this week
-    const weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-
     const userTimeblocks = await db
       .select()
       .from(timeblocks)
       .where(eq(timeblocks.userId, userId))
       .orderBy(timeblocks.startTime);
 
-    // Create system prompt
-    const systemPrompt = `You are Duey, an agentic academic assistant. Help students prioritize their workload and manage their time effectively.
+  
+    const lastUserMessage = limitedMessages.slice().reverse().find(m => m.role === "user")?.content || "";
+    const { isTimeblockIntent } = detectToolIntent(lastUserMessage);
 
-**Style:**
-- Be direct and practical
-- Use bullet points for lists
-- Focus on today and this week
-- Keep responses brief but helpful
-- Be proactive in suggesting timeblocks
-- No need to bold the time in the response.
+    console.log("[Duey Chat] Timeblock intent detected:", isTimeblockIntent);
+    console.log("[Duey Chat] Using prompt:", isTimeblockIntent ? "timeblockToolPrompt" : "dueySystemPrompt");
 
-
-**Timezone:**
-- All times referenced by the user are in their local timezone: ${userTimezone}.
-- When you generate a timeblock, always interpret the requested time as ${userTimezone} local time.
-- When responding to the user, always tell them the time of the time block in normal time. 
-
-
-**Capabilities:**
-- Analyze assignments and suggest study timeblocks
-- Create timeblocks automatically when appropriate
-- Help with time management and scheduling
-- Prioritize urgent items (due today/this week) first
-- Sort by: exams/projects > quizzes > homework
-- Suggest 25-50 minute work blocks
-
-**Timeblock Creation:**
-When suggesting study time, you can create timeblocks by responding with:
-\`\`\`json
-{
-  "action": "create_timeblock",
-  "timeblock": {
-    "title": "Study for Math Exam",
-    "description": "Review chapters 5-7 and practice problems",
-    "startTime": "2024-01-15T14:00:00Z",
-    "endTime": "2024-01-15T15:30:00Z",
-    "type": "study",
-    "classId": "optional-class-id"
-  }
-}
-\`\`\`
-
-**Current context:**
-${formatClassesForPrompt(classes, nowIso)}
-${formatTimeblocksForPrompt(userTimeblocks, nowIso)}
-
-Respond concisely. Use markdown formatting for lists and emphasis. When appropriate, suggest and create timeblocks for effective study sessions.`;
+    const systemPrompt = isTimeblockIntent
+      ? timeblockToolPrompt(userTimezone)
+      : dueySystemPrompt(
+          userTimezone,
+          formatClassesForPrompt(classes, nowIso),
+          formatTimeblocksForPrompt(userTimeblocks, nowIso)
+        );
 
     // Prepare messages for OpenAI
     const openaiMessages = [
@@ -294,7 +258,6 @@ Respond concisely. Use markdown formatting for lists and emphasis. When appropri
     // Create streaming response
     const encoder = new TextEncoder();
     let fullResponse = "";
-    let timeblockCreated = false;
     
     const streamResponse = new ReadableStream({
       async start(controller) {
@@ -307,32 +270,6 @@ Respond concisely. Use markdown formatting for lists and emphasis. When appropri
               controller.enqueue(encoder.encode(data));
             }
           }
-          /*
-          // Check if response contains timeblock creation request
-          const timeblockMatch = fullResponse.match(/```json\s*{\s*"action":\s*"create_timeblock"[\s\S]*?}\s*```/);
-          if (timeblockMatch && !timeblockCreated) {
-            try {
-              const jsonMatch = timeblockMatch[0].match(/\{[\s\S]*\}/);
-              if (jsonMatch) {
-                const parsedTimeblockData = JSON.parse(jsonMatch[0]);
-                if (parsedTimeblockData.action === "create_timeblock" && parsedTimeblockData.timeblock) {
-                  const newTimeblock = await createTimeblock(userId, parsedTimeblockData.timeblock);
-                  timeblockCreated = true;
-                  
-                  // Send timeblock creation confirmation
-                  const timeblockResponseData = `data: ${JSON.stringify({ 
-                    timeblockCreated: true, 
-                    timeblock: newTimeblock 
-                  })}\n\n`;
-                  controller.enqueue(encoder.encode(timeblockResponseData));
-                }
-              }
-            } catch (parseError) {
-              console.error("Error parsing timeblock creation:", parseError);
-            }
-          }
-          */
-          // Send completion signal
           const doneData = `data: ${JSON.stringify({ done: true })}\n\n`;
           controller.enqueue(encoder.encode(doneData));
           controller.close();
