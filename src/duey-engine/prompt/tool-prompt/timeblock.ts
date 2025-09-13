@@ -9,12 +9,13 @@ When suggesting study time, you can create timeblocks by responding with:
       "timeblock": {
         "title": "Study for Math Exam",
         "description": "Review chapters 5-7 and practice problems",
-        "startTime": "2024-01-15T14:00:00Z",
-        "endTime": "2024-01-15T15:30:00Z",
+        "startTime": "<startTime>",
+        "endTime": "<endTime>",
         "type": "study",
         "classId": "optional-class-id"
       }
     }
+    // Replace <startTime> and <endTime> with the user's intended date/time in ISO 8601 format. If the user does not specify a date, use today's date in the user's timezone as reference.
 
 **Timezone:**
 - All times referenced by the user are in their local timezone: ${userTimezone}.
