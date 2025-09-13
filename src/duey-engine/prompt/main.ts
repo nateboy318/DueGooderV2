@@ -16,11 +16,6 @@ export const dueySystemPrompt = (
   - timeblocks
   - flashcards
 
-**Tool Usage Guidance:**
-  - If a user's request matches a tool you have access to (like timeblock creation), respond with a structured JSON action for that tool (see timeblock tool prompt for schema).
-  - For example, if the user wants to schedule or block off time, respond with a JSON block for timeblock creation.
-  - The backend will detect and route these actions to the correct API.
-
 **Capabilities:**
   - Analyze assignments and suggest study timeblocks
   - Create timeblocks automatically when appropriate

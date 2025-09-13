@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dueySystemPrompt } from "@/duey-engine/prompt/main";
 import { timeblockToolPrompt } from "@/duey-engine/prompt/tool-prompt/timeblock";
+import { getCurrentDateString } from "@/duey-engine/prompt/helpers/getCurrentDateString";
 import { detectToolIntent } from "./helpers/toolDetection";
 import { db } from "@/db";
 import { users } from "@/db/schema/user";
@@ -232,8 +233,9 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     console.log("[Duey Chat] Timeblock intent detected:", isTimeblockIntent);
     console.log("[Duey Chat] Using prompt:", isTimeblockIntent ? "timeblockToolPrompt" : "dueySystemPrompt");
 
-    const systemPrompt = isTimeblockIntent
-      ? timeblockToolPrompt(userTimezone)
+    const today = getCurrentDateString(userTimezone);
+const systemPrompt = isTimeblockIntent
+      ? timeblockToolPrompt(userTimezone) + `\n\nToday is ${today}.`
       : dueySystemPrompt(
           userTimezone,
           formatClassesForPrompt(classes, nowIso),
