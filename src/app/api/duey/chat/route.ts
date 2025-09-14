@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { dueySystemPrompt } from "@/duey-engine/prompt/main";
 import { timeblockToolPrompt } from "@/duey-engine/prompt/tool-prompt/timeblock";
 import { getCurrentDateString } from "@/duey-engine/prompt/helpers/getCurrentDateString";
-import { detectToolIntent } from "./helpers/toolDetection";
+import { detectToolIntent, detectToolIntentAI } from "./helpers/toolDetection";
 import { db } from "@/db";
 import { users } from "@/db/schema/user";
 import { timeblocks } from "@/db/schema/timeblocks";
@@ -228,19 +228,21 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
 
   
     const lastUserMessage = limitedMessages.slice().reverse().find(m => m.role === "user")?.content || "";
-    const { isTimeblockIntent } = detectToolIntent(lastUserMessage);
+    const tool = await detectToolIntentAI(lastUserMessage);
 
-    console.log("[Duey Chat] Timeblock intent detected:", isTimeblockIntent);
-    console.log("[Duey Chat] Using prompt:", isTimeblockIntent ? "timeblockToolPrompt" : "dueySystemPrompt");
+    console.log("[Duey Chat] Tool detected (AI intent):", tool);
+    console.log("[Duey Chat] Using prompt:", tool === "timeblocks" ? "timeblockToolPrompt" : tool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");
 
     const today = getCurrentDateString(userTimezone);
-const systemPrompt = isTimeblockIntent
+    const systemPrompt = tool === "timeblocks"
       ? timeblockToolPrompt(userTimezone) + `\n\nToday is ${today}.`
-      : dueySystemPrompt(
-          userTimezone,
-          formatClassesForPrompt(classes, nowIso),
-          formatTimeblocksForPrompt(userTimeblocks, nowIso)
-        );
+      : tool === "flashcards"
+        ? "[Flashcard tool prompt goes here]"
+        : dueySystemPrompt(
+            userTimezone,
+            formatClassesForPrompt(classes, nowIso),
+            formatTimeblocksForPrompt(userTimeblocks, nowIso)
+          );
 
     // Prepare messages for OpenAI
     const openaiMessages = [
@@ -260,7 +262,7 @@ const systemPrompt = isTimeblockIntent
     // Create streaming response
     const encoder = new TextEncoder();
     let fullResponse = "";
-    
+
     const streamResponse = new ReadableStream({
       async start(controller) {
         try {
@@ -268,11 +270,12 @@ const systemPrompt = isTimeblockIntent
             const content = chunk.choices[0]?.delta?.content;
             if (content) {
               fullResponse += content;
-              const data = `data: ${JSON.stringify({ content })}\n\n`;
+              // Stream each chunk as it arrives (for progressive display)
+              const data = `data: ${JSON.stringify({ content, streaming: true })}\n\n`;
               controller.enqueue(encoder.encode(data));
             }
           }
-          const doneData = `data: ${JSON.stringify({ done: true })}\n\n`;
+          const doneData = `data: ${JSON.stringify({ content: fullResponse, done: true })}\n\n`;
           controller.enqueue(encoder.encode(doneData));
           controller.close();
         } catch (error) {
