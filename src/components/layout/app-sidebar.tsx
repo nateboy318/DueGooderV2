@@ -22,6 +22,7 @@ import {
   Bell,
   ChevronLeft,
   MessageCircle,
+  BookOpen,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -43,8 +44,6 @@ interface SidebarProps {
 }
 
 export function AppSidebar({ isOpen, onClose, isCollapsed, onToggleCollapse }: SidebarProps) {
-  const { data: session } = useSession();
-  const { userName, isLoading: userNameLoading } = useUserName();
   const pathname = usePathname();
   const [openAccordions, setOpenAccordions] = useState<string[]>([]);
 
@@ -70,6 +69,13 @@ export function AppSidebar({ isOpen, onClose, isCollapsed, onToggleCollapse }: S
       href: "/app/duey",
       icon: MessageCircle,
       active: pathname === "/app/duey",
+    },
+    {
+      id: "flashcards",
+      label: "Flashcards",
+      href: "/app/flashcards",
+      icon: BookOpen,
+      active: pathname === "/app/flashcards",
     },
     {
       id: "users",

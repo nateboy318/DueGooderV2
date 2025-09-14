@@ -86,6 +86,7 @@ export default function CalendarPage() {
         throw new Error("Failed to fetch timeblocks");
       }
       const timeblocksData = await timeblocksResponse.json();
+      console.log("Fetched timeblocks:", timeblocksData.timeblocks);
       setTimeblocks(timeblocksData.timeblocks || []);
 
       // Extract assignments from classes (already loaded from context)

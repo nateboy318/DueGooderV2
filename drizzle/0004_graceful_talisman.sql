@@ -1,0 +1,1 @@
+ALTER TABLE "flashcard_sets" ADD COLUMN "classId" text;

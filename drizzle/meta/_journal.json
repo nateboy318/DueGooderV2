@@ -15,6 +15,27 @@
       "when": 1757477364306,
       "tag": "0001_flaky_squirrel_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1757794488511,
+      "tag": "0002_rare_toxin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1757797063009,
+      "tag": "0003_acoustic_the_enforcers",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757797410737,
+      "tag": "0004_graceful_talisman",
+      "breakpoints": true
     }
   ]
 }
