@@ -235,7 +235,11 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
 
     const today = getCurrentDateString(userTimezone);
     const systemPrompt = tool === "timeblocks"
-      ? timeblockToolPrompt(userTimezone) + `\n\nToday is ${today}.`
+      ? timeblockToolPrompt(
+          userTimezone,
+          formatClassesForPrompt(classes, nowIso),
+          formatTimeblocksForPrompt(userTimeblocks, nowIso)
+        )
       : tool === "flashcards"
         ? "[Flashcard tool prompt goes here]"
         : dueySystemPrompt(
