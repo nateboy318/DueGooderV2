@@ -27,7 +27,7 @@ async function generateDescription(files: Array<{name: string, content: string, 
     .join('\n\n---\n\n');
   
   const completion = await openai.chat.completions.create({
-    model: "gpt-5-nano",
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
@@ -62,7 +62,7 @@ async function processFlashcardsSync(setId: number, files: Array<{name: string, 
   
   // Call OpenAI to generate flashcards
   const stream = await openai.chat.completions.create({
-    model: "gpt-5-nano",
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
