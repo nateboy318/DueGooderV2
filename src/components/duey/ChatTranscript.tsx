@@ -74,7 +74,7 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject }:
                       </div>
                     ) : (
                       <>
-                        <StreamingMarkdownRenderer text={item.content} streaming={!!item.streaming} />
+                        <StreamingMarkdownRenderer text={item.content.replace(/^tool:\s*\w+\s*\n?/i, "")} streaming={!!item.streaming} />
                         {showConfirmation && (
                           <div className="flex gap-4 mt-4 justify-center">
                             <button
@@ -84,19 +84,12 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject }:
                             >
                               Looks good!
                             </button>
-                            <button
-                              className={`px-4 py-2 rounded border border-gray-300 ${clickedMessages[item.id] === 'reject' ? 'bg-[var(--color-myBlue)] text-white' : 'bg-white'}`}
-                              onClick={() => handleClick(item.id, 'reject', onTimeblockReject, parsed)}
-                              disabled={!!clickedMessages[item.id]}
-                            >
-                              Let's try another.
-                            </button>
                           </div>
                         )}
                       </>
                     )
                   ) : (
-                    <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">{item.content}</div>
+                    <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">{item.content.replace(/^tool:\s*\w+\s*\n?/i, "")}</div>
                   )}
                 </div>
               </div>

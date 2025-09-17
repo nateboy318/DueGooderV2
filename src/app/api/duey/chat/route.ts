@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { dueySystemPrompt } from "@/duey-engine/prompt/main";
 import { timeblockToolPrompt } from "@/duey-engine/prompt/tool-prompt/timeblock";
 import { getCurrentDateString } from "@/duey-engine/prompt/helpers/getCurrentDateString";
-import { detectToolIntent, detectToolIntentAI } from "./helpers/toolDetection";
+import { detectInitialToolIntent } from "./helpers/toolDetection";
 import { db } from "@/db";
 import { users } from "@/db/schema/user";
 import { timeblocks } from "@/db/schema/timeblocks";
@@ -185,7 +185,7 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     }
 
     const body = await request.json();
-    const { messages, options = {}, timezone } = body;
+    const { messages, options = {}, timezone, pendingTool, pendingTask } = body;
     const userTimezone = timezone || "UTC";
 
     // Validate messages
@@ -227,27 +227,48 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
       .orderBy(timeblocks.startTime);
 
   
-    // Use last 5 messages as context window for tool intent detection
-    const contextWindow = limitedMessages.slice(-5);
-    const tool = await detectToolIntentAI(contextWindow);
-
-    console.log("[Duey Chat] Tool detected (AI intent):", tool);
-    console.log("[Duey Chat] Using prompt:", tool === "timeblocks" ? "timeblockToolPrompt" : tool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");
-
+    let tool = "none";
+    let systemPrompt = "";
     const today = getCurrentDateString(userTimezone);
-    const systemPrompt = tool === "timeblocks"
-      ? timeblockToolPrompt(
-          userTimezone,
-          formatClassesForPrompt(classes, nowIso),
-          formatTimeblocksForPrompt(userTimeblocks, nowIso)
-        )
-      : tool === "flashcards"
-        ? "[Flashcard tool prompt goes here]"
-        : dueySystemPrompt(
+
+    if (pendingTool && pendingTool !== "none" && pendingTask) {
+      // Tool is pending: lock to tool prompt
+      tool = pendingTool;
+      systemPrompt = pendingTool === "timeblocks"
+        ? timeblockToolPrompt(
             userTimezone,
             formatClassesForPrompt(classes, nowIso),
             formatTimeblocksForPrompt(userTimeblocks, nowIso)
-          );
+          )
+        : pendingTool === "flashcards"
+          ? "[Flashcard tool prompt goes here]"
+          : dueySystemPrompt(
+              userTimezone,
+              formatClassesForPrompt(classes, nowIso),
+              formatTimeblocksForPrompt(userTimeblocks, nowIso)
+            );
+      console.log("[Duey Chat] Tool locked (pending):", tool);
+      console.log("[Duey Chat] Using prompt:", pendingTool === "timeblocks" ? "timeblockToolPrompt" : pendingTool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");
+    } else {
+      // No tool pending: run detection
+      const contextWindow = limitedMessages.slice(-5);
+      tool = await detectInitialToolIntent(contextWindow[contextWindow.length - 1]?.content || "");
+      console.log("[Duey Chat] Tool detected (AI intent):", tool);
+      console.log("[Duey Chat] Using prompt:", tool === "timeblocks" ? "timeblockToolPrompt" : tool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");
+      systemPrompt = tool === "timeblocks"
+        ? timeblockToolPrompt(
+            userTimezone,
+            formatClassesForPrompt(classes, nowIso),
+            formatTimeblocksForPrompt(userTimeblocks, nowIso)
+          )
+        : tool === "flashcards"
+          ? "[Flashcard tool prompt goes here]"
+          : dueySystemPrompt(
+              userTimezone,
+              formatClassesForPrompt(classes, nowIso),
+              formatTimeblocksForPrompt(userTimeblocks, nowIso)
+            );
+    }
 
     // Prepare messages for OpenAI
     const openaiMessages = [
@@ -280,7 +301,7 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
               controller.enqueue(encoder.encode(data));
             }
           }
-          const doneData = `data: ${JSON.stringify({ content: fullResponse, done: true })}\n\n`;
+          const doneData = `data: ${JSON.stringify({ content: fullResponse, done: true, tool })}\n\n`;
           controller.enqueue(encoder.encode(doneData));
           controller.close();
         } catch (error) {
