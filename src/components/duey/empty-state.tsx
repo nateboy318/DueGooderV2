@@ -12,7 +12,7 @@ const suggestionChips = [
   "What should I do today?",
   "Prioritize my assignments",
   "Show urgent tasks",
-  "Plan my study time"
+  "Put time on my calendar to work on my assignments"
 ];
 
 export function EmptyState({ onSendMessage }: EmptyStateProps) {

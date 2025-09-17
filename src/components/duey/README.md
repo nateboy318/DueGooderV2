@@ -71,7 +71,7 @@ data: {"done": true}
 - "List all assignments by urgency"
 - "What's my most important task?"
 
-## Data Structure
+## Data Structureev
 The chatbot uses the user's `classes` field from the database:
 ```typescript
 classes: {

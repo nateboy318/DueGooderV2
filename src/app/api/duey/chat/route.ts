@@ -280,7 +280,7 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     const stream = await openai.chat.completions.create({
       model: process.env.OPENAI_MODEL || "gpt-4o-mini",
       messages: openaiMessages as any,
-      max_tokens: options.maxTokens || 600,
+      max_tokens: options.maxTokens || 1800,
       temperature: options.temperature || 0.3,
       stream: true,
     });
@@ -297,10 +297,49 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
             if (content) {
               fullResponse += content;
               // Stream each chunk as it arrives (for progressive display)
-              const data = `data: ${JSON.stringify({ content, streaming: true })}\n\n`;
+              const data = `data: ${JSON.stringify({ content, streaming: true, tool })}\n\n`;
               controller.enqueue(encoder.encode(data));
             }
           }
+          // If tool was timeblocks but the model didn't emit the JSON payload, run a follow-up extraction pass
+          const needsExtraction = tool === "timeblocks" && !/"action"\s*:\s*"create_timeblock"/i.test(fullResponse);
+          console.log("[Duey Chat] Stream finished. tool=", tool, "needsExtraction=", needsExtraction, "len=", fullResponse.length);
+          if (needsExtraction) {
+            const extractionMessages = [
+              {
+                role: "system",
+                content:
+                  `You are a strict JSON generator for a scheduling tool. ` +
+                  `Return ONLY one JSON object on a single response with this exact shape: ` +
+                  `{ "action": "create_timeblock", "timeblocks": [ { "title": "...", "description": "...", "startTime": "ISO", "endTime": "ISO", "type": "study" } ] }.` +
+                  ` Use timezone ${userTimezone}. Snap to 15-minute increments. No prose before or after.`,
+              },
+              {
+                role: "user",
+                content:
+                  `Extract timeblocks from the following assistant message. If no concrete schedule is present, reply with {"action":"create_timeblock","timeblocks":[]}.\n\n` +
+                  fullResponse,
+              },
+            ] as any;
+
+            // Tell client fallback extraction has started
+            const fallbackData = `data: ${JSON.stringify({ phase: "fallback_start", tool })}\n\n`;
+            controller.enqueue(encoder.encode(fallbackData));
+
+            console.log("[Duey Chat] Starting extraction fallback.");
+            const extraction = await openai.chat.completions.create({
+              model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+              messages: extractionMessages,
+              max_tokens: 800,
+              temperature: 0.1,
+              stream: false,
+            });
+            const exContent = extraction.choices[0]?.message?.content || "";
+            console.log("[Duey Chat] Extraction produced len=", exContent.length);
+            // Do NOT stream the extraction content; append only to final payload
+            fullResponse += exContent;
+          }
+
           const doneData = `data: ${JSON.stringify({ content: fullResponse, done: true, tool })}\n\n`;
           controller.enqueue(encoder.encode(doneData));
           controller.close();

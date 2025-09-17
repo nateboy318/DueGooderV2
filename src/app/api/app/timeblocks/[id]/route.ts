@@ -8,7 +8,7 @@ import withAuthRequired from "@/lib/auth/withAuthRequired";
 export const GET = withAuthRequired(async (request: NextRequest, context) => {
   try {
     const userId = context.session.user.id;
-    const { params } = context;
+    const params = await context.params;
     const timeblockId = params.id as string;
     
     const timeblock = await db
@@ -41,7 +41,7 @@ export const GET = withAuthRequired(async (request: NextRequest, context) => {
 export const PUT = withAuthRequired(async (request: NextRequest, context) => {
   try {
     const userId = context.session.user.id;
-    const { params } = context;
+    const params = await context.params;
     const timeblockId = params.id as string;
     const body = await request.json();
     
@@ -110,7 +110,7 @@ export const PUT = withAuthRequired(async (request: NextRequest, context) => {
 export const DELETE = withAuthRequired(async (request: NextRequest, context) => {
   try {
     const userId = context.session.user.id;
-    const { params } = context;
+    const params = await context.params;
     const timeblockId = params.id as string;
     
     const deletedTimeblock = await db

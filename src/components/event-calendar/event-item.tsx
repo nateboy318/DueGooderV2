@@ -215,7 +215,7 @@ export function EventItem({
         isDragging={isDragging}
         onClick={onClick}
         className={cn(
-          "py-1",
+          "py-1 ",
           durationMinutes < 45 && !event.allDay ? "items-center" : "flex-col",
           view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
           className
@@ -228,7 +228,7 @@ export function EventItem({
       >
         {durationMinutes < 45 && !event.allDay ? (
           <div className="truncate">
-            <div className="truncate font-medium flex items-center">
+            <div className="truncate font-medium flex items-center ">
               {event.timeblockType ? getTimeblockCircle(event.timeblockType) : (event.emoji && <span className="mr-1">{event.emoji}</span>)}
               {event.title}
             </div>

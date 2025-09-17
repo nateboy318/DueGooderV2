@@ -16,28 +16,60 @@ export function useTimeblockActions({
   // Confirm timeblock
   const onTimeblockConfirm = useCallback(
     async (parsed: any, messageId: string) => {
-      if (parsed?.timeblocks && Array.isArray(parsed.timeblocks)) {
-        try {
-          await fetch("/api/duey/timeblock", {
+      // Mark tool task as running right when we actually call the API
+      setIsLoading(true);
+      // Insert a temporary assistant message to show loading state
+      const loadingId = crypto.randomUUID();
+      setItems((prev) => [
+        ...prev,
+        {
+          id: loadingId,
+          role: "assistant",
+          content: "Scheduling your timeblock...",
+          streaming: false,
+        },
+      ]);
+
+      const finish = (success: boolean, count?: number) => {
+        setItems((prev) =>
+          prev.map((it) =>
+            it.id === loadingId
+              ? {
+                  ...it,
+                  content: success
+                    ? count && count > 1
+                      ? `Booked ${count} timeblocks successfully.`
+                      : "Timeblock booked successfully."
+                    : "Failed to schedule. Try again.",
+                }
+              : it
+          )
+        );
+      };
+
+      try {
+        if (parsed?.timeblocks && Array.isArray(parsed.timeblocks)) {
+          const res = await fetch("/api/duey/timeblock", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ timeblocks: parsed.timeblocks }),
           });
-        } catch (error) {
-          console.error("Failed to create multiple timeblocks", error);
+          finish(res.ok, parsed.timeblocks.length);
+          return;
         }
-        return;
-      }
-      if (parsed?.timeblock) {
-        try {
-          await fetch("/api/duey/timeblock", {
+        if (parsed?.timeblock) {
+          const res = await fetch("/api/duey/timeblock", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(parsed.timeblock),
+            body: JSON.stringify({ timeblock: parsed.timeblock }),
           });
-        } catch (error) {
-          console.error("Failed to create timeblock", error);
+          finish(res.ok, 1);
         }
+      } catch (error) {
+        console.error("Failed to create timeblock(s)", error);
+        finish(false);
+      } finally {
+        setIsLoading(false);
       }
     },
     []
