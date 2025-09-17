@@ -45,13 +45,17 @@ export function DroppableCell({
       ref={setNodeRef}
       onClick={onClick}
       className={cn(
-        "data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1",
+        "relative flex h-full flex-col ",
         className
       )}
       title={formattedTime ? `${formattedTime}` : undefined}
       data-dragging={isOver && activeEvent ? true : undefined}
     >
       {children}
+      {/* Black line drop indicator */}
+      {isOver && activeEvent && (
+        <div className="absolute"  />
+      )}
     </div>
   )
 }

@@ -21,7 +21,7 @@ interface AppDataContextType {
   classes: Class[];
   classesLoading: boolean;
   classesError: any;
-  mutateClasses: () => void;
+  mutateClasses: (data?: any, shouldRevalidate?: boolean) => Promise<any>;
 }
 
 const AppDataContext = createContext<AppDataContextType | undefined>(undefined);

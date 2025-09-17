@@ -81,7 +81,7 @@ function EventWrapper({
   return (
     <button
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 flex size-full min-w-0 overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through data-[past-event=true]:opacity-30 data-[past-event=true]:grayscale-[30%] sm:px-2",
+        "event-item focus-visible:border-ring focus-visible:ring-ring/50 relative flex size-full min-w-0 overflow-hidden px-1 text-left cursor-pointer font-medium backdrop-blur-md transition-all duration-200 ease-out outline-none select-none focus-visible:ring-[3px] hover:scale-[1.02] hover:z-40 hover:overflow-visible data-dragging:cursor-grabbing data-dragging:scale-[1.03] data-dragging:shadow-xl data-dragging:z-50 data-dragging:overflow-visible data-past-event:line-through data-[past-event=true]:opacity-30 data-[past-event=true]:grayscale-[30%] sm:px-2",
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className
@@ -264,7 +264,7 @@ export function EventItem({
   return (
     <button
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90 data-[past-event=true]:grayscale-[60%]",
+        "event-item focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded p-2 text-left transition-all duration-200 ease-out outline-none focus-visible:ring-[3px] hover:scale-[1.02] hover:z-40 hover:overflow-visible data-dragging:cursor-grabbing data-dragging:scale-[1.03] data-dragging:shadow-xl data-dragging:z-50 data-dragging:overflow-visible data-past-event:line-through data-past-event:opacity-90 data-[past-event=true]:grayscale-[60%]",
         getEventColorClasses(eventColor),
         className
       )}

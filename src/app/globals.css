@@ -187,3 +187,40 @@
   transform: rotateY(180deg);
 }
 
+/* Enhanced drag and drop animations */
+@keyframes dragScale {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.03);
+  }
+}
+
+@keyframes hoverScale {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+/* Smooth transitions for drag states */
+[data-dragging="true"] {
+  animation: dragScale 0.2s ease-out forwards;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+  z-index: 50;
+}
+
+/* Enhanced hover effects */
+.event-item:hover {
+  animation: hoverScale 0.2s ease-out forwards;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+}
+
+/* Smooth transition for all event items */
+.event-item {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+

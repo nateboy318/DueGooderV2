@@ -34,10 +34,10 @@ interface CalendarProps {
   onTimeblockComplete?: (timeblockId: string) => void;
   onAssignmentClick?: (assignment: Assignment) => void;
   onAssignmentComplete?: (assignmentId: string) => void;
-  onTimeblockUpdate?: (timeblock: Timeblock) => void;
-  onAssignmentUpdate?: (assignment: Assignment) => void;
-  onTimeblockDelete?: (timeblockId: string) => void;
-  onAssignmentDelete?: (assignmentId: string) => void;
+  onTimeblockUpdate?: (timeblock: Timeblock) => Promise<void>;
+  onAssignmentUpdate?: (assignment: Assignment) => Promise<void>;
+  onTimeblockDelete?: (timeblockId: string) => Promise<void>;
+  onAssignmentDelete?: (assignmentId: string) => Promise<void>;
   onNavigateToDate?: (navigateFn: (date: Date) => void) => void;
   calendarRef?: React.RefObject<{ navigateToDate: (date: Date) => void; setView: (view: CalendarView) => void } | null>;
 }
@@ -154,7 +154,7 @@ export function Calendar({
         };
         
         // Optimistic update - update UI immediately
-        onTimeblockUpdate?.(updatedTimeblock);
+        await onTimeblockUpdate?.(updatedTimeblock);
         
         // Make API call in background
         try {
@@ -177,12 +177,14 @@ export function Calendar({
           if (!response.ok) {
             console.error('Failed to update timeblock:', await response.text());
             // Revert on failure - put back original timeblock
-            onTimeblockUpdate?.(originalTimeblock);
+            await onTimeblockUpdate?.(originalTimeblock);
+          } else {
+            console.log('Timeblock updated successfully in database');
           }
         } catch (error) {
           console.error('Error updating timeblock:', error);
           // Revert on failure - put back original timeblock
-          onTimeblockUpdate?.(originalTimeblock);
+          await onTimeblockUpdate?.(originalTimeblock);
         }
       }
     } else if (eventId.startsWith('assignment-')) {
@@ -190,41 +192,61 @@ export function Calendar({
       const assignmentId = eventId.replace('assignment-', '');
       const originalAssignment = assignments.find(a => a.id === assignmentId);
       
+      console.log('Assignment drag and drop:', {
+        eventId,
+        assignmentId,
+        originalAssignment,
+        newStart: updatedEvent.start,
+        newDueDate: updatedEvent.start.toISOString()
+      });
+      
       if (originalAssignment) {
         const updatedAssignment: Assignment = {
           ...originalAssignment,
           dueDate: updatedEvent.start.toISOString(),
         };
         
+        console.log('Calling onAssignmentUpdate with:', updatedAssignment);
+        
         // Optimistic update - update UI immediately
-        onAssignmentUpdate?.(updatedAssignment);
+        await onAssignmentUpdate?.(updatedAssignment);
         
         // Make API call in background
         try {
+          console.log('Making API call to update assignment...');
           // Update assignment via classes API
-          const response = await fetch(`/api/app/classes/${originalAssignment.classId}/assignments/${assignmentId}`, {
-            method: 'PUT',
+          const response = await fetch('/api/app/classes/assignments/edit', {
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+              classId: originalAssignment.classId,
+              assignmentId: assignmentId,
               name: updatedAssignment.name,
               description: updatedAssignment.description,
               dueDate: updatedAssignment.dueDate,
-              completed: updatedAssignment.completed,
             }),
           });
           
           if (!response.ok) {
-            console.error('Failed to update assignment:', await response.text());
+            const errorText = await response.text();
+            console.error('Failed to update assignment:', errorText);
             // Revert on failure - put back original assignment
-            onAssignmentUpdate?.(originalAssignment);
+            console.log('Reverting assignment to original state...');
+            await onAssignmentUpdate?.(originalAssignment);
+          } else {
+            // Success - state is already updated, no need to refresh
+            console.log('Assignment updated successfully in database');
           }
         } catch (error) {
           console.error('Error updating assignment:', error);
           // Revert on failure - put back original assignment
-          onAssignmentUpdate?.(originalAssignment);
+          console.log('Reverting assignment to original state due to error...');
+          await onAssignmentUpdate?.(originalAssignment);
         }
+      } else {
+        console.error('Original assignment not found for ID:', assignmentId);
       }
     }
   };
@@ -233,36 +255,60 @@ export function Calendar({
     // Handle deleting events
     if (eventId.startsWith('timeblock-')) {
       const timeblockId = eventId.replace('timeblock-', '');
+      
+      console.log('Deleting timeblock:', { eventId, timeblockId });
+      
+      // Optimistically update UI immediately
+      await onTimeblockDelete?.(timeblockId);
+      
       try {
         const response = await fetch(`/api/app/timeblocks/${timeblockId}`, {
           method: 'DELETE',
         });
         
-        if (response.ok) {
-          onTimeblockDelete?.(timeblockId);
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.warn('API deletion failed, but UI was updated:', { 
+            timeblockId, 
+            status: response.status, 
+            error: errorText 
+          });
+          
+          // If deletion failed on server, refresh data to sync with reality
+          // This handles cases where the item was already deleted or doesn't exist
+          await onTimeblockDelete?.(timeblockId);
         } else {
-          console.error('Failed to delete timeblock:', await response.text());
+          console.log('Timeblock deleted successfully:', timeblockId);
         }
       } catch (error) {
-        console.error('Error deleting timeblock:', error);
+        console.warn('Error during timeblock deletion, but UI was updated:', error);
+        // Refresh data to ensure consistency
+        await onTimeblockDelete?.(timeblockId);
       }
     } else if (eventId.startsWith('assignment-')) {
       const assignmentId = eventId.replace('assignment-', '');
       const assignment = assignments.find(a => a.id === assignmentId);
       
       if (assignment) {
+        // Optimistically update UI immediately
+        await onAssignmentDelete?.(assignmentId);
+        
         try {
           const response = await fetch(`/api/app/classes/${assignment.classId}/assignments/${assignmentId}`, {
             method: 'DELETE',
           });
           
-          if (response.ok) {
-            onAssignmentDelete?.(assignmentId);
-          } else {
-            console.error('Failed to delete assignment:', await response.text());
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.warn('API deletion failed, but UI was updated:', errorText);
+            
+            // If deletion failed on server, refresh data to sync with reality
+            await onAssignmentDelete?.(assignmentId);
           }
         } catch (error) {
-          console.error('Error deleting assignment:', error);
+          console.warn('Error during assignment deletion, but UI was updated:', error);
+          // Refresh data to ensure consistency
+          await onAssignmentDelete?.(assignmentId);
         }
       }
     }

@@ -99,7 +99,7 @@ export function MonthView({
           </div>
         ))}
       </div>
-      <div className="grid flex-1 auto-rows-fr">
+      <div className="grid flex-1 auto-rows-fr overflow-visible">
         {weeks.map((week, weekIndex) => (
           <div
             key={`week-${weekIndex}`}
@@ -128,7 +128,7 @@ export function MonthView({
               return (
                 <div
                   key={day.toString()}
-                  className={`group data-outside-cell:bg-gray-50/30 data-outside-cell:text-muted-foreground/50 min-h-[120px] p-2 hover:bg-gray-50/50 transition-colors ${
+                  className={`group data-outside-cell:bg-gray-50/30 data-outside-cell:text-muted-foreground/50 min-h-[120px] p-2 hover:bg-gray-50/50 transition-colors overflow-visible ${
                     (weekIndex + dayIndex) % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'
                   }`}
                   data-today={isToday(day) || undefined}

@@ -237,8 +237,8 @@ export function WeekView({
       </div>
 
       {showAllDaySection && (
-        <div className="bg-gray-100">
-          <div className="grid grid-cols-8">
+        <div className="bg-gray-100 overflow-visible">
+          <div className="grid grid-cols-8 overflow-visible min-w-0">
             <div className="relative bg-gray-50">
               <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
                 {"   "}Today
@@ -258,7 +258,7 @@ export function WeekView({
               return (
                 <div
                   key={day.toString()}
-                  className={`relative p-1 ${dayIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                  className={`relative p-1 overflow-visible min-w-0 ${dayIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
                   data-today={isToday(day) || undefined}
                 >
                   {dayAllDayEvents.map((event) => {
@@ -318,7 +318,7 @@ export function WeekView({
         </div>
       )}
 
-      <div className="grid flex-1 grid-cols-8 overflow-hidden">
+      <div className="grid flex-1 grid-cols-8 overflow-visible">
         <div className="grid auto-cols-fr bg-gray-50">
           {hours.map((hour, index) => (
             <div
@@ -337,14 +337,14 @@ export function WeekView({
         {days.map((day, dayIndex) => (
           <div
             key={day.toString()}
-            className={`relative grid auto-cols-fr ${dayIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+            className={`relative grid auto-cols-fr overflow-visible ${dayIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
             data-today={isToday(day) || undefined}
           >
             {/* Positioned events */}
             {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => (
               <div
                 key={positionedEvent.event.id}
-                className="absolute z-10 px-0.5"
+                className="absolute z-10 px-0.5 overflow-visible"
                 style={{
                   top: `${positionedEvent.top}px`,
                   height: `${positionedEvent.height}px`,
