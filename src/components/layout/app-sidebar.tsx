@@ -18,18 +18,10 @@ import {
   X,
   Menu,
   User,
-  LogOut,
-  Bell,
-  ChevronLeft,
   MessageCircle,
   BookOpen,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { PiCardsBold } from "react-icons/pi";
 import {
   Collapsible,
   CollapsibleContent,
@@ -74,7 +66,7 @@ export function AppSidebar({ isOpen, onClose, isCollapsed, onToggleCollapse }: S
       id: "flashcards",
       label: "Flashcards",
       href: "/app/flashcards",
-      icon: BookOpen,
+      icon: PiCardsBold,
       active: pathname === "/app/flashcards",
     },
     {
