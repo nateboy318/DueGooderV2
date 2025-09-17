@@ -25,26 +25,61 @@ export const GET = withAuthRequired(async (request: NextRequest, context) => {
 
 // Create a new timeblock
 export const POST = withAuthRequired(async (request: NextRequest, context) => {
+    let rawBody = '';
+  try {
+    rawBody = await request.text();
+        // Re-create the request object with the raw body for downstream .json() parsing
+    request = new NextRequest(request.url, { method: request.method, headers: request.headers, body: rawBody });
+  } catch (err) {
+      }
   try {
     const userId = context.session.user.id;
-    const body = await request.json();
-    const timeblockData = body.timeblock;
-    if (!timeblockData) {
-      return NextResponse.json({ error: "Missing timeblock data" }, { status: 400 });
+    let body;
+    try {
+      body = await request.json();
+    } catch (err) {
+            return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
-    const newTimeblock = await db.insert(timeblocks).values({
-      userId,
-      title: timeblockData.title,
-      description: timeblockData.description,
-      startTime: new Date(timeblockData.startTime),
-      endTime: new Date(timeblockData.endTime),
-      classId: timeblockData.classId,
-      assignmentId: timeblockData.assignmentId,
-      type: timeblockData.type || "study",
-      isRecurring: timeblockData.isRecurring || false,
-      recurringPattern: timeblockData.recurringPattern,
-    }).returning();
-    return NextResponse.json({ timeblock: newTimeblock[0] });
+    // Support both single and multiple timeblock creation
+    const single = body.timeblock;
+    const multiple = body.timeblocks;
+    if (!single && !multiple) {
+            return NextResponse.json({ error: "Missing timeblock data" }, { status: 400 });
+    }
+
+    let createdTimeblocks: any[] = [];
+    if (multiple && Array.isArray(multiple)) {
+      // Batch insert
+      const values = multiple.map(tb => ({
+        userId,
+        title: tb.title,
+        description: tb.description,
+        startTime: new Date(tb.startTime),
+        endTime: new Date(tb.endTime),
+        classId: tb.classId,
+        assignmentId: tb.assignmentId,
+        type: tb.type || "study",
+        isRecurring: tb.isRecurring || false,
+        recurringPattern: tb.recurringPattern,
+      }));
+      createdTimeblocks = await db.insert(timeblocks).values(values).returning();
+    } else if (single) {
+      // Single insert
+      const [created] = await db.insert(timeblocks).values({
+        userId,
+        title: single.title,
+        description: single.description,
+        startTime: new Date(single.startTime),
+        endTime: new Date(single.endTime),
+        classId: single.classId,
+        assignmentId: single.assignmentId,
+        type: single.type || "study",
+        isRecurring: single.isRecurring || false,
+        recurringPattern: single.recurringPattern,
+      }).returning();
+      createdTimeblocks = [created];
+    }
+    return NextResponse.json({ timeblocks: createdTimeblocks });
   } catch (error) {
     return NextResponse.json({ error: "Failed to create timeblock" }, { status: 500 });
   }
