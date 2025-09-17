@@ -227,8 +227,9 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
       .orderBy(timeblocks.startTime);
 
   
-    const lastUserMessage = limitedMessages.slice().reverse().find(m => m.role === "user")?.content || "";
-    const tool = await detectToolIntentAI(lastUserMessage);
+    // Use last 5 messages as context window for tool intent detection
+    const contextWindow = limitedMessages.slice(-5);
+    const tool = await detectToolIntentAI(contextWindow);
 
     console.log("[Duey Chat] Tool detected (AI intent):", tool);
     console.log("[Duey Chat] Using prompt:", tool === "timeblocks" ? "timeblockToolPrompt" : tool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");

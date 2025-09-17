@@ -16,15 +16,28 @@ export function useTimeblockActions({
   // Confirm timeblock
   const onTimeblockConfirm = useCallback(
     async (parsed: any, messageId: string) => {
-      if (!parsed?.timeblock) return;
-      try {
-        await fetch("/api/app/timeblocks", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(parsed.timeblock),
-        });
-      } catch (error) {
-        console.error("Failed to create timeblock", error);
+      if (parsed?.timeblocks && Array.isArray(parsed.timeblocks)) {
+        try {
+          await fetch("/api/duey/timeblock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ timeblocks: parsed.timeblocks }),
+          });
+        } catch (error) {
+          console.error("Failed to create multiple timeblocks", error);
+        }
+        return;
+      }
+      if (parsed?.timeblock) {
+        try {
+          await fetch("/api/duey/timeblock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(parsed.timeblock),
+          });
+        } catch (error) {
+          console.error("Failed to create timeblock", error);
+        }
       }
     },
     []
