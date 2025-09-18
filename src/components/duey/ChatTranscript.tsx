@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Loader2, Pencil } from "lucide-react";
+import { Loader2, Pencil, Trash } from "lucide-react";
 import { Virtuoso } from "react-virtuoso";
 import { StreamingMarkdownRenderer } from "@/components/duey/StreamingMarkdownRenderer";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,7 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
   const [clickedMessages, setClickedMessages] = React.useState<Record<string, "confirm" | "reject" | undefined>>({});
   const [submittingMessages, setSubmittingMessages] = React.useState<Record<string, boolean>>({});
   const [edits, setEdits] = React.useState<Record<string, { overrides: Record<number, any> }>>({});
+  const [deleted, setDeleted] = React.useState<Record<string, Record<number, true>>>({});
 
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const [editMsgId, setEditMsgId] = React.useState<string | null>(null);
@@ -92,6 +93,13 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
     setIsEditOpen(false);
   };
 
+  const removeBlock = (messageId: string, index: number) => {
+    setDeleted(prev => ({
+      ...prev,
+      [messageId]: { ...(prev[messageId] || {}), [index]: true },
+    }));
+  };
+
   const handleClick = async (
     messageId: string,
     action: "confirm" | "reject",
@@ -135,7 +143,10 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
             ? (Array.isArray(parsed.timeblocks) ? parsed.timeblocks : parsed.timeblock ? [parsed.timeblock] : [])
             : [];
           const overrides = edits[item.id]?.overrides;
-          const displayBlocks = originalBlocks.map((tb: any, idx: number) => (overrides && overrides[idx]) ? overrides[idx] : tb);
+          const deletions = deleted[item.id] || {};
+          const displayBlocks = originalBlocks
+            .map((tb: any, idx: number) => (overrides && overrides[idx]) ? overrides[idx] : tb)
+            .filter((_: any, idx: number) => !deletions[idx]);
           const contentWithoutJson = item.role === "assistant"
             ? item.content
                 .replace(/^\s*tool:\s*\w+\s*\n?/i, "")
@@ -202,11 +213,18 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
                                   <div className="text-xs text-gray-500">{formatDate(start)}</div>
                                   <div className="text-sm text-gray-700 flex items-center gap-2">{formatTimeRange(start, end)}<div
                                       className="cursor-pointer"
-
                                       onClick={(e) => { e.stopPropagation(); openEditor(item.id, tb, idx); }}
                                     >
-                                      <Pencil className="w-3 h-3 text-myBlue" />
-                                    </div></div> 
+                                      <Pencil className="w-3 h-3 text-myBlue hover:scale-[110%] transition-all duration-200 ease-in-out" />
+                                    </div>
+                                    <div
+                                      className="cursor-pointer"
+                                      title="Remove"
+                                      onClick={(e) => { e.stopPropagation(); removeBlock(item.id, idx); }}
+                                    >
+                                      <Trash className="w-3 h-3 text-myRed hover:scale-[110%] transition-all duration-200 ease-in-out" />
+                                    </div>
+                                  </div> 
                                   {tb.description && (
                                     <div className="text-xs text-gray-600 truncate">{tb.description}</div>
                                   )}
@@ -216,17 +234,11 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
                             })}
                           </div>
                         )}
-                        {pendingTask && pendingTool === "timeblocks" && (
-                          <div className="mt-3 flex items-center gap-2 text-amber-900 bg-amber-50 rounded px-3 py-1.5">
-                            <div className="w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
-                            <span className="text-xs">Creating timeblocks...</span>
-                          </div>
-                        )}
                         {showConfirmation && !item.streaming && (
                           <div className="flex gap-4 my-4 mt-8 justify-start">
                             <Button
                               className={` ${clickedMessages[item.id] === 'confirm' ? '' : ''}`}
-                              onClick={() => handleClick(item.id, 'confirm', onTimeblockConfirm, { action: "create_timeblock", timeblocks: displayBlocks.length ? displayBlocks : originalBlocks })}
+                              onClick={() => handleClick(item.id, 'confirm', onTimeblockConfirm, { action: "create_timeblock", timeblocks: displayBlocks })}
                               variant="default"
                               disabled={!!clickedMessages[item.id] || !!submittingMessages[item.id]}
                             >
