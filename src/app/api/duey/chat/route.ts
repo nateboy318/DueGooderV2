@@ -185,8 +185,10 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     }
 
     const body = await request.json();
-    const { messages, options = {}, timezone, pendingTool, pendingTask } = body;
+    const { messages, options = {}, timezone, pendingTool } = body;
     const userTimezone = timezone || "UTC";
+    // Minimal state log for debugging tool lock behavior
+    console.log("[Duey Chat] Pending state:", { pendingTool});
 
     // Validate messages
     if (!Array.isArray(messages) || messages.length === 0) {
@@ -231,8 +233,7 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
     let systemPrompt = "";
     const today = getCurrentDateString(userTimezone);
 
-    if (pendingTool && pendingTool !== "none" && pendingTask) {
-      // Tool is pending: lock to tool prompt
+    if (pendingTool && pendingTool !== "none") {
       tool = pendingTool;
       systemPrompt = pendingTool === "timeblocks"
         ? timeblockToolPrompt(
@@ -247,13 +248,15 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
               formatClassesForPrompt(classes, nowIso),
               formatTimeblocksForPrompt(userTimeblocks, nowIso)
             );
-      console.log("[Duey Chat] Tool locked (pending):", tool);
+      console.log("[Duey Chat] Tool locked (selected):", tool);
       console.log("[Duey Chat] Using prompt:", pendingTool === "timeblocks" ? "timeblockToolPrompt" : pendingTool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");
     } else {
-      // No tool pending: run detection
       const contextWindow = limitedMessages.slice(-5);
       tool = await detectInitialToolIntent(contextWindow[contextWindow.length - 1]?.content || "");
       console.log("[Duey Chat] Tool detected (AI intent):", tool);
+      if (tool && tool !== "none") {
+        console.log("[Duey Chat] Tool locked (detected):", tool);
+      }
       console.log("[Duey Chat] Using prompt:", tool === "timeblocks" ? "timeblockToolPrompt" : tool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");
       systemPrompt = tool === "timeblocks"
         ? timeblockToolPrompt(
@@ -270,13 +273,11 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
             );
     }
 
-    // Prepare messages for OpenAI
     const openaiMessages = [
       { role: "system", content: systemPrompt },
       ...limitedMessages
     ];
 
-    // Call OpenAI with streaming
     const stream = await openai.chat.completions.create({
       model: process.env.OPENAI_MODEL || "gpt-4o-mini",
       messages: openaiMessages as any,
