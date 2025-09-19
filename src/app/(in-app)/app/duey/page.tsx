@@ -140,6 +140,19 @@ export default function DueyPage() {
     setPendingTool("none");
   };
 
+  const handleTimeblockReject = async (_arg1?: any, _arg2?: any) => {
+    const id = crypto.randomUUID();
+    setItems((prev) => [
+      ...prev,
+      {
+        id,
+        role: "assistant",
+        content: "Let me know what I can change!",
+        streaming: false,
+      },
+    ]);
+  };
+
   
   return (
     <div className="flex h-[calc(100vh-65px)]">
@@ -154,6 +167,7 @@ export default function DueyPage() {
               <ChatTranscript
                 items={items}
                 onTimeblockConfirm={handleTimeblockConfirm}
+                onTimeblockReject={handleTimeblockReject}
                 pendingTool={pendingTool}
                 isFallbackStreaming={isFallbackStreaming}
               />

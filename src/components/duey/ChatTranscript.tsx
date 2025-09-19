@@ -114,6 +114,10 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
           await handler(parsed, messageId);
         } finally {
           setSubmittingMessages(prev => ({ ...prev, [messageId]: false }));
+          // For reject, clear the clicked state so other actions remain enabled
+          if (action === "reject") {
+            setClickedMessages(prev => ({ ...prev, [messageId]: undefined }));
+          }
         }
       }
     }
@@ -253,9 +257,9 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
                               className={` ${clickedMessages[item.id] === 'confirm' ? '' : ''}`}
                               onClick={() => handleClick(item.id, 'confirm', onTimeblockConfirm, { action: "create_timeblock", timeblocks: displayBlocks })}
                               variant="default"
-                              disabled={!!clickedMessages[item.id] || !!submittingMessages[item.id]}
+                              disabled={(clickedMessages[item.id] === 'confirm') || (submittingMessages[item.id] && clickedMessages[item.id] === 'confirm')}
                             >
-                              {submittingMessages[item.id] ? (
+                              {clickedMessages[item.id] === 'confirm' && submittingMessages[item.id] ? (
                                 <>
                                   <Loader2 className="w-4 h-4 animate-spin" />
                                   Scheduling...
@@ -264,6 +268,16 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
                                 <>Looks good!</>
                               )}
                             </Button>
+                            {onTimeblockReject && (
+                              <Button
+                                className={`${clickedMessages[item.id] === 'reject' ? '' : ''}`}
+                                onClick={() => handleClick(item.id, 'reject', onTimeblockReject, { action: "create_timeblock", timeblocks: displayBlocks })}
+                                variant="outline"
+                                disabled={(clickedMessages[item.id] === 'reject') || (submittingMessages[item.id] && clickedMessages[item.id] === 'reject')}
+                              >
+                                Not quite
+                              </Button>
+                            )}
                           </div>
                         )}
                       </>
