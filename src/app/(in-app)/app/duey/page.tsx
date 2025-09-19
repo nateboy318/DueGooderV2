@@ -142,15 +142,24 @@ export default function DueyPage() {
 
   const handleTimeblockReject = async (_arg1?: any, _arg2?: any) => {
     const id = crypto.randomUUID();
+    const streamText = "Let me know what I can change!";
     setItems((prev) => [
       ...prev,
-      {
-        id,
-        role: "assistant",
-        content: "Let me know what I can change!",
-        streaming: false,
-      },
+      { id, role: "assistant", content: "", streaming: true },
     ]);
+
+
+    let i = 0;
+    const stepMs = 25; 
+    const interval = setInterval(() => {
+      i++;
+      const next = streamText.slice(0, i);
+      setItems((prev) => prev.map((it) => (it.id === id ? { ...it, content: next } : it)));
+      if (i >= streamText.length) {
+        clearInterval(interval);
+        setItems((prev) => prev.map((it) => (it.id === id ? { ...it, streaming: false } : it)));
+      }
+    }, stepMs);
   };
 
   
