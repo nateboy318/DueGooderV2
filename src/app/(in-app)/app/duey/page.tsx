@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
 import { useTimeblockActions } from "../../../../duey-engine/hooks/useTimeblockActions";
 import { ChatInput } from "@/components/duey/chat-input";
 import { EmptyState } from "@/components/duey/empty-state";
@@ -10,13 +9,11 @@ import { ChatTranscript } from "@/components/duey/ChatTranscript";
 
 export default function DueyPage() {
   const [pendingTool, setPendingTool] = useState<"none" | "timeblocks" | "flashcards">("none");
-  const [pendingTask, setPendingTask] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [items, setItems] = useState<{ id: string; role: "user" | "assistant"; content: string; streaming?: boolean }[]>([]);
   const streamingRef = useRef<boolean>(false);
-  const prevPendingTaskRef = useRef<boolean>(false);
-  const isFirstRenderRef = useRef<boolean>(true);
+  const prevPendingToolRef = useRef<"none" | "timeblocks" | "flashcards">("none");
   const [isFallbackStreaming, setIsFallbackStreaming] = useState(false);
 
 
@@ -44,8 +41,7 @@ export default function DueyPage() {
           ],
           options: { maxTokens: 1800, temperature: 0.3 },
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          pendingTool,
-          pendingTask
+          pendingTool
         }),
       });
       if (response.status === 429) {
@@ -121,22 +117,15 @@ export default function DueyPage() {
     }
   };
  
-  useEffect(() => {}, [pendingTool]);
-
   useEffect(() => {
-    if (isFirstRenderRef.current) {
-      isFirstRenderRef.current = false;
-      prevPendingTaskRef.current = pendingTask;
-      return;
+    const prev = prevPendingToolRef.current;
+    if (prev !== "none" && pendingTool === "none") {
+      console.log("[Duey Chat] Tool unlocked:", prev);
     }
-    const prev = prevPendingTaskRef.current;
-    if (!prev && pendingTask) {
-      console.log('pending task started');
-    } else if (prev && !pendingTask) {
-      console.log('pending task complete');
-    }
-    prevPendingTaskRef.current = pendingTask;
-  }, [pendingTask]);
+    prevPendingToolRef.current = pendingTool;
+  }, [pendingTool]);
+
+  // removed pendingTask tracking
 
   const { onTimeblockConfirm } = useTimeblockActions({
     setItems,
@@ -147,29 +136,14 @@ export default function DueyPage() {
   });
 
   const handleTimeblockConfirm = async (arg1: any, arg2: any) => {
-    console.debug("[Duey Chat] handleTimeblockConfirm: start", { pendingTaskBefore: pendingTask });
-    setPendingTask(true);
-    try {
-      await onTimeblockConfirm(arg1, arg2);
-    } finally {
-      setPendingTool("none");
-      setPendingTask(false);
-      console.debug("[Duey Chat] handleTimeblockConfirm: end", { pendingTaskAfter: false });
-    }
+    await onTimeblockConfirm(arg1, arg2);
+    setPendingTool("none");
   };
 
   
   return (
     <div className="flex h-[calc(100vh-65px)]">
       <div className="flex-1 flex flex-col">
-        {pendingTask && (
-          <div className="w-full bg-amber-50 border-b border-amber-200">
-            <div className="max-w-4xl mx-auto px-4 py-2 flex items-center gap-2 text-amber-900 text-sm">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Duey is creating your timeblocks...
-            </div>
-          </div>
-        )}
         {items.length === 0 ? (
           <div className="flex-1 overflow-hidden">
             <EmptyState onSendMessage={sendMessage} />
@@ -181,7 +155,6 @@ export default function DueyPage() {
                 items={items}
                 onTimeblockConfirm={handleTimeblockConfirm}
                 pendingTool={pendingTool}
-                pendingTask={pendingTask}
                 isFallbackStreaming={isFallbackStreaming}
               />
             </div>
@@ -189,8 +162,8 @@ export default function DueyPage() {
         )}
         <ChatInput
           onSendMessage={sendMessage}
-          disabled={isLoading || isRateLimited || pendingTask}
-          placeholder={pendingTask ? "Working... Duey is creating your timeblocks" : "Ask Duey anything about your classes..."}
+          disabled={isLoading || isRateLimited}
+          placeholder={"Ask Duey anything about your classes..."}
         />
       </div>
       <AssignmentsSidebar />
