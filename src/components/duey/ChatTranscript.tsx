@@ -147,12 +147,20 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
           const displayBlocks = originalBlocks
             .map((tb: any, idx: number) => (overrides && overrides[idx]) ? overrides[idx] : tb)
             .filter((_: any, idx: number) => !deletions[idx]);
+          // Only render prose BEFORE any JSON/tool payload hint; cards are rendered from parsed JSON below.
           const contentWithoutJson = item.role === "assistant"
-            ? item.content
-                .replace(/^\s*tool:\s*\w+\s*\n?/i, "")
-                .replace(/```[\s\S]*?```/g, "")
-                .replace(/\{[\s\S]*\}/, "")
-                .replace(/\n{3,}/g, "\n\n")
+            ? (() => {
+                const cleaned = item.content
+                  .replace(/^\s*tool:\s*\w+\s*\n?/i, "")
+                  .replace(/```[\s\S]*?```/g, "");
+                const tokenIdx = cleaned.search(/"action"\s*:\s*"create_timeblock"/i);
+                const braceIdx = cleaned.indexOf("{");
+                const cutAt = [tokenIdx, braceIdx]
+                  .filter((i) => i !== -1)
+                  .reduce((min, i) => (min === -1 ? i : Math.min(min, i)), -1);
+                const beforeJson = cutAt !== -1 ? cleaned.slice(0, cutAt) : cleaned;
+                return beforeJson.replace(/\n{3,}/g, "\n\n");
+              })()
             : item.content;
           const hasTimeblockToolHeader =
             item.role === "assistant" && /^\s*tool:\s*timeblocks/i.test(item.content);
