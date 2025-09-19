@@ -248,14 +248,13 @@ export const POST = withAuthRequired(async (request: NextRequest, context) => {
               formatClassesForPrompt(classes, nowIso),
               formatTimeblocksForPrompt(userTimeblocks, nowIso)
             );
-      console.log("[Duey Chat] Tool locked (selected):", tool);
+      console.log("[Duey Chat] Tool locked:", tool);
       console.log("[Duey Chat] Using prompt:", pendingTool === "timeblocks" ? "timeblockToolPrompt" : pendingTool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");
     } else {
       const contextWindow = limitedMessages.slice(-5);
       tool = await detectInitialToolIntent(contextWindow[contextWindow.length - 1]?.content || "");
-      console.log("[Duey Chat] Tool detected (AI intent):", tool);
       if (tool && tool !== "none") {
-        console.log("[Duey Chat] Tool locked (detected):", tool);
+        console.log("[Duey Chat] Tool locked:", tool);
       }
       console.log("[Duey Chat] Using prompt:", tool === "timeblocks" ? "timeblockToolPrompt" : tool === "flashcards" ? "flashcardToolPrompt" : "dueySystemPrompt");
       systemPrompt = tool === "timeblocks"

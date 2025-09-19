@@ -75,5 +75,25 @@ export function useTimeblockActions({
     []
   );
 
-  return { onTimeblockConfirm };
+  // Reject/"Not quite" — ask a follow-up question and keep the tool locked
+  const onTimeblockReject = useCallback(
+    async (_parsed: any, _messageId: string) => {
+      // For now, we simply add a concise assistant prompt to clarify what to adjust.
+      // We intentionally do NOT unlock the tool or trigger any scheduling.
+      const id = crypto.randomUUID();
+      setItems((prev) => [
+        ...prev,
+        {
+          id,
+          role: "assistant",
+          content:
+            "No problem — what should I change about these timeblocks? You can specify things like a different day, earlier/later times, shorter/longer durations, or which items to include/exclude.",
+          streaming: false,
+        },
+      ]);
+    },
+    []
+  );
+
+  return { onTimeblockConfirm, onTimeblockReject };
 }

@@ -114,6 +114,10 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
           await handler(parsed, messageId);
         } finally {
           setSubmittingMessages(prev => ({ ...prev, [messageId]: false }));
+          // For reject, clear the clicked state so other actions remain enabled
+          if (action === "reject") {
+            setClickedMessages(prev => ({ ...prev, [messageId]: undefined }));
+          }
         }
       }
     }
@@ -147,20 +151,33 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
           const displayBlocks = originalBlocks
             .map((tb: any, idx: number) => (overrides && overrides[idx]) ? overrides[idx] : tb)
             .filter((_: any, idx: number) => !deletions[idx]);
+          // Only allow confirmation UI if there is at least one block to confirm
+          if (parsed && parsed.action === "create_timeblock") {
+            showConfirmation = (displayBlocks?.length || 0) > 0;
+          }
+          // Only render prose BEFORE any JSON/tool payload hint; cards are rendered from parsed JSON below.
           const contentWithoutJson = item.role === "assistant"
-            ? item.content
-                .replace(/^\s*tool:\s*\w+\s*\n?/i, "")
-                .replace(/```[\s\S]*?```/g, "")
-                .replace(/\{[\s\S]*\}/, "")
-                .replace(/\n{3,}/g, "\n\n")
+            ? (() => {
+                const cleaned = item.content
+                  .replace(/^\s*tool:\s*\w+\s*\n?/i, "")
+                  .replace(/```[\s\S]*?```/g, "");
+                const tokenIdx = cleaned.search(/"action"\s*:\s*"create_timeblock"/i);
+                const braceIdx = cleaned.indexOf("{");
+                const cutAt = [tokenIdx, braceIdx]
+                  .filter((i) => i !== -1)
+                  .reduce((min, i) => (min === -1 ? i : Math.min(min, i)), -1);
+                const beforeJson = cutAt !== -1 ? cleaned.slice(0, cutAt) : cleaned;
+                return beforeJson.replace(/\n{3,}/g, "\n\n");
+              })()
             : item.content;
           const hasTimeblockToolHeader =
             item.role === "assistant" && /^\s*tool:\s*timeblocks/i.test(item.content);
           const hasCreateActionToken =
             item.role === "assistant" && /"action"\s*:\s*"create_timeblock"/i.test(item.content);
+          // Only show generating UI when we actually see the create_timeblock token.
+          // Do NOT show during fallback extraction to avoid flashing on clarification prompts.
           const showGeneratingPlaceholder =
-            (item.role === "assistant" && !!item.streaming && (hasTimeblockToolHeader || hasCreateActionToken) && !parsed)
-            || (item.role === "assistant" && !!item.streaming && isFallbackStreaming && !parsed);
+            (item.role === "assistant" && !!item.streaming && hasCreateActionToken && !parsed);
           if (item.role === "assistant") {
             console.debug("[ChatTranscript] flags:", {
               id: item.id,
@@ -240,9 +257,9 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
                               className={` ${clickedMessages[item.id] === 'confirm' ? '' : ''}`}
                               onClick={() => handleClick(item.id, 'confirm', onTimeblockConfirm, { action: "create_timeblock", timeblocks: displayBlocks })}
                               variant="default"
-                              disabled={!!clickedMessages[item.id] || !!submittingMessages[item.id]}
+                              disabled={(clickedMessages[item.id] === 'confirm') || (submittingMessages[item.id] && clickedMessages[item.id] === 'confirm')}
                             >
-                              {submittingMessages[item.id] ? (
+                              {clickedMessages[item.id] === 'confirm' && submittingMessages[item.id] ? (
                                 <>
                                   <Loader2 className="w-4 h-4 animate-spin" />
                                   Scheduling...
@@ -251,6 +268,16 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
                                 <>Looks good!</>
                               )}
                             </Button>
+                            {onTimeblockReject && (
+                              <Button
+                                className={`${clickedMessages[item.id] === 'reject' ? '' : ''}`}
+                                onClick={() => handleClick(item.id, 'reject', onTimeblockReject, { action: "create_timeblock", timeblocks: displayBlocks })}
+                                variant="outline"
+                                disabled={(clickedMessages[item.id] === 'reject') || (submittingMessages[item.id] && clickedMessages[item.id] === 'reject')}
+                              >
+                                Not quite
+                              </Button>
+                            )}
                           </div>
                         )}
                       </>
