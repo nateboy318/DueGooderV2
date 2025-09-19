@@ -147,6 +147,10 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
           const displayBlocks = originalBlocks
             .map((tb: any, idx: number) => (overrides && overrides[idx]) ? overrides[idx] : tb)
             .filter((_: any, idx: number) => !deletions[idx]);
+          // Only allow confirmation UI if there is at least one block to confirm
+          if (parsed && parsed.action === "create_timeblock") {
+            showConfirmation = (displayBlocks?.length || 0) > 0;
+          }
           // Only render prose BEFORE any JSON/tool payload hint; cards are rendered from parsed JSON below.
           const contentWithoutJson = item.role === "assistant"
             ? (() => {
@@ -166,9 +170,10 @@ export function ChatTranscript({ items, onTimeblockConfirm, onTimeblockReject, p
             item.role === "assistant" && /^\s*tool:\s*timeblocks/i.test(item.content);
           const hasCreateActionToken =
             item.role === "assistant" && /"action"\s*:\s*"create_timeblock"/i.test(item.content);
+          // Only show generating UI when we actually see the create_timeblock token.
+          // Do NOT show during fallback extraction to avoid flashing on clarification prompts.
           const showGeneratingPlaceholder =
-            (item.role === "assistant" && !!item.streaming && (hasTimeblockToolHeader || hasCreateActionToken) && !parsed)
-            || (item.role === "assistant" && !!item.streaming && isFallbackStreaming && !parsed);
+            (item.role === "assistant" && !!item.streaming && hasCreateActionToken && !parsed);
           if (item.role === "assistant") {
             console.debug("[ChatTranscript] flags:", {
               id: item.id,
